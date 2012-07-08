@@ -15,7 +15,6 @@
  limitations under the License.
  */
 package com.repeater;
-import org.apache.log4j.Logger;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -40,8 +39,7 @@ import java.util.List;
  */
 public abstract class QuickViewBase<T> extends RepeatingView implements IQuickView {
 
-    private static Logger logger = Logger.getLogger(QuickViewBase.class);
-    //items created per request ,if used with PagingNavigator/AjaxPagingNavigator then it's the items per page
+      //items created per request ,if used with PagingNavigator/AjaxPagingNavigator then it's the items per page
     private int itemsPerRequest=Integer.MAX_VALUE;
 
     public int getItemsPerRequest() {
@@ -112,10 +110,10 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     /**
      * set reuse strategy
      * <p/>
-     * for {@link org.apache.wicket.markup.html.navigation.paging.PagingNavigator} or {@link org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigator}  the
-     * {@link ReUse.NOTHING_FOR_PAGING} is preferred
+     * for paging ie. when used with {@link org.apache.wicket.markup.html.navigation.paging.PagingNavigator} or {@link org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigator}  the
+     * {@link ReUse.DEFAULT_PAGING} is preferred
      * <p/>
-     * for scrolling purpose {@link ReUse.NOTHING_FOR_SCROLL} is preferred
+     * for rows navigation purpose {@link ReUse.DEFAULT_ROWSNAVIGATOR} is preferred
      *
      * @param reuse
      */
@@ -495,7 +493,6 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     @Override
     public MarkupContainer add(final Component... c) {
         simpleAdd(c);
-
         if (!isAjax()) {
             return this;
         }
@@ -504,8 +501,8 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         }
         AjaxRequestTarget target = getAjaxRequestTarget();
         for (int i = 0; i < c.length; i++) {
-            Component parent = _getParent();
-            String script = getRepeaterUtil().insertAfterScript(c[i], parent);
+            MarkupContainer parent = _getParent();
+            String script = getRepeaterUtil().insertAfter((Item)c[i], parent);
             target.prependJavaScript(script);
         }
         target.add(c);
@@ -587,8 +584,8 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         }
         AjaxRequestTarget target = getAjaxRequestTarget();
         for (int i = 0; i < c.length; i++) {
-            Component parent = _getParent();
-            String updateBeforeScript = getRepeaterUtil().insertBeforeScript(c[i], parent);
+            MarkupContainer parent = _getParent();
+            String updateBeforeScript = getRepeaterUtil().insertBefore((Item)c[i], parent);
             target.prependJavaScript(updateBeforeScript);
         }
         target.add(c);
