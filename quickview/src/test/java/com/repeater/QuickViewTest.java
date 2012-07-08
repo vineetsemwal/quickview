@@ -281,7 +281,7 @@ public class QuickViewTest {
 
         };
         final String script = "script..";
-        Mockito.when(util.insertAfterScript(c, parent)).thenReturn(script);
+        Mockito.when(util.insertAfter(c, parent)).thenReturn(script);
         QuickView sparc = Mockito.spy(arc);
         sparc.add(c);
 
@@ -341,7 +341,7 @@ public class QuickViewTest {
 
         };
         final String script = "script..";
-        Mockito.when(util.insertAfterScript(c, parent)).thenReturn(script);
+        Mockito.when(util.insertAfter(c, parent)).thenReturn(script);
         QuickView sparc = Mockito.spy(arc);
         sparc.add(c);
 
@@ -399,7 +399,7 @@ public class QuickViewTest {
 
         };
         final String script = "script..";
-        Mockito.when(util.insertAfterScript(c, parent)).thenReturn(script);
+        Mockito.when(util.insertAfter(c, parent)).thenReturn(script);
         QuickView sparc = Mockito.spy(arc);
         sparc.add(c);
 
@@ -458,8 +458,8 @@ public class QuickViewTest {
 
         };
         final String script = "script..", script2 = "script2!";
-        Mockito.when(util.insertAfterScript(c, parent)).thenReturn(script);
-        Mockito.when(util.insertAfterScript(c2, parent)).thenReturn(script2);
+        Mockito.when(util.insertAfter(c, parent)).thenReturn(script);
+        Mockito.when(util.insertAfter(c2, parent)).thenReturn(script2);
         QuickView sparc = Mockito.spy(arc);
         sparc.add(c, c2);
         Mockito.verify(sparc, Mockito.times(1)).simpleAdd(c, c2);
@@ -716,7 +716,7 @@ public class QuickViewTest {
 
         };
         final String script = "script..";
-        Mockito.when(util.insertBeforeScript(c, parent)).thenReturn(script);
+        Mockito.when(util.insertBefore(c, parent)).thenReturn(script);
         QuickView sparc = Mockito.spy(arc);
         sparc.addAtStart(c);
         Mockito.verify(sparc, Mockito.times(1)).simpleAdd(c);
@@ -774,8 +774,8 @@ public class QuickViewTest {
 
         };
         final String script = "script..", script2 = "script2!";
-        Mockito.when(util.insertBeforeScript(c, parent)).thenReturn(script);
-        Mockito.when(util.insertBeforeScript(c2, parent)).thenReturn(script2);
+        Mockito.when(util.insertBefore(c, parent)).thenReturn(script);
+        Mockito.when(util.insertBefore(c2, parent)).thenReturn(script2);
         QuickView sparc = Mockito.spy(arc);
         sparc.addAtStart(c, c2);
         Mockito.verify(sparc, Mockito.times(1)).simpleAdd(c, c2);
@@ -833,7 +833,7 @@ public class QuickViewTest {
 
         };
         final String script = "script..";
-        Mockito.when(util.insertBeforeScript(c, parent)).thenReturn(script);
+        Mockito.when(util.insertBefore(c, parent)).thenReturn(script);
         QuickView sparc = Mockito.spy(arc);
         sparc.addAtStart(c);
         Mockito.verify(sparc, Mockito.times(1)).simpleAdd(c);
@@ -891,7 +891,7 @@ public class QuickViewTest {
 
         };
         final String script = "script..";
-        Mockito.when(util.insertBeforeScript(c, parent)).thenReturn(script);
+        Mockito.when(util.insertBefore(c, parent)).thenReturn(script);
         QuickView sparc = Mockito.spy(arc);
         sparc.addAtStart(c);
         Mockito.verify(sparc, Mockito.times(1)).simpleAdd(c);
@@ -989,7 +989,7 @@ public class QuickViewTest {
     }
 
     /**
-     * reuse={@link ReUse.NOTHING_FOR_PAGING}  ,size=0   .current page=2
+     * reuse={@link ReUse.DEFAULT_PAGING}  ,size=0   .current page=2
      */
 
     @Test(groups = {"wicketTests"})
@@ -1035,7 +1035,7 @@ public class QuickViewTest {
 
 
     /**
-     * reuse={@link ReUse.NOTHING_FOR_SCROLL}  ,size=0   .current page=2
+     * reuse={@link ReUse.DEFAULT_ROWSNAVIGATOR}  ,size=0   .current page=2
      */
 
     @Test(groups = {"wicketTests"})
@@ -1131,7 +1131,7 @@ public class QuickViewTest {
 
 
     /**
-     * reuse={@link ReUse.REUSE_CURRENTPAGE}  ,size=0   .current page=2
+     * reuse={@link ReUse.CURRENTPAGE}  ,size=0   .current page=2
      */
 
     @Test(groups = {"wicketTests"})
@@ -1175,7 +1175,7 @@ public class QuickViewTest {
     }
 
     /**
-     * reuse ={@link ReUse.REUSE_CURRENTPAGE}   ,size!=0    ,pagecount=6
+     * reuse ={@link ReUse.CURRENTPAGE}   ,size!=0    ,pagecount=6
      */
 
     @Test(groups = {"wicketTests"})
@@ -1231,7 +1231,7 @@ public class QuickViewTest {
     }
 
     /**
-     * reuse ={@link ReUse.REUSE_CURRENTPAGE}   ,size!=0    ,pagecount=6
+     * reuse ={@link ReUse.CURRENTPAGE}   ,size!=0    ,pagecount=6
      */
 
     @Test(groups = {"wicketTests"})
