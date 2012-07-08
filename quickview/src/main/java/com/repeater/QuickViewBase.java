@@ -216,7 +216,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         super.onPopulate();
         clearCachedItemCount();
         reuseNotInitialized();
-        nonJsRemoveAllIfNotReuse();
+        simpleRemoveAllIfNotReuse();
         long current=_getCurrentPage();
         if (size() == 0) {
 
@@ -533,7 +533,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
 
     public List<Item<T>> addComponentsFromIndex(final long index) {
         clearCachedItemCount();
-        nonJsRemoveAllIfNotReuse();
+        simpleRemoveAllIfNotReuse();
         long newIndex=index;
         Iterator<? extends T> iterator = getDataProvider().iterator(newIndex, getItemsPerRequest());
         List<Item<T>> components = new ArrayList<Item<T>>();
@@ -595,7 +595,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     /**
      * removes all children if reuse is not true
      */
-    public void nonJsRemoveAllIfNotReuse() {
+    public void simpleRemoveAllIfNotReuse() {
         if (reuse == ReUse.DEFAULT_PAGING || reuse == ReUse.DEFAULT_ROWSNAVIGATOR) {
             simpleRemoveAll();
         }

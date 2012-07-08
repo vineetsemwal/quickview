@@ -496,7 +496,7 @@ public class QuickViewTest {
             }
 
             @Override
-            public void nonJsRemoveAllIfNotReuse() {
+            public void simpleRemoveAllIfNotReuse() {
             }
 
             @Override
@@ -506,7 +506,7 @@ public class QuickViewTest {
         };
         QuickView spy = Mockito.spy(repeater);
         List<Item<TestObj>> items = spy.addComponentsFromIndex(4);
-        Mockito.verify(spy, Mockito.times(1)).nonJsRemoveAllIfNotReuse();
+        Mockito.verify(spy, Mockito.times(1)).simpleRemoveAllIfNotReuse();
         Assert.assertEquals(items.size(), 2);
         Mockito.verify(spy, Mockito.times(1)).add(items.get(0));
         Mockito.verify(spy, Mockito.times(1)).add(items.get(1));
@@ -543,7 +543,7 @@ public class QuickViewTest {
             }
 
             @Override
-            public void nonJsRemoveAllIfNotReuse() {
+            public void simpleRemoveAllIfNotReuse() {
             }
 
             @Override
@@ -554,7 +554,7 @@ public class QuickViewTest {
         QuickView spy = Mockito.spy(repeater);
         List<Item<TestObj>> items = spy.addComponentsFromIndex(index);
 
-        Mockito.verify(spy, Mockito.times(1)).nonJsRemoveAllIfNotReuse();
+        Mockito.verify(spy, Mockito.times(1)).simpleRemoveAllIfNotReuse();
         Assert.assertEquals(items.size(), 1);
         Mockito.verify(spy, Mockito.times(1)).add(items.get(0));
         Assert.assertEquals(Integer.valueOf(items.get(0).getMarkupId()).intValue(), 3);
@@ -591,7 +591,7 @@ public class QuickViewTest {
             }
 
             @Override
-            public void nonJsRemoveAllIfNotReuse() {
+            public void simpleRemoveAllIfNotReuse() {
             }
 
             @Override
@@ -1028,7 +1028,7 @@ public class QuickViewTest {
         repeater.setReuse(ReUse.DEFAULT_PAGING);
         QuickView spy = Mockito.spy(repeater);
         spy.onPopulate();
-        Mockito.verify(spy, Mockito.times(1)).nonJsRemoveAllIfNotReuse();
+        Mockito.verify(spy, Mockito.times(1)).simpleRemoveAllIfNotReuse();
         Mockito.verify(spy, Mockito.times(1)).createChildren(2);
 
     }
@@ -1074,7 +1074,7 @@ public class QuickViewTest {
         repeater.setReuse(ReUse.DEFAULT_ROWSNAVIGATOR);
         QuickView spy = Mockito.spy(repeater);
         spy.onPopulate();
-        Mockito.verify(spy, Mockito.times(1)).nonJsRemoveAllIfNotReuse();
+        Mockito.verify(spy, Mockito.times(1)).simpleRemoveAllIfNotReuse();
         Mockito.verify(spy, Mockito.times(1)).createChildren(0);
         Mockito.verify(spy, Mockito.times(1)).setCurrentPage(0);
 
@@ -1099,7 +1099,7 @@ public class QuickViewTest {
             }
 
             @Override
-            public void nonJsRemoveAllIfNotReuse() {
+            public void simpleRemoveAllIfNotReuse() {
             }
 
             @Override
@@ -1124,7 +1124,7 @@ public class QuickViewTest {
         repeater.setReuse(ReUse.ALL);
         QuickView spy = Mockito.spy(repeater);
         spy.onPopulate();
-        Mockito.verify(spy, Mockito.times(1)).nonJsRemoveAllIfNotReuse();
+        Mockito.verify(spy, Mockito.times(1)).simpleRemoveAllIfNotReuse();
         Mockito.verify(spy, Mockito.times(1)).createChildren(0);
 
     }
@@ -1153,7 +1153,7 @@ public class QuickViewTest {
             }
 
             @Override
-            public void nonJsRemoveAllIfNotReuse() {
+            public void simpleRemoveAllIfNotReuse() {
             }
 
             @Override
@@ -1169,7 +1169,7 @@ public class QuickViewTest {
         repeater.setReuse(ReUse.CURRENTPAGE);
         QuickView spy = Mockito.spy(repeater);
         spy.onPopulate();
-        Mockito.verify(spy, Mockito.times(1)).nonJsRemoveAllIfNotReuse();
+        Mockito.verify(spy, Mockito.times(1)).simpleRemoveAllIfNotReuse();
         Mockito.verify(spy, Mockito.times(1)).createChildren(0);
 
     }
@@ -1197,7 +1197,7 @@ public class QuickViewTest {
             }
 
             @Override
-            public void nonJsRemoveAllIfNotReuse() {
+            public void simpleRemoveAllIfNotReuse() {
             }
 
             @Override
@@ -1224,7 +1224,7 @@ public class QuickViewTest {
         repeater.setReuse(ReUse.CURRENTPAGE);
         QuickView spy = Mockito.spy(repeater);
         spy.onPopulate();
-        Mockito.verify(spy, Mockito.times(1)).nonJsRemoveAllIfNotReuse();
+        Mockito.verify(spy, Mockito.times(1)).simpleRemoveAllIfNotReuse();
         Mockito.verify(spy, Mockito.times(1)).removePages(0, 1);
         Mockito.verify(spy, Mockito.times(1)).removePages(3, 5);
 
@@ -1253,7 +1253,7 @@ public class QuickViewTest {
             }
 
             @Override
-            public void nonJsRemoveAllIfNotReuse() {
+            public void simpleRemoveAllIfNotReuse() {
             }
 
             @Override
@@ -1280,7 +1280,7 @@ public class QuickViewTest {
         repeater.setReuse(ReUse.ALL);
         QuickView spy = Mockito.spy(repeater);
         spy.onPopulate();
-        Mockito.verify(spy, Mockito.times(1)).nonJsRemoveAllIfNotReuse();
+        Mockito.verify(spy, Mockito.times(1)).simpleRemoveAllIfNotReuse();
         Mockito.verify(spy, Mockito.never()).removePages(0, 1);
         Mockito.verify(spy, Mockito.never()).removePages(3, 5);
         Mockito.verify(spy, Mockito.never()).createChildren(Mockito.anyLong());
