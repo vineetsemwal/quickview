@@ -17,6 +17,7 @@
 package com.repeater;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
@@ -33,23 +34,38 @@ public class RepeaterUtil implements  IRepeaterUtil{
          return instance;
     }
 
-    public String insertBeforeScript(String tag, String id, String parentContainerId) {
-        String script = String.format("insertBefore('%s','%s','%s')", tag, id, parentContainerId);
+    /**
+     * {@inheritDoc}
+     */
+    public String insertBefore(String tag, String markupId, String parentMarkupId) {
+        String script = String.format("insertBefore('%s','%s','%s')", tag, markupId, parentMarkupId);
         return script;
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public String insertBeforeScript(Component component, Component parentContainer) {
-        String script = insertBeforeScript(getComponentTag(component).getName(), component.getMarkupId(), parentContainer.getMarkupId());
+    public String insertBefore(MarkupContainer component, MarkupContainer parent) {
+        String script = insertBefore(getComponentTag(component).getName(), component.getMarkupId(), parent.getMarkupId());
         return script;
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public String insertAfterScript(String tag, String id, String parentContainerId) {
-        String script = String.format("insertAfter('%s','%s','%s')", tag, id, parentContainerId);
+    public String insertAfter(String tag, String markupId, String parentMarkupId) {
+        String script = String.format("insertAfter('%s','%s','%s')", tag, markupId, parentMarkupId);
         return script;
 
     }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ComponentTag getComponentTag(Component c) {
         IMarkupFragment markup = c.getMarkup();
@@ -57,23 +73,36 @@ public class RepeaterUtil implements  IRepeaterUtil{
         return stream.getTag();
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public String insertAfterScript(Component c, Component parentContainer) {
-      return insertAfterScript(getComponentTag(c).getName(), c.getMarkupId(), parentContainer.getMarkupId());
+    public String insertAfter(MarkupContainer c, MarkupContainer parent) {
+      return insertAfter(getComponentTag(c).getName(), c.getMarkupId(), parent.getMarkupId());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public String removeItem(String id) {
-        String script = String.format(" removeItem('%s')", id);
+    public String removeItem(String markupId) {
+        String script = String.format("removeItem('%s')", markupId);
         return script;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String removeItem(Component component) {
         Args.notNull(component, "component");
         return removeItem(component.getMarkupId());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int safeLongToInt(long value) {
         if (value < Integer.MIN_VALUE || value > Integer.MAX_VALUE) {
