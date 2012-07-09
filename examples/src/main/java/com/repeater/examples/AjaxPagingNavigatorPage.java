@@ -18,9 +18,7 @@ package com.repeater.examples;
 
 import com.repeater.QuickView;
 import com.repeater.ReUse;
-import com.repeater.navigator.AjaxRowsNavigator;
 import org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigator;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.Item;

@@ -18,8 +18,7 @@ package com.repeater.examples;
 
 import com.repeater.QuickView;
 import com.repeater.ReUse;
-import com.repeater.navigator.AjaxRowsNavigator;
-import org.apache.wicket.Page;
+import com.repeater.navigator.AjaxItemsNavigator;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -60,7 +59,7 @@ public class RowsNavigatorPage extends WebPage {
           numbers.add(quickView);
            numbers.setOutputMarkupId(true); //don't forget required when using ajaxrownavigator
           add(numbers);
-        AjaxRowsNavigator navigator=new AjaxRowsNavigator("navigator",quickView);
+        AjaxItemsNavigator navigator=new AjaxItemsNavigator("navigator",quickView);
         add(navigator) ;
     }
 }
