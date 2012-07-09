@@ -24,6 +24,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Args;
 
 /**
+ * a label with onclick ajaxeventbehavior which on click creates new items of quickview
  * @author Vineet Semwal
  */
 public class MoreLabel extends Label {
