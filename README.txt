@@ -8,9 +8,16 @@ the way of using it is exactly like DataView .the only difference is you will ha
 the behavior of the quickview depends on that enum.
 
 Please use the simple examples which comes with the package .
+
 thank you !
 
+Please note the idea/inspiration to write quickview came from Igor Vaynberg's article 
+http://wicketinaction.com/2008/10/repainting-only-newly-created-repeater-items-via-ajax/
+
+
+
 QuickView uses wicket 6.0.0-beta2 currently.
+
 
 Copyright 2012 Vineet Semwal
 
