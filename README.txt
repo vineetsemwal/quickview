@@ -1,7 +1,7 @@
   QuickView
 -----------------------------
 QuickView is a wicket component(RepeatingView) ,it works with wicket 6.0.0-beta2 currently,it lets you adds new rows or remove the rows without the need to
- re-render the whole repeater again when used with ajax components like AjaxLink or AjaxRowsNavigator.AjaxRowsNavigator which is provided in this package
+ re-render the whole repeater again when used with ajax components like AjaxLink or AjaxItemsNavigator.AjaxItemsNavigator which is provided in this package
  creates new rows on click.
 Quickview can be also be used with PagingNavigator or AjaxPagingNavigator .it should work in all the scenarios where the DataView works.
 the way of using it is exactly like DataView.
