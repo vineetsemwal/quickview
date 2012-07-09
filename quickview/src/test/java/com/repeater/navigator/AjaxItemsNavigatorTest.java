@@ -29,13 +29,7 @@ import static org.mockito.Mockito.mock;
  */
 public class AjaxItemsNavigatorTest {
 
-    WicketTester tester;
-
-           void setup() {
-        tester = new WicketTester(createMockApplication());
-    }
-
-    private static WebApplication createMockApplication() {
+     private static WebApplication createMockApplication() {
         WebApplication app = new MockApplication();
         return app;
     }
