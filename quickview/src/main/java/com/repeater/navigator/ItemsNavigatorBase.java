@@ -69,7 +69,7 @@ public abstract class ItemsNavigatorBase extends Panel {
 
     private void parentNotNull(IQuickView repeater) {
         if (repeater.getParent() == null) {
-            throw new RepeatNotAddedToParentException("parent is null , add quickview to a markupcontainer");
+            throw new QuickViewNotAddedToParentException("parent is null , add quickview to a markupcontainer");
         }
     }
 
@@ -113,7 +113,7 @@ public abstract class ItemsNavigatorBase extends Panel {
 
 
     /**
-     * on a stateful event say onclick ,this method creates new elements from the newindex
+     * on a stateful event say onclick ,this method creates new elements for the page
      *
      * @return list of items created
      */
@@ -138,8 +138,8 @@ public abstract class ItemsNavigatorBase extends Panel {
     }
 
 
-    public static class RepeatNotAddedToParentException extends RuntimeException {
-        public RepeatNotAddedToParentException(String message) {
+    public static class QuickViewNotAddedToParentException extends RuntimeException {
+        public QuickViewNotAddedToParentException(String message) {
             super(message);
         }
     }

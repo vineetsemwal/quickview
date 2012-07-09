@@ -25,8 +25,7 @@ import org.apache.wicket.model.Model;
 
 
 /**
- * ajax stateful single link paging navigator which enables {@link com.repeater.QuickViewBase}
- * to create and draw new children
+ * ajax items navigator which enables {@link com.repeater.QuickView} to create and draw new children
  *
  *  <strong>add quickview to markupcontainer to use with rowsnavigator and markupcontainer should setoutputmarkupid
  *  or setgetOutputMarkupPlaceholderTag to true</strong>
