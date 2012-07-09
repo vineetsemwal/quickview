@@ -25,7 +25,7 @@ public class NavigatorCssReference extends PackageResourceReference {
     public static NavigatorCssReference instance = new NavigatorCssReference();
 
     private NavigatorCssReference() {
-        super(RowsNavigatorBase.class, "navigate.css");
+        super(ItemsNavigatorBase.class, "navigate.css");
     }
 
     public static NavigatorCssReference get() {

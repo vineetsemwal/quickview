@@ -30,7 +30,7 @@ public enum ReUse {
  DEFAULT_PAGING,
 
     /**
-     * all children are removed and children of first page are created again ,mostly used and preferred for {@link com.repeater.navigator.AjaxRowsNavigator}
+     * all children are removed and children of first page are created again ,mostly used and preferred for {@link com.repeater.navigator.AjaxItemsNavigator}
      */
     DEFAULT_ROWSNAVIGATOR,
 
@@ -42,7 +42,7 @@ public enum ReUse {
 
 
     /**
-     *     all children are reused,no child gets removed  or recreated,this should only be used with {@link com.repeater.navigator.AjaxRowsNavigator},
+     *     all children are reused,no child gets removed  or recreated,this should only be used with {@link com.repeater.navigator.AjaxItemsNavigator},
      *     the usecase for this can be a user has  itemsperequest 3 times after the initial render ,on page reload you want to show
      *     him all the rows he created so that he doesn't have to start again
      */

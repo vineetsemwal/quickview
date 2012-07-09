@@ -27,9 +27,9 @@ import org.apache.wicket.markup.repeater.data.IDataProvider;
  * the type of reuse constant to use  must be set ,for {@link org.apache.wicket.markup.html.navigation.paging.PagingNavigator}
  * or {@link org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigator} {@link ReUse.DEFAULT_PAGING} is preferred
  *
- * for {@link com.repeater.navigator.AjaxRowsNavigator} {@link ReUse.DEFAULT_ROWSNAVIGATOR} is preferred
+ * for {@link com.repeater.navigator.AjaxItemsNavigator} {@link ReUse.DEFAULT_ROWSNAVIGATOR} is preferred
  *
- * add it to a Markupcontainer to use with {@link com.repeater.navigator.AjaxRowsNavigator}  or if you want to add new rows
+ * add it to a Markupcontainer to use with {@link com.repeater.navigator.AjaxItemsNavigator}  or if you want to add new rows
  * using an ajax acomponent
  */
 public abstract class QuickView<T> extends QuickViewBase<T> {
