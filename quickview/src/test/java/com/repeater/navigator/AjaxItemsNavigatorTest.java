@@ -27,9 +27,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.mock.MockApplication;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.util.tester.WicketTester;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -173,7 +171,7 @@ public class AjaxItemsNavigatorTest {
      *  parent is null
      */
 
-    @Test(groups = {"wicketTests"},expectedExceptions =ItemsNavigatorBase.RepeatNotAddedToParentException.class)
+    @Test(groups = {"wicketTests"},expectedExceptions =ItemsNavigatorBase.QuickViewNotAddedToParentException.class)
     public void  onBeforeRender_1(){
         IDataProvider data=Mockito.mock(IDataProvider.class);
         QuickViewBase repeater = new QuickView("id",data,10) {
