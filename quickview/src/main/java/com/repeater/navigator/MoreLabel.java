@@ -21,32 +21,29 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * @author Vineet Semwal
  */
 public class MoreLabel extends Label {
 
-    private RowsNavigatorBase navigator;
+    private ItemsNavigatorBase navigator;
 
-    public RowsNavigatorBase getNavigator() {
+    public ItemsNavigatorBase getNavigator() {
         return navigator;
     }
 
-    public MoreLabel(String id, IModel model, RowsNavigatorBase navigator) {
+    public MoreLabel(String id, IModel model, ItemsNavigatorBase navigator) {
         super(id,model);
+        Args.notNull(navigator,"navigator");
         this.navigator = navigator;
         setOutputMarkupId(true);
     }
 
 
-    protected Behavior newOnClickBehavior(){
-                 return new AjaxEventBehavior("onClick") {
-            @Override
-            protected void onEvent(AjaxRequestTarget target) {
-                MoreLabel.this.onClick(target);
-            }
-        };
+    protected OnClickBehavior newOnClickBehavior(){
+       return new OnClickBehavior();
     }
     @Override
     protected void onInitialize() {
@@ -58,16 +55,23 @@ public class MoreLabel extends Label {
     @Override
     protected void onConfigure() {
         super.onConfigure();
-
          // no need to render for the last page hence check if current page smaller than (pages count -1)
 
          setVisible(navigator.getRepeater().getCurrentPage() < navigator.getRepeater().getPageCount()-1) ;
     }
 
 
-    public void onClick(AjaxRequestTarget target) {
+    protected void onClick(AjaxRequestTarget target) {
         navigator.onStatefulEvent();
-
     }
 
+    public class OnClickBehavior extends AjaxEventBehavior{
+        public OnClickBehavior() {
+           super("onclick");
+        }
+            @Override
+            protected void onEvent(AjaxRequestTarget target) {
+                MoreLabel.this.onClick(target);
+            }
+    }
 }
