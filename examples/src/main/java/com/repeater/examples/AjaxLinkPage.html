@@ -16,18 +16,20 @@ Copyright 2012 Vineet Semwal
 <!DOCTYPE html>
 <html xmlns:wicket="http://wicket.apache.org">
 <head>
-    <title>QuickView with AjaxLink</title>
+    <title>add new row </title>
+    QuickView with AjaxLink ,Add new row as last item  in quickview
 </head>
-QuickView with AjaxLink
+
 <body>
 <div style="margin-bottom:50px;"></div>
+<a wicket:id="addAtStartLink"> add new row at start</a>
 <div wicket:id="numbers">
     <div wicket:id="number">
         <label wicket:id="display"></label>
     </div>
 </div>
 
-<a wicket:id="addLink"> create new row</a>
+<a wicket:id="addLink"> add new row at last</a>
 
 </body>
 </html>

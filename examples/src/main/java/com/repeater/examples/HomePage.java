@@ -14,11 +14,10 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package com.repeater;
+package com.repeater.examples;
 
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.WebPage;
 
 public class HomePage extends WebPage {
@@ -33,5 +32,8 @@ public class HomePage extends WebPage {
 
         BookmarkablePageLink ajaxLink=new BookmarkablePageLink("ajaxLink",AjaxLinkPage.class);
         add(ajaxLink);
+
+        BookmarkablePageLink removeLink=new BookmarkablePageLink("removeLink",RemoveItemsPage.class);
+        add(removeLink);
     }
 }

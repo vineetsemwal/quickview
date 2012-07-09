@@ -14,8 +14,10 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package com.repeater;
+package com.repeater.examples;
 
+import com.repeater.QuickView;
+import com.repeater.ReUse;
 import com.repeater.navigator.AjaxRowsNavigator;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -46,9 +48,9 @@ public class RowsNavigatorPage extends WebPage {
         super.onInitialize();
         IDataProvider<Integer>data=new ListDataProvider<Integer>(list);
         final int itemsPerRequest=7;//rows created per request
-        final  ReUse reuse= ReUse.DEFAULT_ROWSNAVIGATOR;//default reuse strategy that should be used with rowsnavigator
+        final ReUse reuse= ReUse.DEFAULT_ROWSNAVIGATOR;//default reuse strategy that should be used with rowsnavigator
 
-        QuickView<Integer>quickView=new QuickView<Integer>("number",data,reuse,itemsPerRequest) {
+        QuickView<Integer> quickView=new QuickView<Integer>("number",data,reuse,itemsPerRequest) {
             @Override
             protected void populate(Item<Integer> item) {
                 item.add(new Label("display",item.getModel()));

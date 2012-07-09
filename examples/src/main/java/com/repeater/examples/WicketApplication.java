@@ -14,7 +14,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package com.repeater;
+package com.repeater.examples;
 
 import org.apache.wicket.protocol.http.WebApplication;
 
