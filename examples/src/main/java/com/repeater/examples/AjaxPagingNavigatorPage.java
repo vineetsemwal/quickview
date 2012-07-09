@@ -35,7 +35,7 @@ public class AjaxPagingNavigatorPage extends WebPage {
     private List<Integer> list=new ArrayList<Integer>();
 
     public AjaxPagingNavigatorPage(){
-              for(int i=0;i<40;i++){
+              for(int i=0;i<20;i++){
                 list.add(i)  ;
             }
     }
@@ -44,7 +44,7 @@ public class AjaxPagingNavigatorPage extends WebPage {
     protected void onInitialize() {
         super.onInitialize();
         IDataProvider<Integer> data=new ListDataProvider<Integer>(list);
-        final int itemsPerRequest=7;//rows created per request
+        final int itemsPerRequest=4;//rows created per request
         final ReUse reuse= ReUse.DEFAULT_PAGING;//default reuse strategy that should be used with pagingnavigator
 
         QuickView<Integer> quickView=new QuickView<Integer>("number",data,reuse,itemsPerRequest) {
