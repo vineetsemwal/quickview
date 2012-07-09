@@ -1,4 +1,19 @@
+/**
+ *
+ Copyright 2012 Vineet Semwal
 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
 package com.repeater.navigator;
 
 import com.repeater.IQuickView;
@@ -144,80 +159,6 @@ public class AjaxItemsNavigatorTest {
         Assert.assertTrue(actual.isEmpty());
     }
 
-    /**
-     * current page=2 pages=4
-     */
-
-   @Test(groups = {"wicketTests"})
-    public void onConfigure_1() {
-        final String id = "id";
-        final long currentpage = 2,pages = 4;
-         ItemsNavigatorBase navigator = Mockito.mock(ItemsNavigatorBase.class);
-       IQuickView repeater = mock(IQuickView.class);
-       Mockito.when(repeater.getCurrentPage()).thenReturn(currentpage);
-       Mockito.when(repeater.getPageCount()).thenReturn(pages) ;
-       Mockito.when(navigator.getRepeater()).thenReturn(repeater);
-       IModel model=Mockito.mock(IModel.class);
-        MoreLabel more = new MoreLabel(id,model, navigator);
-        more.onConfigure();
-        Assert.assertTrue(more.isVisible());
-    }
-
-    /**
-     * current page=3 pages=4
-     */
-
-    @Test(groups = {"wicketTests"})
-    public void onConfigure_2() {
-        final String id = "id";
-        final long currentpage = 3,pages = 4;
-        ItemsNavigatorBase navigator = Mockito.mock(ItemsNavigatorBase.class);
-        IQuickView repeater = mock(IQuickView.class);
-        Mockito.when(repeater.getCurrentPage()).thenReturn(currentpage);
-        Mockito.when(repeater.getPageCount()).thenReturn(pages) ;
-        Mockito.when(navigator.getRepeater()).thenReturn(repeater);
-        IModel model=Mockito.mock(IModel.class);
-        MoreLabel more = new MoreLabel(id,model, navigator);
-        more.onConfigure();
-        Assert.assertFalse(more.isVisible());
-    }
-
-    /**
-     * current page=4 pages=4
-     */
-
-    @Test(groups = {"wicketTests"})
-    public void onConfigure_3() {
-        final String id = "id";
-        final long currentpage = 4,pages = 4;
-        ItemsNavigatorBase navigator = Mockito.mock(ItemsNavigatorBase.class);
-        IQuickView repeater = mock(IQuickView.class);
-        Mockito.when(repeater.getCurrentPage()).thenReturn(currentpage);
-        Mockito.when(repeater.getPageCount()).thenReturn(pages) ;
-        Mockito.when(navigator.getRepeater()).thenReturn(repeater);
-        IModel model=Mockito.mock(IModel.class);
-        MoreLabel more = new MoreLabel(id,model, navigator);
-        more.onConfigure();
-        Assert.assertFalse(more.isVisible());
-    }
-    /**
-     * current page=5 pages=4
-     */
-
-    @Test(groups = {"wicketTests"})
-    public void onConfigure_4() {
-        final String id = "id";
-        final long currentpage = 5,pages = 4;
-        ItemsNavigatorBase navigator = Mockito.mock(ItemsNavigatorBase.class);
-        IQuickView repeater = mock(IQuickView.class);
-        Mockito.when(repeater.getCurrentPage()).thenReturn(currentpage);
-        Mockito.when(repeater.getPageCount()).thenReturn(pages) ;
-        Mockito.when(navigator.getRepeater()).thenReturn(repeater);
-        IModel model=Mockito.mock(IModel.class);
-        MoreLabel more = new MoreLabel(id,model, navigator);
-        more.onConfigure();
-        Assert.assertFalse(more.isVisible());
-    }
 
     @Test(groups = {"wicketTests"})
     public void renderHead_1(){
