@@ -1,5 +1,6 @@
 package com.repeater;
 
+import com.repeater.navigator.TestPanel2;
 import junit.framework.Assert;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -36,14 +37,29 @@ public class RepeaterUtilTest {
          Assert.assertEquals(actual.trim(),expected.trim());
     }
 
+    /**
+     * check with testpanel
+     */
     @Test(groups = {"utilTests"})
-    public void getComponentTag(){
+    public void getComponentTag_1(){
         WicketTester tester=new WicketTester(createMockApplication()) ;
         TestPanel panel=new TestPanel("id");
              tester.startComponentInPage(panel);
         QuickView quick=   panel.getQuickView();
          ComponentTag tag= RepeaterUtil.get().getComponentTag(quick);
          Assert.assertEquals(tag.getName(),"div");
+    }
+    /**
+     * check with testpanel2
+     */
+    @Test(groups = {"utilTests"})
+    public void getComponentTag_2(){
+        WicketTester tester=new WicketTester(createMockApplication()) ;
+        TestPanel2 panel=new TestPanel2("id");
+        tester.startComponentInPage(panel);
+        QuickView quick=   panel.getQuickView();
+        ComponentTag tag= RepeaterUtil.get().getComponentTag(quick);
+        Assert.assertEquals(tag.getName(),"li");
     }
 
     @Test(groups = {"utilTests"})
@@ -82,18 +98,28 @@ public class RepeaterUtilTest {
         final String expected="removeItem('quick')";
         Assert.assertEquals(actual.trim(),expected.trim());
     }
+
+    /**
+     * integer overflow
+     */
     @Test(groups = {"utilTests"},expectedExceptions = IllegalArgumentException.class)
     public void safeLongToInt_1(){
         long val=  (long)Integer.MAX_VALUE+1l;
         RepeaterUtil.get().safeLongToInt(val);
     }
 
+    /**
+     * integer overflow
+     */
     @Test(groups = {"utilTests"} ,expectedExceptions = IllegalArgumentException.class)
     public void safeLongToInt_2(){
         long val= (long) Integer.MIN_VALUE-(long)1;
       RepeaterUtil.get().safeLongToInt(val);
     }
 
+    /**
+     * integer doesn't overflow
+     */
     @Test(groups = {"utilTests"})
     public void safeLongToInt_3(){
        int min= RepeaterUtil.get().safeLongToInt(Integer.MIN_VALUE);
