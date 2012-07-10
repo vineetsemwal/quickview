@@ -56,7 +56,7 @@ public class MoreLabelTest {
         ItemsNavigatorBase navigator=Mockito.mock(ItemsNavigatorBase.class);
         MoreLabel label=new MoreLabel("id",model,navigator)  ;
         AjaxEventBehavior behavior=label.newOnClickBehavior();
-        Assert.assertEquals(behavior.getEvent(), "click");
+        Assert.assertEquals(behavior.getEvent(), "onclick");
     }
     @Test(groups = {"wicketTests"})
     public void newOnClickBehavior_onclick(){
