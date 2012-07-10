@@ -16,12 +16,12 @@
  */
 package com.repeater.navigator;
 
-import com.repeater.IQuickView;
 import org.apache.log4j.Logger;
-import org.apache.wicket.markup.head.CssHeaderItem;
-import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+
+import com.repeater.IQuickView;
 
 
 /**
@@ -72,7 +72,7 @@ public class AjaxItemsNavigator extends ItemsNavigatorBase {
     @Override
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
-        response.render(CssHeaderItem.forReference(NavigatorCssReference.get()));
+        response.renderCSSReference(NavigatorCssReference.get());
     }
 
 }
