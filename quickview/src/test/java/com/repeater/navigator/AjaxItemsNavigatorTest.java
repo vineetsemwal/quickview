@@ -16,13 +16,12 @@
  */
 package com.repeater.navigator;
 
-import com.repeater.IQuickView;
-import com.repeater.QuickView;
-import com.repeater.QuickViewBase;
-import com.repeater.ReUse;
+import static org.mockito.Mockito.mock;
+
+import java.util.List;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.markup.head.CssHeaderItem;
-import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
@@ -31,9 +30,11 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import java.util.List;
 
-import static org.mockito.Mockito.mock;
+import com.repeater.IQuickView;
+import com.repeater.QuickView;
+import com.repeater.QuickViewBase;
+import com.repeater.ReUse;
 
 /**
  *
@@ -77,7 +78,7 @@ public class AjaxItemsNavigatorTest {
         final String id = "id";
         final int repeaterSize = 2;
         final int dataProviderSize = 12;
-       final long current=5,next=6 ,pages=7;
+       final int current=5,next=6 ,pages=7;
        IQuickView repeater=Mockito.mock(IQuickView.class);
        Mockito.when(repeater.getCurrentPage()).thenReturn(current);
        Mockito.when(repeater.getPageCount()).thenReturn(pages);
@@ -106,7 +107,7 @@ public class AjaxItemsNavigatorTest {
         final String id = "id";
         final int repeaterSize = 2;
         final int dataProviderSize = 12;
-        final long current=5,next=6 ,pages=6;
+        final int current=5,next=6 ,pages=6;
 
         IQuickView repeater=Mockito.mock(IQuickView.class);
         Mockito.when(repeater.getCurrentPage()).thenReturn(current);
@@ -136,7 +137,7 @@ public class AjaxItemsNavigatorTest {
         final String id = "id";
         final int repeaterSize = 2;
         final int dataProviderSize = 12;
-        final long current=7,next=6 ,pages=6;
+        final int current=7,next=6 ,pages=6;
 
         IQuickView repeater=Mockito.mock(IQuickView.class);
         Mockito.when(repeater.getCurrentPage()).thenReturn(current);
@@ -164,7 +165,7 @@ public class AjaxItemsNavigatorTest {
        AjaxItemsNavigator navigator=new AjaxItemsNavigator("id",repeater);
         IHeaderResponse response=Mockito.mock(IHeaderResponse.class);
         navigator.renderHead(response);
-        Mockito.verify(response,Mockito.times(1)).render(CssHeaderItem.forReference(NavigatorCssReference.get()));
+        Mockito.verify(response,Mockito.times(1)).renderCSSReference(NavigatorCssReference.get());
     }
 
     /**

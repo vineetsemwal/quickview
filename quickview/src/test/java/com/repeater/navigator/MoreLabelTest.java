@@ -56,7 +56,7 @@ public class MoreLabelTest {
         ItemsNavigatorBase navigator=Mockito.mock(ItemsNavigatorBase.class);
         MoreLabel label=new MoreLabel("id",model,navigator)  ;
         AjaxEventBehavior behavior=label.newOnClickBehavior();
-        Assert.assertEquals(behavior.getEvent(), "click");
+        Assert.assertEquals(behavior.getEvent(), "onclick");
     }
     @Test(groups = {"wicketTests"})
     public void newOnClickBehavior_onclick(){
@@ -82,7 +82,7 @@ public class MoreLabelTest {
     @Test(groups = {"wicketTests"})
     public void onConfigure_1() {
         final String id = "id";
-        final long currentpage = 2,pages = 4;
+        final int currentpage = 2,pages = 4;
         ItemsNavigatorBase navigator = Mockito.mock(ItemsNavigatorBase.class);
         IQuickView repeater = mock(IQuickView.class);
         Mockito.when(repeater.getCurrentPage()).thenReturn(currentpage);
@@ -101,7 +101,7 @@ public class MoreLabelTest {
     @Test(groups = {"wicketTests"})
     public void onConfigure_2() {
         final String id = "id";
-        final long currentpage = 3,pages = 4;
+        final int currentpage = 3,pages = 4;
         ItemsNavigatorBase navigator = Mockito.mock(ItemsNavigatorBase.class);
         IQuickView repeater = mock(IQuickView.class);
         Mockito.when(repeater.getCurrentPage()).thenReturn(currentpage);
@@ -120,7 +120,7 @@ public class MoreLabelTest {
     @Test(groups = {"wicketTests"})
     public void onConfigure_3() {
         final String id = "id";
-        final long currentpage = 4,pages = 4;
+        final int currentpage = 4,pages = 4;
         ItemsNavigatorBase navigator = Mockito.mock(ItemsNavigatorBase.class);
         IQuickView repeater = mock(IQuickView.class);
         Mockito.when(repeater.getCurrentPage()).thenReturn(currentpage);
@@ -138,7 +138,7 @@ public class MoreLabelTest {
     @Test(groups = {"wicketTests"})
     public void onConfigure_4() {
         final String id = "id";
-        final long currentpage = 5,pages = 4;
+        final int currentpage = 5,pages = 4;
         ItemsNavigatorBase navigator = Mockito.mock(ItemsNavigatorBase.class);
         IQuickView repeater = mock(IQuickView.class);
         Mockito.when(repeater.getCurrentPage()).thenReturn(currentpage);

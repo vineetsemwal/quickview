@@ -17,12 +17,18 @@
 package com.repeater;
 
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.Item;
@@ -34,13 +40,6 @@ import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * @author Vineet Semwal
@@ -572,9 +571,9 @@ public class QuickViewTest {
         IDataProvider dataProvider = Mockito.mock(IDataProvider.class);
         final TestObj to = Mockito.mock(TestObj.class);
         final AjaxRequestTarget target = Mockito.mock(AjaxRequestTarget.class);
-        final long page = 2l;
+        final int page = 2;
         Iterator it = mockIterator();
-        long start = itemsPerRequest * page;
+        int start = itemsPerRequest * page;
         Mockito.when(dataProvider.iterator(start, itemsPerRequest)).thenReturn(it);
         Mockito.when(it.hasNext()).thenReturn(true).thenReturn(true).thenReturn(false);
         QuickView<TestObj> repeater = new QuickView<TestObj>("repeater", dataProvider, ReUse.DEFAULT_ROWSNAVIGATOR, itemsPerRequest) {
@@ -600,7 +599,7 @@ public class QuickViewTest {
             }
 
             @Override
-            public List<Item<TestObj>> addComponentsFromIndex(long index) {
+            public List<Item<TestObj>> addComponentsFromIndex(int index) {
                 return null;
             }
         };
@@ -1007,7 +1006,7 @@ public class QuickViewTest {
             }
 
             @Override
-            protected void createChildren(long page) {
+            protected void createChildren(int page) {
             }
 
             @Override
@@ -1021,7 +1020,7 @@ public class QuickViewTest {
             }
 
             @Override
-            public long _getCurrentPage() {
+            public int _getCurrentPage() {
                 return 2;
             }
         };
@@ -1053,7 +1052,7 @@ public class QuickViewTest {
             }
 
             @Override
-            protected void createChildren(long page) {
+            protected void createChildren(int page) {
             }
 
             @Override
@@ -1067,7 +1066,7 @@ public class QuickViewTest {
             }
 
             @Override
-            public long _getCurrentPage() {
+            public int _getCurrentPage() {
                 return 2;
             }
         };
@@ -1103,7 +1102,7 @@ public class QuickViewTest {
             }
 
             @Override
-            protected void createChildren(long page) {
+            protected void createChildren(int page) {
             }
 
             @Override
@@ -1117,7 +1116,7 @@ public class QuickViewTest {
             }
 
             @Override
-            public long _getCurrentPage() {
+            public int _getCurrentPage() {
                 return 2;
             }
         };
@@ -1149,7 +1148,7 @@ public class QuickViewTest {
             }
 
             @Override
-            protected void createChildren(long page) {
+            protected void createChildren(int page) {
             }
 
             @Override
@@ -1162,7 +1161,7 @@ public class QuickViewTest {
             }
 
             @Override
-            public long _getCurrentPage() {
+            public int _getCurrentPage() {
                 return 2;
             }
         };
@@ -1193,7 +1192,7 @@ public class QuickViewTest {
             }
 
             @Override
-            protected void createChildren(long page) {
+            protected void createChildren(int page) {
             }
 
             @Override
@@ -1206,7 +1205,7 @@ public class QuickViewTest {
             }
 
             @Override
-            public long _getCurrentPage() {
+            public int _getCurrentPage() {
                 return 2;
             }
 
@@ -1217,7 +1216,7 @@ public class QuickViewTest {
 
 
             @Override
-            public long _getPageCount() {
+            public int _getPageCount() {
                 return 6;    //To change body of overridden methods use File | Settings | File Templates.
             }
         };
@@ -1249,7 +1248,7 @@ public class QuickViewTest {
             }
 
             @Override
-            protected void createChildren(long page) {
+            protected void createChildren(int page) {
             }
 
             @Override
@@ -1262,7 +1261,7 @@ public class QuickViewTest {
             }
 
             @Override
-            public long _getCurrentPage() {
+            public int _getCurrentPage() {
                 return 2;
             }
 
@@ -1273,7 +1272,7 @@ public class QuickViewTest {
 
 
             @Override
-            public long _getPageCount() {
+            public int _getPageCount() {
                 return 6;    //To change body of overridden methods use File | Settings | File Templates.
             }
         };
@@ -1283,7 +1282,7 @@ public class QuickViewTest {
         Mockito.verify(spy, Mockito.times(1)).simpleRemoveAllIfNotReuse();
         Mockito.verify(spy, Mockito.never()).removePages(0, 1);
         Mockito.verify(spy, Mockito.never()).removePages(3, 5);
-        Mockito.verify(spy, Mockito.never()).createChildren(Mockito.anyLong());
+        Mockito.verify(spy, Mockito.never()).createChildren(Mockito.anyInt());
 
     }
 
@@ -1294,7 +1293,7 @@ public class QuickViewTest {
     public void getPageCount_1() {
         final int itemsperrequest = 2;
         IDataProvider provider = Mockito.mock(IDataProvider.class);
-        Mockito.when(provider.size()).thenReturn(10l);
+        Mockito.when(provider.size()).thenReturn(10);
         QuickView repeater = new QuickView("repeater", provider, itemsperrequest) {
             @Override
             protected void populate(Item item) {
@@ -1313,7 +1312,7 @@ public class QuickViewTest {
     public void getPageCount_2() {
         final int itemsperrequest = 3;
         IDataProvider provider = Mockito.mock(IDataProvider.class);
-        Mockito.when(provider.size()).thenReturn(10l);
+        Mockito.when(provider.size()).thenReturn(10);
         QuickView repeater = new QuickView("repeater", provider, itemsperrequest) {
             @Override
             protected void populate(Item item) {
@@ -1329,7 +1328,7 @@ public class QuickViewTest {
     public void getItemsCount_1() {
         final int itemsPerRequest = 3;
         IDataProvider provider = Mockito.mock(IDataProvider.class);
-        Mockito.when(provider.size()).thenReturn(10l);
+        Mockito.when(provider.size()).thenReturn(10);
         QuickView repeater = new QuickView("repeater", provider, itemsPerRequest) {
             @Override
             protected void populate(Item item) {
@@ -1347,7 +1346,7 @@ public class QuickViewTest {
     public void getRowsCount_1() {
         final int itemsPerRequest = 3;
         IDataProvider provider = Mockito.mock(IDataProvider.class);
-        Mockito.when(provider.size()).thenReturn(10l);
+        Mockito.when(provider.size()).thenReturn(10);
         QuickView repeater = new QuickView("repeater", provider, itemsPerRequest) {
             @Override
             protected void populate(Item item) {
@@ -1370,7 +1369,7 @@ public class QuickViewTest {
     public void getRowsCount_2() {
         final int itemsPerRequest = 3;
         IDataProvider provider = Mockito.mock(IDataProvider.class);
-        Mockito.when(provider.size()).thenReturn(10l);
+        Mockito.when(provider.size()).thenReturn(10);
         QuickView repeater = new QuickView("repeater", provider, itemsPerRequest) {
             @Override
             protected void populate(Item item) {
@@ -1394,7 +1393,7 @@ public class QuickViewTest {
     public void setItemsPerRequest_1() {
         final int itemsPerRequest = 3;
         IDataProvider provider = Mockito.mock(IDataProvider.class);
-        Mockito.when(provider.size()).thenReturn(10l);
+        Mockito.when(provider.size()).thenReturn(10);
         QuickView repeater = new QuickView("repeater", provider) {
             @Override
             protected void populate(Item item) {
@@ -1417,7 +1416,7 @@ public class QuickViewTest {
     public void setItemsPerRequest_2() {
         final int itemsPerRequest = -1;
         IDataProvider provider = Mockito.mock(IDataProvider.class);
-        Mockito.when(provider.size()).thenReturn(10l);
+        Mockito.when(provider.size()).thenReturn(10);
         QuickView repeater = new QuickView("repeater", provider) {
             @Override
             protected void populate(Item item) {
@@ -1642,7 +1641,7 @@ public class QuickViewTest {
         };
         IHeaderResponse response = Mockito.mock(IHeaderResponse.class);
         quick.renderHead(response);
-        Mockito.verify(response, Mockito.times(1)).render(JavaScriptHeaderItem.forReference(RepeaterUtilReference.get()));
+        Mockito.verify(response, Mockito.times(1)).renderJavaScriptReference(RepeaterUtilReference.get());
     }
     /*
 @Test(groups = {"wicketTests"})
@@ -1755,7 +1754,7 @@ public void childVisitor_1(){
         return it;
     }
 
-    public IDataProvider<TestObj> mockProvider(long size) {
+    public IDataProvider<TestObj> mockProvider(int size) {
         IDataProvider<TestObj> dp = mock(IDataProvider.class);
         when(dp.size()).thenReturn(size);
         return dp;

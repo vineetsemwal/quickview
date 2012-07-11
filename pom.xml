@@ -39,7 +39,7 @@ Copyright 2012 Vineet Semwal
 		</license>
 	</licenses>
 	<properties>
-		<wicket.version>6.0.0-beta2</wicket.version>
+		<wicket.version>1.5.7</wicket.version>
 		<jetty.version>7.6.3.v20120416</jetty.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>

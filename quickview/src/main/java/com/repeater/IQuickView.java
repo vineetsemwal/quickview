@@ -16,22 +16,21 @@
  */
 package com.repeater;
 
-import org.apache.wicket.Component;
+import java.util.List;
+
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.html.navigation.paging.IPageable;
 import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.request.component.IRequestableComponent;
-
-import java.util.List;
 
 /**
  * @author Vineet Semwal
- *
+ * 
  */
 
-public interface IQuickView<T> extends IPageable{
-    ReUse getReuse();
-    MarkupContainer getParent();
-    public List<Item<T>> addComponentsForPage(final long page);
-    }
+public interface IQuickView<T> extends IPageable {
+	ReUse getReuse();
 
+	MarkupContainer getParent();
+
+	public List<Item<T>> addComponentsForPage(final int page);
+}

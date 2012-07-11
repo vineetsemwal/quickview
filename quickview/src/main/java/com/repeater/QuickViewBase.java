@@ -15,22 +15,21 @@
  limitations under the License.
  */
 package com.repeater;
-import org.apache.wicket.Component;
-import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.repeater.RepeatingView;
-import org.apache.wicket.markup.repeater.data.IDataProvider;
-import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.visit.IVisit;
-import org.apache.wicket.util.visit.IVisitor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+
+import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.RepeatingView;
+import org.apache.wicket.markup.repeater.data.IDataProvider;
+import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.visit.IVisit;
+import org.apache.wicket.util.visit.IVisitor;
 
 /**
  * base class for {@link QuickView}
@@ -88,7 +87,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         _setCurrentPage(0);
     }
 
-    private transient long itemsCount=-1;
+    private transient int itemsCount=-1;
 
 
     private IDataProvider<T> dataProvider;
@@ -129,7 +128,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
        return RepeaterUtil.get();
     }
 
-    private long currentPage;
+    private int currentPage;
 
 
     /**
@@ -217,7 +216,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         clearCachedItemCount();
         reuseNotInitialized();
         simpleRemoveAllIfNotReuse();
-        long current=_getCurrentPage();
+        int current=_getCurrentPage();
         if (size() == 0) {
 
              // all children might have got removed ,if true then create children of last page
@@ -297,8 +296,8 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      *
      * @param page
      */
-    protected void createChildren(long page) {
-        long items = page * getItemsPerRequest();
+    protected void createChildren(int page) {
+        int items = page * getItemsPerRequest();
         Iterator<? extends T> iterator = getDataProvider().iterator(items, getItemsPerRequest());
         for (long i = items; iterator.hasNext(); i++) {
             T obj = iterator.next();
@@ -310,10 +309,10 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     @Override
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
-         response.render(JavaScriptHeaderItem.forReference( RepeaterUtilReference.get()));
+        response.renderJavaScriptReference(RepeaterUtilReference.get());
          }
 
-    public final long getItemsCount(){
+    public final int getItemsCount(){
         if(itemsCount>=0){
             return itemsCount;
         }
@@ -326,7 +325,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         itemsCount= -1;
     }
 
-    public long getRowsCount(){
+    public int getRowsCount(){
         if(!isVisibleInHierarchy()){
             return 0;
         }
@@ -341,7 +340,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      */
 
     @Override
-    public final long getPageCount() {
+    public final int getPageCount() {
         return _getPageCount();
     }
 
@@ -350,10 +349,10 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      *
      * @return number of pages
      */
-    protected long _getPageCount() {
-        long total = getRowsCount();
+    protected int _getPageCount() {
+        int total = getRowsCount();
 
-        long count = total / itemsPerRequest;
+        int count = total / itemsPerRequest;
         if ((itemsPerRequest * count) < total) {
             count++;
         }
@@ -367,25 +366,25 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      */
 
     @Override
-    public final long getCurrentPage() {
-      return   _getCurrentPage();
+    public final int getCurrentPage() {
+      return  _getCurrentPage();
     }
 
     /**
      * don't override,it's for internal use
      *
      */
-    protected  long _getCurrentPage() {
-        long page = currentPage;
+    protected  int _getCurrentPage() {
+        int page = currentPage;
 
         /*
         * trim current page if its out of bounds this can happen if items are added/deleted between
         * requests
         */
 
-        final long count=_getPageCount();
+        final int count=_getPageCount();
         if (page > 0 && page >= count) {
-            page = Math.max(count - 1, 0);
+            page = ((count - 1) >= 0) ? (count - 1) : 0;
             currentPage = page;
             return page;
         }
@@ -396,7 +395,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      * @see org.apache.wicket.markup.html.navigation.paging.IPageable#setCurrentPage(long)
      */
 
-    public final void setCurrentPage(long page) {
+    public final void setCurrentPage(int page) {
         _setCurrentPage(page);
     }
 
@@ -404,7 +403,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      * don't override,it's for internal use
      *
      */
-    protected void _setCurrentPage(long page) {
+    protected void _setCurrentPage(int page) {
         if (currentPage != page) {
             if (isVersioned()) {
                 addStateChange();
@@ -415,7 +414,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     }
 
     public AjaxRequestTarget getAjaxRequestTarget() {
-        return RequestCycle.get().find(AjaxRequestTarget.class);
+    	return AjaxRequestTarget.get();
     }
 
 
@@ -519,8 +518,8 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      * @return   list of components created
      */
     @Override
-    public List<Item<T>> addComponentsForPage(final long page) {
-        long newIndex=page* getItemsPerRequest();
+    public List<Item<T>> addComponentsForPage(final int page) {
+        int newIndex=page* getItemsPerRequest();
         return addComponentsFromIndex(newIndex);
     }
     /**
@@ -531,10 +530,10 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      */
 
 
-    public List<Item<T>> addComponentsFromIndex(final long index) {
+    public List<Item<T>> addComponentsFromIndex(final int index) {
         clearCachedItemCount();
         simpleRemoveAllIfNotReuse();
-        long newIndex=index;
+        int newIndex=index;
         Iterator<? extends T> iterator = getDataProvider().iterator(newIndex, getItemsPerRequest());
         List<Item<T>> components = new ArrayList<Item<T>>();
         // long i = newIndex;

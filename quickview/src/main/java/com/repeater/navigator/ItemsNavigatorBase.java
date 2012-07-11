@@ -16,8 +16,9 @@
  */
 package com.repeater.navigator;
 
-import com.repeater.IQuickView;
-import com.repeater.ReUse;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -29,8 +30,8 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.repeater.IQuickView;
+import com.repeater.ReUse;
 
 /**
  * base navigator which is inherited by {@link  AjaxItemsNavigator}
@@ -120,11 +121,11 @@ public abstract class ItemsNavigatorBase extends Panel {
     public List<Item> onStatefulEvent() {
         AjaxRequestTarget target = getAjaxRequestTarget();
         List<Item> list = new ArrayList<Item>();
-        long current = getRepeater().getCurrentPage();
+        int current = getRepeater().getCurrentPage();
 
          // page for which new items have to created
 
-        long next = current + 1;
+        int next = current + 1;
         if (next < getRepeater().getPageCount()) {
             list = getRepeater().addComponentsForPage(next);
             getRepeater().setCurrentPage(next);
@@ -134,7 +135,7 @@ public abstract class ItemsNavigatorBase extends Panel {
     }
 
     public AjaxRequestTarget getAjaxRequestTarget() {
-        return getRequestCycle().find(AjaxRequestTarget.class);
+        return AjaxRequestTarget.get();
     }
 
 
