@@ -28,7 +28,6 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,22 +62,22 @@ public abstract class ItemsNavigatorBase extends Panel {
 
     private Component more;
 
-    protected boolean properInitializationCheckDone =false;
+    protected boolean properInitializationCheckDone = false;
 
     /**
      * don't override this,for internal use only
      */
     protected boolean isProperInitializationCheckDone() {
-         return properInitializationCheckDone;
+        return properInitializationCheckDone;
     }
 
     /**
      * don't override this,for internal use only
      */
-    protected  void doProperInitializationCheck(){
-        if(!properInitializationCheckDone)
-        {repeaterNotProperlyInitializedForItemsNavigation(repeater);
-            properInitializationCheckDone =true;
+    protected void doProperInitializationCheck() {
+        if (!properInitializationCheckDone) {
+            repeaterNotProperlyInitializedForItemsNavigation(repeater);
+            properInitializationCheckDone = true;
         }
     }
 
@@ -103,13 +102,12 @@ public abstract class ItemsNavigatorBase extends Panel {
     @Override
     protected void onBeforeRender() {
         super.onBeforeRender();
-       doProperInitializationCheck();
+        doProperInitializationCheck();
     }
 
     /**
-     *
      * checks if quickview is properly initialized for items navigation
-     *
+     * <p/>
      * don't override,it's for internal use
      */
     protected void repeaterNotProperlyInitializedForItemsNavigation(IQuickView quickView) {
