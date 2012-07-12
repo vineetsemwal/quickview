@@ -29,8 +29,10 @@ import org.apache.wicket.markup.repeater.data.IDataProvider;
  *
  * for {@link com.repeater.navigator.AjaxItemsNavigator} {@link ReUse.DEFAULT_ROWSNAVIGATOR} is preferred
  *
- * add it to a Markupcontainer to use with {@link com.repeater.navigator.AjaxItemsNavigator}  or if you want to add new rows
- * using an ajax acomponent
+ * add quickview to a Markupcontainer to use with {@link com.repeater.navigator.AjaxItemsNavigator}  or if you want to add new rows
+ * using an ajax acomponent ,the markupcontainer should have only one child and that should be quickview for items/rows navigation
+ *
+ *
  */
 public abstract class QuickView<T> extends QuickViewBase<T> {
 
@@ -70,6 +72,5 @@ public abstract class QuickView<T> extends QuickViewBase<T> {
     public QuickView(String id, IDataProvider<T> dataProvider, int itemsPerRequest) {
         super(id, dataProvider, ReUse.NOT_INITIALIZED);
         setItemsPerRequest(itemsPerRequest);
-
     }
 }

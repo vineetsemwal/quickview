@@ -32,6 +32,6 @@ import java.util.List;
 public interface IQuickView<T> extends IPageable{
     ReUse getReuse();
     MarkupContainer getParent();
-    public List<Item<T>> addComponentsForPage(final long page);
+    List<Item<T>> addComponentsForPage(final long page);
     }
 
