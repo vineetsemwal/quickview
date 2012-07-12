@@ -26,57 +26,54 @@ import org.apache.wicket.markup.ComponentTag;
  */
 public interface IRepeaterUtil {
     /**
-     *    insertBefore js call
+     * insertBefore js call
      *
-     * @param tag       repeater tag
-     * @param id        repeater markupid
-     * @param parentId    parent markupid
-     * @return    insertBefore call of js
-     */
-    public String insertBefore(String tag, String id, String parentId);
-
-    /**
-     *  insertBefore js call for the repeeater and parent passed
-     *
-     * @param component     repeater
-     * @param parent parent to which repeater is added
-     * @return    insertBefore call of js
-     */
-    public String insertBefore(MarkupContainer component, MarkupContainer parent);
-
-    /**
-     *
-     * @param tag    repeater tag
-     * @param id      repeater markupid
+     * @param tag      repeater tag
+     * @param id       repeater markupid
      * @param parentId parent markupid
-     * @return   insertAfter call of js
+     * @return insertBefore call of js
      */
-    public String insertAfter(String tag, String id, String parentId);
+    String insertBefore(String tag, String id, String parentId);
+
+    /**
+     * insertBefore js call for the repeeater and parent passed
+     *
+     * @param component repeater
+     * @param parent    parent to which repeater is added
+     * @return insertBefore call of js
+     */
+    String insertBefore(MarkupContainer component, MarkupContainer parent);
+
+    /**
+     * @param tag      repeater tag
+     * @param id       repeater markupid
+     * @param parentId parent markupid
+     * @return insertAfter call of js
+     */
+    String insertAfter(String tag, String id, String parentId);
 
     /**
      * finds {@link ComponentTag} of the component passed
      *
      * @param c component whose componenttag has to be found
-     *
-     * @return  {@link ComponentTag}
+     * @return {@link ComponentTag}
      */
-    public ComponentTag getComponentTag(Component c);
+    ComponentTag getComponentTag(Component c);
 
     /**
-     *
      * @param c      repeater
-     * @param parent   parent
-     * @return   insertAfter js call
+     * @param parent parent
+     * @return insertAfter js call
      */
-    public String insertAfter(MarkupContainer c, MarkupContainer parent);
+    String insertAfter(MarkupContainer c, MarkupContainer parent);
 
     /**
      * removes js call for item whose markupid is passed
      *
-     * @param id   markupid of the element which needs to be removed
-     * @return        remove js call
+     * @param id markupid of the element which needs to be removed
+     * @return remove js call
      */
-    public String removeItem(String id);
+    String removeItem(String id);
 
     /**
      * removes js call for component which is provided
@@ -84,14 +81,39 @@ public interface IRepeaterUtil {
      * @param component
      * @return remove js call
      */
-    public String removeItem(Component component);
+    String removeItem(Component component);
 
     /**
      * safely converts long to int
      *
      * @param l
-     * @return  int value for long passed
+     * @return int value for long passed
      */
-    public int safeLongToInt(long l);
+    int safeLongToInt(long l);
 
+
+    /**
+     * throws exception if no suitable unary parent is found,unary parent is one which only has one child
+     * @param repeater
+     */
+    void parentNotSuitable(IQuickView repeater);
+
+    /**
+     * throws exception if reuse strategy is not supported  for items navigation
+     * @param repeater
+     */
+    void reuseStategyNotSupportedForItemsNavigation(IQuickView repeater);
+
+    /**
+     *  throws exception if outmarkupid of parent is not set true and outputMarkupPlaceholderTag is not set true
+     *
+     * @param repeater
+     */
+    void outPutMarkupIdNotTrue(IQuickView repeater);
+
+    /**
+     * ruse nt initialized or initialized with {@link ReUse.NOT_INITIALIZED}
+     * @param repeater
+     */
+    void reuseNotInitialized(IQuickView repeater);
 }
