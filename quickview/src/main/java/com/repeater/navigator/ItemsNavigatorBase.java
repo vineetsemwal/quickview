@@ -17,11 +17,11 @@
 package com.repeater.navigator;
 
 import com.repeater.IQuickView;
-import com.repeater.ReUse;
+import com.repeater.IRepeaterUtil;
+import com.repeater.RepeaterUtil;
 import org.apache.log4j.Logger;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
-import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
@@ -45,6 +45,10 @@ public abstract class ItemsNavigatorBase extends Panel {
         return repeater;
     }
 
+    public IRepeaterUtil getRepeaterUtil() {
+        return RepeaterUtil.get();
+    }
+
     private static Logger logger = Logger.getLogger(ItemsNavigatorBase.class);
 
     private String cssClass;
@@ -59,6 +63,24 @@ public abstract class ItemsNavigatorBase extends Panel {
 
     private Component more;
 
+    protected boolean properInitializationCheckDone =false;
+
+    /**
+     * don't override this,for internal use only
+     */
+    protected boolean isProperInitializationCheckDone() {
+         return properInitializationCheckDone;
+    }
+
+    /**
+     * don't override this,for internal use only
+     */
+    protected  void doProperInitializationCheck(){
+        if(!properInitializationCheckDone)
+        {repeaterNotProperlyInitializedForItemsNavigation(repeater);
+            properInitializationCheckDone =true;
+        }
+    }
 
     public ItemsNavigatorBase(String id, IModel model, IQuickView repeater) {
         super(id, model);
@@ -67,24 +89,6 @@ public abstract class ItemsNavigatorBase extends Panel {
         this.repeater = repeater;
     }
 
-    private void parentNotNull(IQuickView repeater) {
-        if (repeater.getParent() == null) {
-            throw new QuickViewNotAddedToParentException("parent is null , add quickview to a markupcontainer");
-        }
-    }
-
-    private void outPutMarkupIdNotTrue(IQuickView repeater) {
-        MarkupContainer container = repeater.getParent();
-        if (container.getOutputMarkupId() == false && container.getOutputMarkupPlaceholderTag() == false) {
-            throw new OutputMarkupIdNotTrueException("parent doesn't have setOutputMarkupId to true");
-        }
-    }
-
-    private void reuseStategyNotSupported(IQuickView repeater) {
-        if (ReUse.DEFAULT_PAGING == repeater.getReuse()) {
-            throw new ReuseStrategyNotSupportedException(ReUse.DEFAULT_PAGING + "this reuse stategy is not supported for rowsnavigator ");
-        }
-    }
 
     @Override
     protected void onInitialize() {
@@ -99,11 +103,20 @@ public abstract class ItemsNavigatorBase extends Panel {
     @Override
     protected void onBeforeRender() {
         super.onBeforeRender();
-        parentNotNull(repeater);
-        outPutMarkupIdNotTrue(repeater);
-        reuseStategyNotSupported(repeater);
+       doProperInitializationCheck();
     }
 
+    /**
+     *
+     * checks if quickview is properly initialized for items navigation
+     *
+     * don't override,it's for internal use
+     */
+    protected void repeaterNotProperlyInitializedForItemsNavigation(IQuickView quickView) {
+        getRepeaterUtil().reuseStategyNotSupportedForItemsNavigation(repeater);
+        getRepeaterUtil().parentNotSuitable(repeater);
+        getRepeaterUtil().outPutMarkupIdNotTrue(repeater);
+    }
 
     public abstract Component newMore();
 
@@ -122,7 +135,7 @@ public abstract class ItemsNavigatorBase extends Panel {
         List<Item> list = new ArrayList<Item>();
         long current = getRepeater().getCurrentPage();
 
-         // page for which new items have to created
+        // page for which new items have to created
 
         long next = current + 1;
         if (next < getRepeater().getPageCount()) {
@@ -135,25 +148,6 @@ public abstract class ItemsNavigatorBase extends Panel {
 
     public AjaxRequestTarget getAjaxRequestTarget() {
         return getRequestCycle().find(AjaxRequestTarget.class);
-    }
-
-
-    public static class QuickViewNotAddedToParentException extends RuntimeException {
-        public QuickViewNotAddedToParentException(String message) {
-            super(message);
-        }
-    }
-
-    public static class OutputMarkupIdNotTrueException extends RuntimeException {
-        public OutputMarkupIdNotTrueException(String message) {
-            super(message);
-        }
-    }
-
-    public static class ReuseStrategyNotSupportedException extends RuntimeException {
-        public ReuseStrategyNotSupportedException(String message) {
-            super(message);
-        }
     }
 
 }
