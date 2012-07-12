@@ -23,7 +23,6 @@ Copyright 2012 Vineet Semwal
 	<artifactId>quickview-parent</artifactId>
 	<packaging>pom</packaging>
 	<version>1.0-SNAPSHOT</version>
-	
 	<name>quickview parent</name>
 	<description>with quickview you can quickly add/remove new rows using ajax component without the need to re render the whole of it,it also works well with pagingnavigator/ajaxpagingnavigator</description>
         <modules>

@@ -25,18 +25,18 @@ public enum ReUse {
 
     /**
      * all children are removed and children of last page visited are created ,used for paging say with {@link org.apache.wicket.markup.html.navigation.paging.PagingNavigator} or
-     * {@link org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigator}
+     * {@link org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigator}  ,this is the prefered strategy for paging navigation
      */
  DEFAULT_PAGING,
 
     /**
      * all children are removed and children of first page are created again ,mostly used and preferred for {@link com.repeater.navigator.AjaxItemsNavigator}
      */
-    DEFAULT_ROWSNAVIGATOR,
+    DEFAULT_ITEMSNAVIGATION,
 
 
     /**
-     * reuse the current page visited children ,all else are removed
+     * reuse the current page visited children ,all else are removed  ,used with pagingnavigator ,not supported in Items or rows navigation
      */
   CURRENTPAGE,
 

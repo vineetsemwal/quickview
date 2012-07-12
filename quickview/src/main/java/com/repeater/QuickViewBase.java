@@ -124,7 +124,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         this.reuse = reuse;
     }
 
-    public IRepeaterUtil getRepeaterUtil() {
+    protected IRepeaterUtil getRepeaterUtil() {
        return RepeaterUtil.get();
     }
 
@@ -204,17 +204,13 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         return super.removeAll();
     }
 
-    public void reuseNotInitialized(){
-        if (ReUse.NOT_INITIALIZED == reuse) {
-            throw new RuntimeException("reuse strategy is not set or you have set  ReUse.NOT_INITIALIZED ");
-        }
-    }
 
     @Override
     protected void onPopulate() {
         super.onPopulate();
         clearCachedItemCount();
-        reuseNotInitialized();
+       getRepeaterUtil().reuseNotInitialized(this);
+       getRepeaterUtil().parentNotSuitable(this);
         simpleRemoveAllIfNotReuse();
         int current=_getCurrentPage();
         if (size() == 0) {
@@ -229,7 +225,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
 
              //   not first render but items were removed
 
-            if ((ReUse.DEFAULT_ROWSNAVIGATOR == reuse) )  {
+            if ((ReUse.DEFAULT_ITEMSNAVIGATION == reuse) )  {
                 createChildren(0);
                 _setCurrentPage(0);
             }
@@ -595,7 +591,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      * removes all children if reuse is not true
      */
     public void simpleRemoveAllIfNotReuse() {
-        if (reuse == ReUse.DEFAULT_PAGING || reuse == ReUse.DEFAULT_ROWSNAVIGATOR) {
+        if (reuse == ReUse.DEFAULT_PAGING || reuse == ReUse.DEFAULT_ITEMSNAVIGATION) {
             simpleRemoveAll();
         }
     }

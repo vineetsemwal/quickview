@@ -16,11 +16,10 @@
  */
 package com.repeater;
 
-import java.util.List;
-
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.html.navigation.paging.IPageable;
 import org.apache.wicket.markup.repeater.Item;
+import java.util.List;
 
 /**
  * @author Vineet Semwal
@@ -32,5 +31,5 @@ public interface IQuickView<T> extends IPageable {
 
 	MarkupContainer getParent();
 
-	public List<Item<T>> addComponentsForPage(final int page);
+	List<Item<T>> addComponentsForPage(final int page);
 }

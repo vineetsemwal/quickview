@@ -18,6 +18,7 @@ package com.repeater;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.Page;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
@@ -79,7 +80,7 @@ public class RepeaterUtil implements  IRepeaterUtil{
      */
     @Override
     public String insertAfter(MarkupContainer c, MarkupContainer parent) {
-      return insertAfter(getComponentTag(c).getName(), c.getMarkupId(), parent.getMarkupId());
+        return insertAfter(getComponentTag(c).getName(), c.getMarkupId(), parent.getMarkupId());
     }
 
     /**
@@ -110,4 +111,91 @@ public class RepeaterUtil implements  IRepeaterUtil{
         }
         return (int) value;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final void parentNotSuitable(IQuickView quickView) {
+        Args.notNull(quickView,"quickview") ;
+        if (quickView.getReuse() == ReUse.DEFAULT_PAGING || quickView.getReuse() == ReUse.CURRENTPAGE) {
+            return;
+        }
+        MarkupContainer parent = quickView.getParent();
+        if (parent == null) {
+            throw new QuickViewNotAddedToParentException("add quickview to a markupcontainer");
+        }
+        if (parent instanceof Page) {
+            throw new QuickViewNotAddedToParentException("add quickview to a markupcontainer");
+        }
+        if (parent.size() > 1) {
+            throw new ParentNotUnaryException("the markupcontainer to which quickview is attached should have quickview as its only child");
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final void outPutMarkupIdNotTrue(IQuickView quickView) {
+        Args.notNull(quickView,"quickview") ;
+        MarkupContainer container = quickView.getParent();
+        if (container.getOutputMarkupId() == false && container.getOutputMarkupPlaceholderTag() == false) {
+            throw new OutputMarkupIdNotTrueException("parent doesn't have setOutputMarkupId to true");
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final void reuseNotInitialized(IQuickView quickView) {
+        Args.notNull(quickView,"quickview") ;
+        if (ReUse.NOT_INITIALIZED == quickView.getReuse()) {
+            throw new ReuseNotInitializedException("reuse strategy is not set or you have set  ReUse.NOT_INITIALIZED ");
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final void reuseStategyNotSupportedForItemsNavigation(IQuickView quickView) {
+        Args.notNull(quickView,"quickview") ;
+        reuseNotInitialized(quickView);
+        if (ReUse.DEFAULT_PAGING == quickView.getReuse() || ReUse.CURRENTPAGE==quickView.getReuse()) {
+            throw new ReuseStrategyNotSupportedException(ReUse.DEFAULT_PAGING + " stategy is not supported for itemsnavigator ");
+        }
+    }
+
+
+    public static class QuickViewNotAddedToParentException extends RuntimeException {
+        public QuickViewNotAddedToParentException(String message) {
+            super(message);
+        }
+    }
+
+    public static class OutputMarkupIdNotTrueException extends RuntimeException {
+        public OutputMarkupIdNotTrueException(String message) {
+            super(message);
+        }
+    }
+
+    public static class ReuseStrategyNotSupportedException extends RuntimeException {
+        public ReuseStrategyNotSupportedException(String message) {
+            super(message);
+        }
+    }
+
+    public static class ParentNotUnaryException extends RuntimeException {
+        public ParentNotUnaryException(String message) {
+            super(message);
+        }
+    }
+
+    public static class ReuseNotInitializedException extends RuntimeException {
+        public ReuseNotInitializedException(String message) {
+            super(message);
+        }
+    }
+
 }

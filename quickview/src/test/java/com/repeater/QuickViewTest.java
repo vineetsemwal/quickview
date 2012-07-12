@@ -69,7 +69,7 @@ public class QuickViewTest {
         int oneBlock = 2;
         final String repeaterId = "repeater";
         IDataProvider<TestObj> provider = mockProvider(oneBlock);
-        QuickView<TestObj> repeater = new QuickView<TestObj>(repeaterId, provider, ReUse.DEFAULT_ROWSNAVIGATOR, oneBlock) {
+        QuickView<TestObj> repeater = new QuickView<TestObj>(repeaterId, provider, ReUse.DEFAULT_ITEMSNAVIGATION, oneBlock) {
 
             @Override
             protected void populate(Item<TestObj> item) {
@@ -77,7 +77,7 @@ public class QuickViewTest {
 
         };
         repeater.setMarkupId("con");
-        Assert.assertEquals(ReUse.DEFAULT_ROWSNAVIGATOR, repeater.getReuse());
+        Assert.assertEquals(ReUse.DEFAULT_ITEMSNAVIGATION, repeater.getReuse());
         Assert.assertEquals(repeater.getDataProvider(), provider);
         //  Assert.assertEquals(repeater.getFirstInitialization(), start);
         Assert.assertEquals(repeater.getItemsPerRequest(), oneBlock);
@@ -150,6 +150,7 @@ public class QuickViewTest {
     }
 
 
+
     @Test(groups = {"wicketTests"})
     public void constructor_5() {
         final String id = "connn", repeaterId = "repeat";
@@ -167,7 +168,16 @@ public class QuickViewTest {
         Assert.assertEquals(repeater.getItemsPerRequest(), Integer.MAX_VALUE);
 
     }
+    @Test(groups = {"utilTests"},expectedExceptions = IllegalArgumentException.class)
+    public void constructor_6(){
+        IDataProvider data=Mockito.mock(IDataProvider.class);
+        QuickView quickView=new QuickView("id",data,null) {
+            @Override
+            protected void populate(Item item) {
+            }
+        } ;
 
+    }
     /**
      * Reuse set to null
      */
@@ -228,8 +238,8 @@ public class QuickViewTest {
         };
         boolean isexception = false;
 
-        repeater.setReuse(ReUse.DEFAULT_ROWSNAVIGATOR);
-        Assert.assertEquals(repeater.getReuse(), ReUse.DEFAULT_ROWSNAVIGATOR);
+        repeater.setReuse(ReUse.DEFAULT_ITEMSNAVIGATION);
+        Assert.assertEquals(repeater.getReuse(), ReUse.DEFAULT_ITEMSNAVIGATION);
     }
 
 
@@ -481,7 +491,7 @@ public class QuickViewTest {
         // long start=itemsPerRequest*page;
         Mockito.when(dataProvider.iterator(4, itemsPerRequest)).thenReturn(it);
         Mockito.when(it.hasNext()).thenReturn(true).thenReturn(true).thenReturn(false);
-        QuickView<TestObj> repeater = new QuickView<TestObj>("repeater", dataProvider, ReUse.DEFAULT_ROWSNAVIGATOR, itemsPerRequest) {
+        QuickView<TestObj> repeater = new QuickView<TestObj>("repeater", dataProvider, ReUse.DEFAULT_ITEMSNAVIGATION, itemsPerRequest) {
 
             public void populate(Item<TestObj> item) {
             }
@@ -576,7 +586,7 @@ public class QuickViewTest {
         int start = itemsPerRequest * page;
         Mockito.when(dataProvider.iterator(start, itemsPerRequest)).thenReturn(it);
         Mockito.when(it.hasNext()).thenReturn(true).thenReturn(true).thenReturn(false);
-        QuickView<TestObj> repeater = new QuickView<TestObj>("repeater", dataProvider, ReUse.DEFAULT_ROWSNAVIGATOR, itemsPerRequest) {
+        QuickView<TestObj> repeater = new QuickView<TestObj>("repeater", dataProvider, ReUse.DEFAULT_ITEMSNAVIGATION, itemsPerRequest) {
 
             public void populate(Item<TestObj> item) {
             }
@@ -995,7 +1005,14 @@ public class QuickViewTest {
     public void onPopulate_1() {
         IDataProvider provider = Mockito.mock(IDataProvider.class);
         final int size = 0;
+       final IRepeaterUtil util=Mockito.mock(IRepeaterUtil.class);
         QuickView repeater = new QuickView("repeater", provider, 2) {
+
+            @Override
+            public IRepeaterUtil getRepeaterUtil() {
+                return  util;
+            }
+
             @Override
             protected void populate(Item item) {
             }
@@ -1027,6 +1044,8 @@ public class QuickViewTest {
         repeater.setReuse(ReUse.DEFAULT_PAGING);
         QuickView spy = Mockito.spy(repeater);
         spy.onPopulate();
+        Mockito.verify(util,Mockito.times(1)).reuseNotInitialized(spy);
+        Mockito.verify(util,Mockito.times(1)).parentNotSuitable(spy);
         Mockito.verify(spy, Mockito.times(1)).simpleRemoveAllIfNotReuse();
         Mockito.verify(spy, Mockito.times(1)).createChildren(2);
 
@@ -1041,11 +1060,16 @@ public class QuickViewTest {
     public void onPopulate_2() {
         IDataProvider provider = Mockito.mock(IDataProvider.class);
         final int size = 0;
+        final IRepeaterUtil util=Mockito.mock(IRepeaterUtil.class);
         QuickView repeater = new QuickView("repeater", provider, 3) {
             @Override
             protected void populate(Item item) {
             }
 
+            @Override
+            public IRepeaterUtil getRepeaterUtil() {
+                return  util;
+            }
             @Override
             public MarkupContainer simpleAdd(Component... c) {
                 return this;
@@ -1070,9 +1094,11 @@ public class QuickViewTest {
                 return 2;
             }
         };
-        repeater.setReuse(ReUse.DEFAULT_ROWSNAVIGATOR);
+        repeater.setReuse(ReUse.DEFAULT_ITEMSNAVIGATION);
         QuickView spy = Mockito.spy(repeater);
         spy.onPopulate();
+        Mockito.verify(util,Mockito.times(1)).reuseNotInitialized(spy);
+        Mockito.verify(util,Mockito.times(1)).parentNotSuitable(spy);
         Mockito.verify(spy, Mockito.times(1)).simpleRemoveAllIfNotReuse();
         Mockito.verify(spy, Mockito.times(1)).createChildren(0);
         Mockito.verify(spy, Mockito.times(1)).setCurrentPage(0);
@@ -1087,11 +1113,16 @@ public class QuickViewTest {
     public void onPopulate_3() {
         IDataProvider provider = Mockito.mock(IDataProvider.class);
         final int size = 0;
+        final IRepeaterUtil util=Mockito.mock(IRepeaterUtil.class);
         QuickView repeater = new QuickView("repeater", provider, 3) {
             @Override
             protected void populate(Item item) {
             }
 
+            @Override
+            public IRepeaterUtil getRepeaterUtil() {
+                return  util;
+            }
             @Override
             public MarkupContainer simpleAdd(Component... c) {
                 return this;
@@ -1123,6 +1154,8 @@ public class QuickViewTest {
         repeater.setReuse(ReUse.ALL);
         QuickView spy = Mockito.spy(repeater);
         spy.onPopulate();
+        Mockito.verify(util,Mockito.times(1)).reuseNotInitialized(spy);
+        Mockito.verify(util,Mockito.times(1)).parentNotSuitable(spy);
         Mockito.verify(spy, Mockito.times(1)).simpleRemoveAllIfNotReuse();
         Mockito.verify(spy, Mockito.times(1)).createChildren(0);
 
@@ -1137,11 +1170,15 @@ public class QuickViewTest {
     public void onPopulate_4() {
         IDataProvider provider = Mockito.mock(IDataProvider.class);
         final int size = 0;
+        final IRepeaterUtil util=Mockito.mock(IRepeaterUtil.class);
         QuickView repeater = new QuickView("repeater", provider, 3) {
             @Override
             protected void populate(Item item) {
             }
-
+            @Override
+            public IRepeaterUtil getRepeaterUtil() {
+                return  util;
+            }
             @Override
             public MarkupContainer simpleAdd(Component... c) {
                 return this;
@@ -1168,6 +1205,8 @@ public class QuickViewTest {
         repeater.setReuse(ReUse.CURRENTPAGE);
         QuickView spy = Mockito.spy(repeater);
         spy.onPopulate();
+        Mockito.verify(util,Mockito.times(1)).reuseNotInitialized(spy);
+        Mockito.verify(util,Mockito.times(1)).parentNotSuitable(spy);
         Mockito.verify(spy, Mockito.times(1)).simpleRemoveAllIfNotReuse();
         Mockito.verify(spy, Mockito.times(1)).createChildren(0);
 
@@ -1181,6 +1220,7 @@ public class QuickViewTest {
     public void onPopulate_5() {
         IDataProvider provider = Mockito.mock(IDataProvider.class);
         final int size = 5;
+        final IRepeaterUtil util=Mockito.mock(IRepeaterUtil.class);
         QuickView repeater = new QuickView("repeater", provider, 3) {
             @Override
             protected void populate(Item item) {
@@ -1194,7 +1234,10 @@ public class QuickViewTest {
             @Override
             protected void createChildren(int page) {
             }
-
+            @Override
+            public IRepeaterUtil getRepeaterUtil() {
+                return  util;
+            }
             @Override
             public void simpleRemoveAllIfNotReuse() {
             }
@@ -1223,6 +1266,8 @@ public class QuickViewTest {
         repeater.setReuse(ReUse.CURRENTPAGE);
         QuickView spy = Mockito.spy(repeater);
         spy.onPopulate();
+        Mockito.verify(util,Mockito.times(1)).reuseNotInitialized(spy);
+        Mockito.verify(util,Mockito.times(1)).parentNotSuitable(spy);
         Mockito.verify(spy, Mockito.times(1)).simpleRemoveAllIfNotReuse();
         Mockito.verify(spy, Mockito.times(1)).removePages(0, 1);
         Mockito.verify(spy, Mockito.times(1)).removePages(3, 5);
@@ -1237,11 +1282,16 @@ public class QuickViewTest {
     public void onPopulate_6() {
         IDataProvider provider = Mockito.mock(IDataProvider.class);
         final int size = 5;
+        final IRepeaterUtil util=Mockito.mock(IRepeaterUtil.class);
         QuickView repeater = new QuickView("repeater", provider, 3) {
             @Override
             protected void populate(Item item) {
             }
 
+            @Override
+            public IRepeaterUtil getRepeaterUtil() {
+                return  util;
+            }
             @Override
             public MarkupContainer simpleAdd(Component... c) {
                 return this;
@@ -1279,6 +1329,8 @@ public class QuickViewTest {
         repeater.setReuse(ReUse.ALL);
         QuickView spy = Mockito.spy(repeater);
         spy.onPopulate();
+        Mockito.verify(util,Mockito.times(1)).reuseNotInitialized(spy);
+        Mockito.verify(util,Mockito.times(1)).parentNotSuitable(spy);
         Mockito.verify(spy, Mockito.times(1)).simpleRemoveAllIfNotReuse();
         Mockito.verify(spy, Mockito.never()).removePages(0, 1);
         Mockito.verify(spy, Mockito.never()).removePages(3, 5);

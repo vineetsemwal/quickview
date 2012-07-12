@@ -19,6 +19,7 @@ package com.repeater.examples;
 import com.repeater.QuickView;
 import com.repeater.ReUse;
 import org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigator;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.Item;
@@ -53,10 +54,10 @@ public class AjaxPagingNavigatorPage extends WebPage {
                 item.add(new Label("display",item.getModel()));
             }
         } ;
-        //WebMarkupContainer numbers=new WebMarkupContainer("numbers");   //don't forget adding quickview to parent with any ajax navigator
-        add(quickView);
-        //numbers.setOutputMarkupId(true); //don't forget required when using ajax navigators
-        //add(numbers);
+        WebMarkupContainer numbers=new WebMarkupContainer("numbers");   //don't forget adding quickview to parent with any ajax navigator
+        numbers.add(quickView);
+        numbers.setOutputMarkupId(true); //don't forget required when using ajax navigators
+        add(numbers);
         AjaxPagingNavigator navigator=new AjaxPagingNavigator("navigator",quickView);
         add(navigator) ;
     }
