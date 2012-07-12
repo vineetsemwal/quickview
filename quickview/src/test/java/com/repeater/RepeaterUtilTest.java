@@ -178,7 +178,7 @@ public class RepeaterUtilTest {
     @Test(groups = {"utilTests"})
     public void reuseStategyNotSupportedForItemsNavigation_5(){
          IQuickView quickView=Mockito.mock(IQuickView.class);
-        Mockito.when(quickView.getReuse()).thenReturn(ReUse.DEFAULT_ITEMSNAVIGATOR);
+        Mockito.when(quickView.getReuse()).thenReturn(ReUse.DEFAULT_ITEMSNAVIGATION);
 
         RepeaterUtil.get().reuseStategyNotSupportedForItemsNavigation(quickView);
     }
@@ -210,7 +210,7 @@ public class RepeaterUtilTest {
     @Test(groups = {"utilTests"},expectedExceptions = RepeaterUtil.OutputMarkupIdNotTrueException.class)
     public  void outPutMarkupIdNotTrue_1(){
         IDataProvider data=Mockito.mock(IDataProvider.class);
-        QuickView quickView=new QuickView("id",data,ReUse.DEFAULT_ITEMSNAVIGATOR) {
+        QuickView quickView=new QuickView("id",data,ReUse.DEFAULT_ITEMSNAVIGATION) {
             @Override
             protected void populate(Item item) {
             }
@@ -223,7 +223,7 @@ public class RepeaterUtilTest {
     @Test(groups = {"utilTests"})
     public  void outPutMarkupIdNotTrue_2(){
         IDataProvider data=Mockito.mock(IDataProvider.class);
-        QuickView quickView=new QuickView("id",data,ReUse.DEFAULT_ITEMSNAVIGATOR) {
+        QuickView quickView=new QuickView("id",data,ReUse.DEFAULT_ITEMSNAVIGATION) {
             @Override
             protected void populate(Item item) {
             }
@@ -237,7 +237,7 @@ public class RepeaterUtilTest {
     public  void outPutMarkupIdNotTrue_3(){
         IDataProvider data=Mockito.mock(IDataProvider.class);
 
-        QuickView quickView=new QuickView("id",data,ReUse.DEFAULT_ITEMSNAVIGATOR) {
+        QuickView quickView=new QuickView("id",data,ReUse.DEFAULT_ITEMSNAVIGATION) {
             @Override
             protected void populate(Item item) {
             }
@@ -270,29 +270,29 @@ public class RepeaterUtilTest {
     }
 
     /**
-     * parent=null,reuse= ReUse.DEFAULT_ITEMSNAVIGATOR
+     * parent=null,reuse= ReUse.DEFAULT_ITEMSNAVIGATION
      */
     @Test(groups = {"utilTests"},expectedExceptions = RepeaterUtil.QuickViewNotAddedToParentException.class)
     public  void parentNotSuitable_3(){
         IQuickView quickView=Mockito.mock(IQuickView.class);
-        Mockito.when(quickView.getReuse()).thenReturn(ReUse.DEFAULT_ITEMSNAVIGATOR);
+        Mockito.when(quickView.getReuse()).thenReturn(ReUse.DEFAULT_ITEMSNAVIGATION);
         RepeaterUtil.get().parentNotSuitable(quickView);
     }
 
     /**
-     * parent=page,reuse= ReUse.DEFAULT_ITEMSNAVIGATOR
+     * parent=page,reuse= ReUse.DEFAULT_ITEMSNAVIGATION
      */
     @Test(groups = {"utilTests"},expectedExceptions = RepeaterUtil.QuickViewNotAddedToParentException.class)
     public  void parentNotSuitable_4(){
         WebPage parent=Mockito.mock(WebPage.class);
         IQuickView quickView=Mockito.mock(IQuickView.class);
         Mockito.when(quickView.getParent()).thenReturn(parent);
-        Mockito.when(quickView.getReuse()).thenReturn(ReUse.DEFAULT_ITEMSNAVIGATOR);
+        Mockito.when(quickView.getReuse()).thenReturn(ReUse.DEFAULT_ITEMSNAVIGATION);
         RepeaterUtil.get().parentNotSuitable(quickView);
     }
 
     /**
-     * parent children size=2,reuse= ReUse.DEFAULT_ITEMSNAVIGATOR
+     * parent children size=2,reuse= ReUse.DEFAULT_ITEMSNAVIGATION
      */
     @Test(groups = {"utilTests"},expectedExceptions = RepeaterUtil.ParentNotUnaryException.class)
     public  void parentNotSuitable_5(){
@@ -300,12 +300,12 @@ public class RepeaterUtilTest {
         Mockito.when(parent.size()).thenReturn(2) ;
         IQuickView quickView=Mockito.mock(IQuickView.class);
         Mockito.when(quickView.getParent()).thenReturn(parent);
-       Mockito.when(quickView.getReuse()).thenReturn(ReUse.DEFAULT_ITEMSNAVIGATOR);
+       Mockito.when(quickView.getReuse()).thenReturn(ReUse.DEFAULT_ITEMSNAVIGATION);
         RepeaterUtil.get().parentNotSuitable(quickView);
     }
 
     /**
-     * parent children size=1,reuse= ReUse.DEFAULT_ITEMSNAVIGATOR
+     * parent children size=1,reuse= ReUse.DEFAULT_ITEMSNAVIGATION
      */
     @Test(groups = {"utilTests"})
     public  void parentNotSuitable_6(){
@@ -313,7 +313,7 @@ public class RepeaterUtilTest {
         Mockito.when(parent.size()).thenReturn(1) ;
         IQuickView quickView=Mockito.mock(IQuickView.class);
         Mockito.when(quickView.getParent()).thenReturn(parent);
-        Mockito.when(quickView.getReuse()).thenReturn(ReUse.DEFAULT_ITEMSNAVIGATOR);
+        Mockito.when(quickView.getReuse()).thenReturn(ReUse.DEFAULT_ITEMSNAVIGATION);
         RepeaterUtil.get().parentNotSuitable(quickView);
     }
 

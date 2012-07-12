@@ -178,7 +178,7 @@ public class AjaxItemsNavigatorTest {
             @Override
             protected void populate(Item item) { }
         };
-        repeater.setReuse(ReUse.DEFAULT_ITEMSNAVIGATOR);
+        repeater.setReuse(ReUse.DEFAULT_ITEMSNAVIGATION);
         parent.add(repeater);
         parent.setOutputMarkupPlaceholderTag(true);
 
@@ -194,7 +194,7 @@ public class AjaxItemsNavigatorTest {
             @Override
             protected void populate(Item item) { }
         };
-        repeater.setReuse(ReUse.DEFAULT_ITEMSNAVIGATOR);
+        repeater.setReuse(ReUse.DEFAULT_ITEMSNAVIGATION);
         parent.add(repeater);
         parent.setOutputMarkupId(true);
 
