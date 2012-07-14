@@ -159,10 +159,10 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     }
 
     public Item buildCompleteItem(String id, T object) {
-        return buildCompleteItem(Long.parseLong(id),object);
+        return buildCompleteItem(Integer.parseInt(id),object);
     }
 
-    public Item buildCompleteItem(long id, T object) {
+    public Item buildCompleteItem(int id, T object) {
         Item<T> item = newItem(id, object);
         item.setMarkupId(String.valueOf(id));
         item.setOutputMarkupId(true);
@@ -258,8 +258,8 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
 
     }
 
-    public Item<T> getItem(long index) {
-        return (Item) get(getRepeaterUtil().safeLongToInt(index));
+    public Item<T> getItem(int index) {
+        return (Item) get(index);
     }
 
     @Override
@@ -273,12 +273,12 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      * @param startPage
      * @param stopPage
      */
-    public MarkupContainer removePages(long startPage, long stopPage) {
-        for (long i = startPage; i <= stopPage; i++) {
+    public MarkupContainer removePages(int startPage, int stopPage) {
+        for (int i = startPage; i <= stopPage; i++) {
             long startIndex = i * itemsPerRequest;
             long endIndex = startIndex + itemsPerRequest;
             for (long itemIndex = startIndex; itemIndex < endIndex; itemIndex++) {
-                Item item = getItem(itemIndex);
+                Item item = getItem(getRepeaterUtil().safeLongToInt(itemIndex));
                 if (item != null) {
                     simpleRemove(item);
                 }
@@ -293,11 +293,11 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      * @param page
      */
     protected void createChildren(int page) {
-        int items = page * getItemsPerRequest();
-        Iterator<? extends T> iterator = getDataProvider().iterator(items, getItemsPerRequest());
-        for (long i = items; iterator.hasNext(); i++) {
+         long items = page * getItemsPerRequest();
+        Iterator<? extends T> iterator = getDataProvider().iterator(getRepeaterUtil().safeLongToInt(items),getItemsPerRequest());
+         for (long i = items; iterator.hasNext(); i++) {
             T obj = iterator.next();
-            Component item = buildCompleteItem(i, obj);
+            Component item = buildCompleteItem(getRepeaterUtil().safeLongToInt(i), obj);
             simpleAdd(item);
         }
     }
@@ -422,9 +422,8 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      *
      * @return true if parent of repeatingview is added to A.R.T
      */
-    public boolean isParentAddedInAjaxRequestTarget() {
+    public boolean isParentAddedInAjaxRequestTarget(AjaxRequestTarget target) {
         MarkupContainer searchFor = _getParent();
-        AjaxRequestTarget target = getAjaxRequestTarget();
         Collection<? extends Component> cs = target.getComponents();
         if (cs == null) {
             return false;
@@ -491,10 +490,11 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         if (!isAjax()) {
             return this;
         }
-        if (isParentAddedInAjaxRequestTarget()) {
+        AjaxRequestTarget target = getAjaxRequestTarget();
+        if (isParentAddedInAjaxRequestTarget(target)) {
             return this;
         }
-        AjaxRequestTarget target = getAjaxRequestTarget();
+
         for (int i = 0; i < c.length; i++) {
             MarkupContainer parent = _getParent();
             String script = getRepeaterUtil().insertAfter((Item)c[i], parent);
@@ -546,8 +546,8 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     @Override
     public MarkupContainer remove(final Component component) {
         Args.notNull(component, "component can't be null");
-        if (isAjax() && !isParentAddedInAjaxRequestTarget()) {
-            AjaxRequestTarget target = getAjaxRequestTarget();
+        AjaxRequestTarget target = getAjaxRequestTarget();
+        if (isAjax() && !isParentAddedInAjaxRequestTarget(target)) {
             String removeScript = getRepeaterUtil().removeItem(component);
             target.prependJavaScript(removeScript);
             target.add(component);
@@ -574,10 +574,10 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         if (!isAjax()) {
             return this;
         }
-        if (isParentAddedInAjaxRequestTarget()) {
+        AjaxRequestTarget target = getAjaxRequestTarget();
+        if (isParentAddedInAjaxRequestTarget(target)) {
             return this;
         }
-        AjaxRequestTarget target = getAjaxRequestTarget();
         for (int i = 0; i < c.length; i++) {
             MarkupContainer parent = _getParent();
             String updateBeforeScript = getRepeaterUtil().insertBefore((Item)c[i], parent);
