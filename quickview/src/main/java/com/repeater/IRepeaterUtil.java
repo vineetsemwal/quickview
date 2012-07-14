@@ -116,4 +116,21 @@ public interface IRepeaterUtil {
      * @param repeater
      */
     void reuseNotInitialized(IQuickView repeater);
+
+    /**
+     *
+     * @param input is {@link org.apache.wicket.ajax.AjaxRequestTarget#toString()}
+     *
+     * @return  prependedscripts string as displayed by List.toString() of prependedscripts
+     *
+     */
+    String prependedScripts(String input);
+
+    /**
+     *
+     * @param input is {@link org.apache.wicket.ajax.AjaxRequestTarget#toString()}
+     *
+     *  @return  appendedscripts string as displayed by List.toString() of appendedscripts
+     */
+    String appendedScripts(String input);
 }

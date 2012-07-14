@@ -24,16 +24,20 @@ import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.util.lang.Args;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * @author Vineet Semwal
  */
 public class RepeaterUtil implements IRepeaterUtil {
-    public static RepeaterUtil instance = new RepeaterUtil();
+    private static RepeaterUtil instance = new RepeaterUtil();
 
     public static RepeaterUtil get() {
         return instance;
     }
 
+    private RepeaterUtil(){}
     /**
      * {@inheritDoc}
      */
@@ -164,6 +168,44 @@ public class RepeaterUtil implements IRepeaterUtil {
         if (ReUse.DEFAULT_PAGING == quickView.getReuse() || ReUse.CURRENTPAGE==quickView.getReuse()) {
             throw new ReuseStrategyNotSupportedException(ReUse.DEFAULT_PAGING + " stategy is not supported for itemsnavigator ");
         }
+    }
+
+
+    protected String scripts(String regex,String input){
+        int regexEnd=end(regex,input);
+        String afterPrepend=input.substring(regexEnd);
+        final String openBracket="\\[",closeBracket="]";
+        int openBracketEnd=end(openBracket, afterPrepend);
+        String afterOpen=afterPrepend.substring(openBracketEnd);
+        int closeBracketEnd=end(closeBracket,afterOpen);
+        String scriptsString=afterOpen.substring(0,closeBracketEnd);
+        return scriptsString;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String prependedScripts(String input){
+        final String regex="prependJavaScript";
+        return scripts(regex,input);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String appendedScripts(String input){
+        final String regex="appendJavaScript";
+        return scripts(regex,input);
+    }
+
+    public int end(final String regex,final String input){
+        Pattern pattern=Pattern.compile(regex);
+        Matcher matcher=pattern.matcher(input);
+        int end=0;
+        if( matcher.find()){
+            end=matcher.end();
+        }
+        return end;
     }
 
 
