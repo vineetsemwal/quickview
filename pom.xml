@@ -29,7 +29,7 @@ Copyright 2012 Vineet Semwal
         <module>quickview</module>
             <module>examples</module>
     </modules>
-	
+
 	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>

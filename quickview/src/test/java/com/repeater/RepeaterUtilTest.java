@@ -30,6 +30,9 @@ import org.mockito.Mockito;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Vineet Semwal
  *
@@ -344,6 +347,52 @@ public class RepeaterUtilTest {
         Mockito.when(quickView.getParent()).thenReturn(parent);
         Mockito.when(quickView.getReuse()).thenReturn(ReUse.ALL);
         RepeaterUtil.get().parentNotSuitable(quickView);
+    }
+
+    @Test(groups = {"utilTests"})
+    public void testScripts_1(){
+        List<String> markupIdToComponent=new ArrayList<String>();
+        markupIdToComponent.add("1");
+        markupIdToComponent.add("2") ;
+        List<String>prependJavaScripts=new ArrayList<String>();
+        prependJavaScripts.add("prep1");
+        prependJavaScripts.add("prep2");
+        List<String>appendJavaScripts=new ArrayList<String>();
+        appendJavaScripts.add("append1");
+        appendJavaScripts.add("append2");
+       final String input= constructAjaxRequestTargetInput(markupIdToComponent,prependJavaScripts,appendJavaScripts);
+        String actualPrependScripts=RepeaterUtil.get().prependedScripts(input);
+        Assert.assertEquals(actualPrependScripts,prependJavaScripts.toString());
+        String actualAppendScripts=RepeaterUtil.get().appendedScripts(input);
+        Assert.assertEquals(actualAppendScripts,appendJavaScripts.toString());
+    }
+
+    @Test(groups = {"utilTests"})
+    public void testScripts_2(){
+        List<String> markupIdToComponent=new ArrayList<String>();
+        markupIdToComponent.add("1");
+        markupIdToComponent.add("2") ;
+        markupIdToComponent.add("3") ;
+        List<String>prependJavaScripts=new ArrayList<String>();
+        prependJavaScripts.add("prep1");
+        prependJavaScripts.add("prep2");
+        prependJavaScripts.add("fun1('a','b')");
+        List<String>appendJavaScripts=new ArrayList<String>();
+        appendJavaScripts.add("append1");
+        appendJavaScripts.add("append2");
+        appendJavaScripts.add("fun2('c','d')");
+        final String input= constructAjaxRequestTargetInput(markupIdToComponent,prependJavaScripts,appendJavaScripts);
+        String actualPrependScripts=RepeaterUtil.get().prependedScripts(input);
+        Assert.assertEquals(actualPrependScripts,prependJavaScripts.toString());
+        String actualAppendScripts=RepeaterUtil.get().appendedScripts(input);
+        Assert.assertEquals(actualAppendScripts,appendJavaScripts.toString());
+    }
+
+     String constructAjaxRequestTargetInput(List<String>markupIdToComponent,List<String> prependJavaScripts,List<String>appendJavaScripts){
+        final String input="[AjaxRequestTarget@" + "xyz" + " markupIdToComponent [" + markupIdToComponent +
+                "], prependJavaScript [" + prependJavaScripts + "], appendJavaScript [" +
+                appendJavaScripts + "]" ;
+         return input;
     }
 
 }
