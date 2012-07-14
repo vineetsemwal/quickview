@@ -999,6 +999,49 @@ public class QuickViewTest {
     }
 
     /**
+     * items per request is not set ,iterator iterates 3 times
+     */
+    @Test(groups = {"wicketTests"})
+    public void createChildren_3() {
+        IDataProvider provider = Mockito.mock(IDataProvider.class);
+        Iterator it = mockIterator();
+        Mockito.when(provider.iterator(0,Integer.MAX_VALUE )).thenReturn(it);
+        Mockito.when(it.hasNext()).thenReturn(true).thenReturn(true).thenReturn(true).thenReturn(false);
+        final List<Item> list = new ArrayList<Item>();
+
+        QuickView<TestObj> arc = new QuickView<TestObj>("repeater", provider) {
+            @Override
+            protected void populate(Item<TestObj> item) {
+            }
+
+            @Override
+            public MarkupContainer simpleAdd(Component... c) {
+                return this;
+            }
+
+            @Override
+            public Item buildCompleteItem(long id, TestObj object) {
+                Item i = Mockito.mock(Item.class);
+                Mockito.when(i.getMarkupId()).thenReturn(String.valueOf(id));
+                list.add(i);
+                return i;
+            }
+        };
+
+        QuickView spy = Mockito.spy(arc);
+        spy.createChildren(0);
+
+        Mockito.verify(spy, Mockito.times(3)).simpleAdd(Mockito.any(Item.class));
+        Mockito.verify(spy, Mockito.times(1)).simpleAdd(list.get(0));
+        Assert.assertEquals(Long.parseLong(list.get(0).getMarkupId()), 0l);
+        Mockito.verify(spy, Mockito.times(1)).simpleAdd(list.get(1));
+        Assert.assertEquals(Long.parseLong(list.get(1).getMarkupId()), 1l);
+        Mockito.verify(spy, Mockito.times(1)).simpleAdd(list.get(2));
+        Assert.assertEquals(Long.parseLong(list.get(2).getMarkupId()), 2l);
+    }
+
+
+    /**
      * reuse={@link ReUse.DEFAULT_PAGING}  ,size=0   .current page=2
      */
 
