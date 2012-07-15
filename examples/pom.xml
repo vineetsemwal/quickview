@@ -22,7 +22,7 @@ Copyright 2012 Vineet Semwal
  <parent>
     <groupId>com.repeater</groupId>
     <artifactId>quickview-parent</artifactId>
-    <version>1.5.7</version>
+    <version>1.5-SNAPSHOT</version>
   </parent>
 
 	<modelVersion>4.0.0</modelVersion>
@@ -52,7 +52,7 @@ Copyright 2012 Vineet Semwal
         <dependency>
             <groupId>com.repeater</groupId>
             <artifactId>quickview</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
 		<!--  WICKET DEPENDENCIES -->
 
