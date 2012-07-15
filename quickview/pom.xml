@@ -21,14 +21,14 @@ Copyright 2012 Vineet Semwal
  <parent>
     <groupId>com.repeater</groupId>
     <artifactId>quickview-parent</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.5-SNAPSHOT</version>
   </parent>
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.repeater</groupId>
 	<artifactId>quickview</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0-SNAPSHOT</version>
+
 
 	<name>quickview</name>
 	<description>creates new elements without the need to re render the whole repeater</description>
