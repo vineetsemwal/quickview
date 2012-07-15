@@ -20,14 +20,14 @@ Copyright 2012 Vineet Semwal
 
    	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.repeater</groupId>
-	<artifactId>quickview-parent</artifactId>
+	<artifactId>wicket-quickview-parent</artifactId>
 	<packaging>pom</packaging>
 	<version>1.5-SNAPSHOT</version>
 	<name>quickview parent</name>
 	<description>with quickview you can quickly add/remove new rows using ajax component without the need to re render the whole of it,it also works well with pagingnavigator/ajaxpagingnavigator</description>
         <modules>
-        <module>quickview</module>
-            <module>examples</module>
+        <module>wicket-quickview</module>
+            <module>wicket-quickview-examples</module>
     </modules>
 
 	<licenses>
