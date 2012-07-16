@@ -159,16 +159,34 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         return item;
     }
 
-    public Item buildCompleteItem(String id, T object) {
-        return buildCompleteItem(Long.parseLong(id),object);
+    public Item<T> buildItem(String id, T object) {
+        return buildItem(Long.parseLong(id), object);
     }
 
-    public Item buildCompleteItem(long id, T object) {
+    /**
+     * creates new item,this method can be used in stateless environment,unique id is what you have to provide
+     *
+     * @param id    id of the item
+     * @param object   model object
+     * @return     item
+     */
+    public Item<T> buildItem(long id, T object) {
         Item<T> item = newItem(id, object);
-        item.setMarkupId(String.valueOf(id));
-        item.setOutputMarkupId(true);
-        populate(item);
+         populate(item);
         return item;
+    }
+
+
+    /**
+     *
+     * creates new item,for stateless environment,you can use {@link QuickViewBase#buildItem} or {@link QuickViewBase#buildItem}
+     *
+     * @param object model object
+     * @return    item
+     */
+    public Item buildItem(T object) {
+       String id=newChildId();
+      return buildItem(id, object);
     }
 
     public boolean isAjax() {
@@ -298,7 +316,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         Iterator<? extends T> iterator = getDataProvider().iterator(items, getItemsPerRequest());
         for (long i = items; iterator.hasNext(); i++) {
             T obj = iterator.next();
-            Component item = buildCompleteItem(i, obj);
+            Component item = buildItem(i, obj);
             simpleAdd(item);
         }
     }
@@ -306,7 +324,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     @Override
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
-         response.render(JavaScriptHeaderItem.forReference( RepeaterUtilReference.get()));
+         response.render(JavaScriptHeaderItem.forReference(RepeaterUtilReference.get()));
          }
 
     public final long getItemsCount(){
@@ -536,7 +554,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         // long i = newIndex;
         while (iterator.hasNext()) {
             T t = iterator.next();
-            Item<T> c = buildCompleteItem(newIndex, t);
+            Item<T> c = buildItem(newIndex, t);
             components.add(c);
             add(c);
             newIndex++;
