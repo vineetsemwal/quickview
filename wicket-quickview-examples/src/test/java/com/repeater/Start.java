@@ -1,4 +1,4 @@
-package com.repeater;
+package repeater.aplombee;
 
 import org.apache.wicket.util.time.Duration;
 import org.eclipse.jetty.http.ssl.SslContextFactory;
