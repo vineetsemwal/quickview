@@ -19,13 +19,13 @@ Copyright 2012 Vineet Semwal
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
  <parent>
-    <groupId>com.repeater</groupId>
+    <groupId>repeater.aplombee</groupId>
     <artifactId>wicket-quickview-parent</artifactId>
     <version>1.5-SNAPSHOT</version>
   </parent>
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.repeater</groupId>
+	<groupId>repeater.aplombee</groupId>
 	<artifactId>wicket-quickview</artifactId>
 	<packaging>jar</packaging>
 

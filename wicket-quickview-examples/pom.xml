@@ -20,13 +20,13 @@ Copyright 2012 Vineet Semwal
 
 
  <parent>
-    <groupId>com.repeater</groupId>
+    <groupId>repeater.aplombee</groupId>
     <artifactId>wicket-quickview-parent</artifactId>
     <version>1.5-SNAPSHOT</version>
   </parent>
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.repeater</groupId>
+	<groupId>repeater.aplombee</groupId>
 	<artifactId>wicket-quickview-examples</artifactId>
 	<packaging>war</packaging>
 
@@ -50,7 +50,7 @@ Copyright 2012 Vineet Semwal
          </dependency>
 
         <dependency>
-            <groupId>com.repeater</groupId>
+            <groupId>repeater.aplombee</groupId>
             <artifactId>wicket-quickview</artifactId>
             <version>${project.version}</version>
         </dependency>
