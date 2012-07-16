@@ -16,24 +16,28 @@
  */
 package com.repeater.examples;
 
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.markup.html.WebPage;
 
 public class HomePage extends WebPage {
 	private static final long serialVersionUID = 1L;
 
-    public HomePage(final PageParameters parameters) {
-	super(parameters);
-       BookmarkablePageLink rowsNavLink=new BookmarkablePageLink("rowsNavLink",RowsNavigatorPage.class);
+	public HomePage(final PageParameters parameters) {
+		super(parameters);
+		BookmarkablePageLink<RowsNavigatorPage> rowsNavLink = new BookmarkablePageLink<RowsNavigatorPage>(
+				"rowsNavLink", RowsNavigatorPage.class);
 
-        BookmarkablePageLink ajaxPagingLink=new BookmarkablePageLink("ajaxPagingLink",AjaxPagingNavigatorPage.class);
-        add(rowsNavLink,ajaxPagingLink);
+		BookmarkablePageLink<AjaxPagingNavigatorPage> ajaxPagingLink = new BookmarkablePageLink<AjaxPagingNavigatorPage>(
+				"ajaxPagingLink", AjaxPagingNavigatorPage.class);
+		add(rowsNavLink, ajaxPagingLink);
 
-        BookmarkablePageLink ajaxLink=new BookmarkablePageLink("ajaxLink",AjaxLinkPage.class);
-        add(ajaxLink);
+		BookmarkablePageLink<AjaxLinkPage> ajaxLink = new BookmarkablePageLink<AjaxLinkPage>(
+				"ajaxLink", AjaxLinkPage.class);
+		add(ajaxLink);
 
-        BookmarkablePageLink removeLink=new BookmarkablePageLink("removeLink",RemoveItemsPage.class);
-        add(removeLink);
-    }
+		BookmarkablePageLink<RemoveItemsPage> removeLink = new BookmarkablePageLink<RemoveItemsPage>(
+				"removeLink", RemoveItemsPage.class);
+		add(removeLink);
+	}
 }
