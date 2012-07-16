@@ -31,15 +31,14 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
-import org.apache.wicket.mock.MockApplication;
-import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.WicketTester;
+import org.mockito.InOrder;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
@@ -270,7 +269,7 @@ public class QuickViewTest {
                 Iterator<Integer> it=  dataProvider.iterator(1,itemsPerRequest);
                 while(it.hasNext()){
                     int object=it.next();
-                    Item<Integer> item=quickView.buildCompleteItem(quickView.newChildId(),object);
+                    Item<Integer> item=quickView.buildItem(quickView.newChildId(), object);
                     items.add(item);
                     quickView.add(item);
                 }
@@ -336,7 +335,7 @@ public class QuickViewTest {
                 Iterator<Integer> it=  dataProvider.iterator(2,itemsPerRequest);
                 while(it.hasNext()){
                     int object=it.next();
-                    Item<Integer> item=quickView.buildCompleteItem(quickView.newChildId(),object);
+                    Item<Integer> item=quickView.buildItem(quickView.newChildId(), object);
                     items.add(item);
                     quickView.add(item);
                 }
@@ -412,7 +411,7 @@ public class QuickViewTest {
                 Iterator<Integer> it=  dataProvider.iterator(1,itemsPerRequest);
                 while(it.hasNext()){
                     int object=it.next();
-                    Item<Integer> item=quickView.buildCompleteItem(quickView.newChildId(),object);
+                    Item<Integer> item=quickView.buildItem(quickView.newChildId(), object);
                     items.add(item);
                     quickView.add(item);
                 }
@@ -467,7 +466,7 @@ public class QuickViewTest {
                 Iterator<Integer> it=  dataProvider.iterator(1,itemsPerRequest);
                 while(it.hasNext()){
                     int object=it.next();
-                    Item<Integer> item=quickView.buildCompleteItem(quickView.newChildId(),object);
+                    Item<Integer> item=quickView.buildItem(quickView.newChildId(), object);
                     items.add(item);
                     target.add(parent);
                     quickView.add(item);
@@ -534,7 +533,7 @@ public class QuickViewTest {
                 Iterator<Integer> it=  dataProvider.iterator(1,itemsPerRequest);
                 while(it.hasNext()){
                     int object=it.next();
-                    Item<Integer> item=quickView.buildCompleteItem(quickView.newChildId(),object);
+                    Item<Integer> item=quickView.buildItem(quickView.newChildId(), object);
                     items.add(item);
                     quickView.addAtStart(item);
                 }
@@ -599,7 +598,7 @@ public class QuickViewTest {
                 Iterator<Integer> it=  dataProvider.iterator(2,itemsPerRequest);
                 while(it.hasNext()){
                     int object=it.next();
-                    Item<Integer> item=quickView.buildCompleteItem(quickView.newChildId(),object);
+                    Item<Integer> item=quickView.buildItem(quickView.newChildId(), object);
                     items.add(item);
                     quickView.addAtStart(item);
                 }
@@ -674,7 +673,7 @@ public class QuickViewTest {
                 Iterator<Integer> it=  dataProvider.iterator(1,itemsPerRequest);
                 while(it.hasNext()){
                     int object=it.next();
-                    Item<Integer> item=quickView.buildCompleteItem(quickView.newChildId(),object);
+                    Item<Integer> item=quickView.buildItem(quickView.newChildId(), object);
                     items.add(item);
                     quickView.addAtStart(item);
                 }
@@ -728,7 +727,7 @@ public class QuickViewTest {
                 Iterator<Integer> it=  dataProvider.iterator(1,itemsPerRequest);
                 while(it.hasNext()){
                     int object=it.next();
-                    Item<Integer> item=quickView.buildCompleteItem(quickView.newChildId(),object);
+                    Item<Integer> item=quickView.buildItem(quickView.newChildId(), object);
                     items.add(item);
                     target.add(parent);
                     quickView.addAtStart(item);
@@ -792,7 +791,7 @@ public class QuickViewTest {
             }
 
             @Override
-            public Item buildCompleteItem(int id, TestObj object) {
+            public Item buildItem(int id, TestObj object) {
                 Item item = Mockito.mock(Item.class);
                 Mockito.when(item.getMarkupId()).thenReturn(String.valueOf(id));
                 // Mockito.when(item.getIndex()).thenReturn(id);
@@ -840,7 +839,7 @@ public class QuickViewTest {
             }
 
             @Override
-            public Item buildCompleteItem(int id, TestObj object) {
+            public Item buildItem(int id, TestObj object) {
                 Item item = Mockito.mock(Item.class);
                 Mockito.when(item.getMarkupId()).thenReturn(String.valueOf(id));
                 return item;
@@ -887,7 +886,7 @@ public class QuickViewTest {
             }
 
             @Override
-            public Item buildCompleteItem(int id, TestObj object) {
+            public Item buildItem(int id, TestObj object) {
                 Item item = Mockito.mock(Item.class);
                 Mockito.when(item.getMarkupId()).thenReturn(String.valueOf(id));
                 // Mockito.when(item.getIndex()).thenReturn(id);
@@ -990,7 +989,7 @@ public class QuickViewTest {
             }
 
             @Override
-            public Item buildCompleteItem(int id, TestObj object) {
+            public Item buildItem(int id, TestObj object) {
                 Item i = Mockito.mock(Item.class);
                 Mockito.when(i.getMarkupId()).thenReturn(String.valueOf(id));
                 list.add(i);
@@ -1033,7 +1032,7 @@ public class QuickViewTest {
             }
 
             @Override
-            public Item buildCompleteItem(int id, TestObj object) {
+            public Item buildItem(int id, TestObj object) {
                 Item i = Mockito.mock(Item.class);
                 Mockito.when(i.getMarkupId()).thenReturn(String.valueOf(id));
                 list.add(i);
@@ -1080,7 +1079,7 @@ public class QuickViewTest {
             }
 
             @Override
-            public Item buildCompleteItem(int id, TestObj object) {
+            public Item buildItem(int id, TestObj object) {
                 Item i = Mockito.mock(Item.class);
                 Mockito.when(i.getMarkupId()).thenReturn(String.valueOf(id));
                 list.add(i);
@@ -1123,7 +1122,7 @@ public class QuickViewTest {
             }
 
             @Override
-            public Item buildCompleteItem(int id, TestObj object) {
+            public Item buildItem(int id, TestObj object) {
                 Item i = Mockito.mock(Item.class);
                 Mockito.when(i.getMarkupId()).thenReturn(String.valueOf(id));
                 list.add(i);
@@ -1878,8 +1877,8 @@ public void childVisitor_1(){
             protected void populate(Item item) {
             }
         } ;
-        Item one=quickView.buildCompleteItem(0,67);
-        Item two=quickView.buildCompleteItem(1,68);
+        Item one=quickView.buildItem(0, 67);
+        Item two=quickView.buildItem(1, 68);
         quickView.simpleAdd(one,two);
         quickView.simpleRemove(one);
         Assert.assertEquals(quickView.getIndex(),1l);
@@ -1897,8 +1896,8 @@ public void childVisitor_1(){
             protected void populate(Item item) {
             }
         } ;
-        Item one=quickView.buildCompleteItem(0,67);
-        Item two=quickView.buildCompleteItem(1,68);
+        Item one=quickView.buildItem(0, 67);
+        Item two=quickView.buildItem(1, 68);
         quickView.simpleAdd(one,two);
         quickView.simpleRemoveAll();
          Assert.assertEquals(quickView.getIndex(),0l);
@@ -1913,30 +1912,160 @@ public void childVisitor_1(){
             protected void populate(Item item) {
             }
         } ;
-        Item one=quickView.buildCompleteItem(0,67);
+        Item one=quickView.buildItem(0, 67);
         quickView.simpleAdd(one);
         Assert.assertEquals(quickView.getIndex(),1);
         Assert.assertEquals(quickView.size(),1);
-        Item two=quickView.buildCompleteItem(1,68);
+        Item two=quickView.buildItem(1, 68);
         quickView.simpleAdd(two);
         Assert.assertEquals(quickView.getIndex(),2);
         Assert.assertEquals(quickView.size(),2);
 
     }
 
+    /**
+     * model object is integer
+     */
+    @Test(groups = {"wicketTests"})
+    public void newItem_1(){
+        final  int object=89;
+        final Model<Integer> model=new Model<Integer>(object);
+        IDataProvider<Integer> data=Mockito.mock(IDataProvider.class);
+        Mockito.when(data.model(object)).thenReturn(model);
+        QuickView<Integer> quickView=new QuickView<Integer>("id",data,ReUse.DEFAULT_ITEMSNAVIGATION) {
+            @Override
+            protected void populate(Item<Integer> item) {
+            }
+        } ;
+        final long id=9l;
 
-    List<Integer>data(int size){
-       List<Integer>list=new ArrayList<Integer>();
-        for(int i=0;i<size;i++){
-               list.add(i) ;
-        }
-        return list;
+       Item <Integer>item= quickView.newItem(id,object);
+        Assert.assertEquals(item.getModelObject().intValue(), 89);
+        Assert.assertEquals(Integer.parseInt(item.getMarkupId()),id);
     }
+
+    /**
+     * modelobject is string
+     */
+    @Test(groups = {"wicketTests"})
+    public void newItem_2(){
+        final  String object="theobject";
+        IDataProvider data=Mockito.mock(IDataProvider.class);
+        Model<String>model=new Model<String>(object);
+        Mockito.when(data.model(object)).thenReturn(model);
+        QuickView<String> quickView=new QuickView<String>("id",data,ReUse.DEFAULT_ITEMSNAVIGATION) {
+            @Override
+            protected void populate(Item<String> item) {
+    }
+        } ;
+        final long id=9l;
+
+        Item <String>item= quickView.newItem(id,object);
+        Assert.assertEquals(item.getModelObject(),object);
+        Assert.assertEquals(Integer.parseInt(item.getMarkupId()),id);
+        Assert.assertTrue(item.getOutputMarkupId());
+    }
+
+    /**
+     * test for  {@link QuickViewBase#buildItem(long, Object)}
+     */
+    @Test(groups = {"wicketTests"})
+    public void buildItem_1(){
+        IDataProvider data=Mockito.mock(IDataProvider.class);
+        final Item item=Mockito.mock(Item.class);
+        QuickView<TestObj> quickView=new QuickView<TestObj>("id",data,ReUse.DEFAULT_ITEMSNAVIGATION) {
+            @Override
+            protected void populate(Item item) {
+            }
+
+            @Override
+            protected Item newItem(long id, TestObj object) {
+                return item;
+            }
+        } ;
+        final int id=9;
+       final TestObj object=Mockito.mock(TestObj.class);
+        QuickView<TestObj>spy=Mockito.spy(quickView);
+        Item <TestObj>actual= spy.buildItem(id,object);
+        Assert.assertEquals(actual,item);
+       InOrder order= Mockito.inOrder(spy, item);
+         order.verify(spy, Mockito.times(1)).newItem(id,object);
+         order.verify(spy, Mockito.times(1)).populate(item);
+     }
+
+    /**
+     * test for  {@link QuickViewBase#buildItem(String, Object)}
+     */
+    @Test(groups = {"wicketTests"})
+    public void buildItem_2(){
+        IDataProvider data=Mockito.mock(IDataProvider.class);
+        final Item item=Mockito.mock(Item.class);
+        QuickView<TestObj> quickView=new QuickView<TestObj>("id",data,ReUse.DEFAULT_ITEMSNAVIGATION) {
+            @Override
+            protected void populate(Item item) {
+            }
+
+            @Override
+            public Item<TestObj> buildItem(int id, TestObj object) {
+                return item;
+            }
+        } ;
+        final String id="99";
+        final TestObj object=Mockito.mock(TestObj.class);
+        QuickView<TestObj>spy=Mockito.spy(quickView);
+        Item <TestObj>actual= spy.buildItem(id,object);
+        Assert.assertEquals(actual,item);
+       Mockito.verify(spy,Mockito.times(1)).buildItem(99, object);
+    }
+
+
+    /**
+     * test for  {@link QuickViewBase#buildItem(String, Object)}
+     */
+    @Test(groups = {"wicketTests"})
+    public void buildItem_3(){
+        final String id="78";
+        IDataProvider data=Mockito.mock(IDataProvider.class);
+        final Item item=Mockito.mock(Item.class);
+        QuickView<TestObj> quickView=new QuickView<TestObj>("id",data,ReUse.DEFAULT_ITEMSNAVIGATION) {
+            @Override
+            protected void populate(Item item) {
+            }
+
+            @Override
+            public Item<TestObj> buildItem( int id, TestObj object) {
+                return item;
+            }
+
+            @Override
+            public String newChildId() {
+                return id;
+            }
+        } ;
+       // final String id="99";
+        final TestObj object=Mockito.mock(TestObj.class);
+        QuickView<TestObj>spy=Mockito.spy(quickView);
+        Item <TestObj>actual= spy.buildItem(object);
+        Assert.assertEquals(actual,item);
+        Mockito.verify(spy,Mockito.times(1)).buildItem(id,object);
+    }
+
+    public AjaxRequestTarget mockTarget() {
+        AjaxRequestTarget target = mock(AjaxRequestTarget.class);
+        return target;
+    }
+
     public Iterator<TestObj> mockIterator() {
         Iterator<TestObj> it = mock(Iterator.class);
         return it;
     }
-
+    List<Integer>data(int size){
+        List<Integer>list=new ArrayList<Integer>();
+        for(int i=0;i<size;i++){
+            list.add(i) ;
+        }
+        return list;
+    }
     public IDataProvider<TestObj> mockProvider(int size) {
         IDataProvider<TestObj> dp = mock(IDataProvider.class);
         when(dp.size()).thenReturn(size);
