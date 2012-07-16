@@ -20,18 +20,16 @@ Copyright 2012 Vineet Semwal
 
    	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.repeater</groupId>
-	<artifactId>quickview-parent</artifactId>
+	<artifactId>wicket-quickview-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>1.0-SNAPSHOT</version>
-	
+	<version>1.5-SNAPSHOT</version>
 	<name>quickview parent</name>
 	<description>with quickview you can quickly add/remove new rows using ajax component without the need to re render the whole of it,it also works well with pagingnavigator/ajaxpagingnavigator</description>
         <modules>
-        <module>quickview</module>
-            <module>examples</module>
+        <module>wicket-quickview</module>
+            <module>wicket-quickview-examples</module>
     </modules>
-	
-	<licenses>
+     	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
 			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
@@ -39,7 +37,7 @@ Copyright 2012 Vineet Semwal
 		</license>
 	</licenses>
 	<properties>
-		<wicket.version>1.5.7</wicket.version>
+		<wicket.version>1.5-SNAPSHOT</wicket.version>
 		<jetty.version>7.6.3.v20120416</jetty.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -174,6 +172,21 @@ Copyright 2012 Vineet Semwal
                     </connectors>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.1.2</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-eclipse-plugin</artifactId>
