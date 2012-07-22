@@ -19,6 +19,7 @@ package com.aplombee.navigator;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Args;
@@ -75,4 +76,10 @@ public class MoreLabel extends Label {
                 MoreLabel.this.onClick(target);
             }
     }
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
+        response.renderCSSReference(NavigatorCssReference.get());
+    }
+
 }

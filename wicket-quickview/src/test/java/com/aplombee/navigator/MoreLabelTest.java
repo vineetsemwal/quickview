@@ -20,6 +20,7 @@ import com.aplombee.IQuickView;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -149,6 +150,19 @@ public class MoreLabelTest {
         more.onConfigure();
         Assert.assertFalse(more.isVisible());
     }
+
+    @Test(groups = {"wicketTests"})
+    public void renderHead_1() {
+        ItemsNavigatorBase navigator = Mockito.mock(ItemsNavigatorBase.class);
+        IQuickView repeater = mock(IQuickView.class);
+        Mockito.when(navigator.getRepeater()).thenReturn(repeater);
+        IModel model=Mockito.mock(IModel.class);
+        MoreLabel more = new MoreLabel("more",model, navigator);
+        IHeaderResponse response = Mockito.mock(IHeaderResponse.class);
+        more.renderHead(response);
+        Mockito.verify(response, Mockito.times(1)).renderCSSReference(NavigatorCssReference.get());
+    }
+
     private static WebApplication createMockApplication() {
         WebApplication app = new MockApplication();
         return app;

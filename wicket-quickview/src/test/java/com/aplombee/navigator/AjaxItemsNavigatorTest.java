@@ -150,15 +150,6 @@ public class AjaxItemsNavigatorTest {
     }
 
 
-    @Test(groups = {"wicketTests"})
-    public void renderHead_1() {
-        IQuickView repeater = Mockito.mock(IQuickView.class);
-        AjaxItemsNavigator navigator = new AjaxItemsNavigator("id", repeater);
-        IHeaderResponse response = Mockito.mock(IHeaderResponse.class);
-        navigator.renderHead(response);
-        Mockito.verify(response, Mockito.times(1)).renderCSSReference(NavigatorCssReference.get());
-    }
-
 
     /**
      * parent not null ,OutputMarkupPlaceholderTag set to true
