@@ -20,6 +20,8 @@ import com.aplombee.IQuickView;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -58,6 +60,7 @@ public class MoreLabelTest {
         AjaxEventBehavior behavior=label.newOnClickBehavior();
         Assert.assertEquals(behavior.getEvent(), "click");
     }
+
     @Test(groups = {"wicketTests"})
     public void newOnClickBehavior_onclick(){
         IModel model= Mockito.mock(IModel.class);
@@ -70,7 +73,8 @@ public class MoreLabelTest {
         };
          AjaxRequestTarget target=Mockito.mock(AjaxRequestTarget.class);
          MoreLabel spy=Mockito.spy(label);
-         spy.newOnClickBehavior().onEvent(target);
+         MoreLabel.OnClickBehavior behavior=(MoreLabel.OnClickBehavior)spy.newOnClickBehavior() ;
+          behavior.onEvent(target);
            Mockito.verify(spy,Mockito.times(1)).onClick(target);
     }
 
@@ -149,6 +153,21 @@ public class MoreLabelTest {
         more.onConfigure();
         Assert.assertFalse(more.isVisible());
     }
+
+    @Test(groups = {"wicketTests"})
+    public void renderHead_1(){
+
+        IHeaderResponse response=Mockito.mock(IHeaderResponse.class);
+
+        ItemsNavigatorBase navigator = Mockito.mock(ItemsNavigatorBase.class);
+        IQuickView repeater = mock(IQuickView.class);
+        Mockito.when(navigator.getRepeater()).thenReturn(repeater);
+        IModel model=Mockito.mock(IModel.class);
+        MoreLabel more = new MoreLabel("more",model, navigator);
+        more.renderHead(response);
+        Mockito.verify(response,Mockito.times(1)).render(CssHeaderItem.forReference(NavigatorCssReference.get()));
+    }
+
     private static WebApplication createMockApplication() {
         WebApplication app = new MockApplication();
         return app;
