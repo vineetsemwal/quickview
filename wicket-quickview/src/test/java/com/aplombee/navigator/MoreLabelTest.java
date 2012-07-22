@@ -156,9 +156,7 @@ public class MoreLabelTest {
 
     @Test(groups = {"wicketTests"})
     public void renderHead_1(){
-
         IHeaderResponse response=Mockito.mock(IHeaderResponse.class);
-
         ItemsNavigatorBase navigator = Mockito.mock(ItemsNavigatorBase.class);
         IQuickView repeater = mock(IQuickView.class);
         Mockito.when(navigator.getRepeater()).thenReturn(repeater);
