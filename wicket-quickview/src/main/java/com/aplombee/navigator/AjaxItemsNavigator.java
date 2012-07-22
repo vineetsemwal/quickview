@@ -69,10 +69,4 @@ public class AjaxItemsNavigator extends ItemsNavigatorBase {
       }
 
 
-    @Override
-    public void renderHead(IHeaderResponse response) {
-        super.renderHead(response);
-        response.render(CssHeaderItem.forReference(NavigatorCssReference.get()));
-    }
-
 }
