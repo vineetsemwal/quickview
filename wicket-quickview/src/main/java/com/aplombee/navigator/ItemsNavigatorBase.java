@@ -94,7 +94,7 @@ public abstract class ItemsNavigatorBase extends Panel {
         super.onInitialize();
         add(more = newMore());
         if (!Strings.isEmpty(getCssClass())) {
-            AttributeModifier cssClassModifier = new AttributeModifier("class ", getCssClass());
+            AttributeModifier cssClassModifier = new AttributeModifier("class", getCssClass());
             more.add(cssClassModifier);
         }
     }
@@ -124,7 +124,7 @@ public abstract class ItemsNavigatorBase extends Panel {
 
 
     /**
-     * on a stateful event say onclick ,this method creates new elements for the page
+     * on a stateful event say onclick ,this method creates new rows/items for the page
      *
      * @return list of items created
      */
