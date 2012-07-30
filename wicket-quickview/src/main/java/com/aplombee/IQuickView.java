@@ -25,6 +25,8 @@ import org.apache.wicket.request.component.IRequestableComponent;
 import java.util.List;
 
 /**
+ *  QuickView's interface
+ *
  * @author Vineet Semwal
  *
  */
@@ -32,6 +34,22 @@ import java.util.List;
 public interface IQuickView<T> extends IPageable{
     ReUse getReuse();
     MarkupContainer getParent();
-    List<Item<T>> addComponentsForPage(final long page);
+    /**
+     *
+     * create and draw children for the provided page ,number of
+     * children created are smaller than equal to getItemsPerRequest()
+     *
+     * @param page
+     * @return   list of components created
+     */
+    List<Item<T>> addItemsForPage(final long page);
+    /**
+     * adds items/rows for next page and also sets the next page ,this method can called by any sequential items/rows navigator
+     * for example {@link com.aplombee.navigator.ItemsNavigatorBase} calls this method onClick,
+     * ItemsNavigatorBase is the base of {@link com.aplombee.navigator.AjaxItemsNavigator}.
+     *
+     *
+     */
+    List<Item<T>> addItemsForNextPage();
     }
 

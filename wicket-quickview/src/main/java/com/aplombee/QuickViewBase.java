@@ -107,7 +107,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         return reuse;
     }
 
-    /**
+   /**
      * set reuse strategy
      * <p/>
      * for paging ie. when used with {@link org.apache.wicket.markup.html.navigation.paging.PagingNavigator} or {@link org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigator}  the
@@ -524,19 +524,34 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         return this;
     }
 
+
     /**
-     *
-     * create and draw children for the provided page ,number of
-     * children created are smaller than equal to getItemsPerRequest()
-     *
-     * @param page
-     * @return   list of components created
+     * {@inheritDoc}
+     */
+    public  List<Item<T>> addItemsForNextPage(){
+        List<Item<T>> list = new ArrayList<Item<T>>();
+        long current = getCurrentPage();
+
+        // page for which new items have to created
+
+        long next = current + 1;
+        if (next < _getPageCount()) {
+            list = addItemsForPage(next);
+           _setCurrentPage(next);
+        }
+        return list;
+    }
+
+
+    /**
+     * {@inheritDoc}
      */
     @Override
-    public List<Item<T>> addComponentsForPage(final long page) {
+    public List<Item<T>> addItemsForPage(final long page) {
         long newIndex=page* getItemsPerRequest();
-        return addComponentsFromIndex(newIndex);
+        return addItemsFromIndex(newIndex);
     }
+
     /**
      * create and draw children from the provided index ,number of
      * children created are smaller than equal to getItemsPerRequest()
@@ -544,8 +559,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      * @return list of components created
      */
 
-
-    public List<Item<T>> addComponentsFromIndex(final long index) {
+    public List<Item<T>> addItemsFromIndex(final long index) {
         clearCachedItemCount();
         simpleRemoveAllIfNotReuse();
         long newIndex=index;
@@ -562,6 +576,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
 
         return components;
     }
+
     @Override
     public MarkupContainer remove(final Component component) {
         Args.notNull(component, "component can't be null");
@@ -583,7 +598,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
 
     /**
      * draws a new element at start but the actually element is added at last in repeater,
-     * this should not pose problem when whole repeater is rendered and if dataprovider is sorted
+     * this should not pose problem when whole repeater is rendered and if data is sorted
      *
      * @param c
      * @return this
@@ -614,6 +629,41 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
             simpleRemoveAll();
         }
     }
+
+    /**
+     * when called on ajax event ,this method moves navigation-bar to bottom
+     *
+     */
+    public void scrollToBottom(){
+     if(isAjax()){
+        AjaxRequestTarget target= this.getAjaxRequestTarget();
+         target.appendJavaScript(getRepeaterUtil().scrollToBottom(this));
+     }
+    }
+
+    /**
+     * when called on ajax event, this method moves navigation-bar to top
+     *
+     */
+    public void scrollToTop(){
+        if(isAjax()){
+            AjaxRequestTarget target= this.getAjaxRequestTarget();
+            target.appendJavaScript(getRepeaterUtil().scrollToTop(this));
+        }
+    }
+
+    /**
+     * when called on ajax event, this method moves navigation-bar to height passed in method
+     *
+     */
+    public void scrollTo(int height){
+        if(isAjax()){
+            AjaxRequestTarget target= this.getAjaxRequestTarget();
+            target.appendJavaScript(getRepeaterUtil().scrollTo(this,height));
+        }
+    }
+
+
 
     @Override
     protected void onDetach() {

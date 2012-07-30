@@ -28,7 +28,7 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
-import java.util.ArrayList;
+
 import java.util.List;
 
 /**
@@ -129,17 +129,8 @@ public abstract class ItemsNavigatorBase extends Panel {
      * @return list of items created
      */
     public List<Item> onStatefulEvent() {
-        AjaxRequestTarget target = getAjaxRequestTarget();
-        List<Item> list = new ArrayList<Item>();
-        long current = getRepeater().getCurrentPage();
-
-        // page for which new items have to created
-
-        long next = current + 1;
-        if (next < getRepeater().getPageCount()) {
-            list = getRepeater().addComponentsForPage(next);
-            getRepeater().setCurrentPage(next);
-        }
+        AjaxRequestTarget target=getAjaxRequestTarget();
+        List<Item>list=getRepeater().addItemsForNextPage();
         target.add(getMore());
         return list;
     }

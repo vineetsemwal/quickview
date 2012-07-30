@@ -16,8 +16,10 @@
  */
 package com.aplombee;
 
+import com.aplombee.navigator.AjaxItemsNavigator;
 import com.aplombee.navigator.TestPanel2;
-import junit.framework.Assert;
+import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
@@ -27,8 +29,8 @@ import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.WicketTester;
 import org.mockito.Mockito;
+import org.testng.Assert;
 import org.testng.annotations.Test;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,8 +44,8 @@ public class RepeaterUtilTest {
     public void insertBefore_1(){
         final String child="child" ,parent="parent",tag="div";
                String actual= RepeaterUtil.get().insertBefore(tag,child,parent);
-        String expected="insertBefore('div','child','parent')";
-        Assert.assertEquals(actual.trim(),expected.trim());
+        String expected="insertBefore('div','child','parent');";
+        Assert.assertEquals(actual.trim(), expected.trim());
     }
     @Test(groups = {"utilTests"})
     public void insertBefore_2(){
@@ -53,7 +55,7 @@ public class RepeaterUtilTest {
         QuickView quick=   panel.getQuickView();
         ComponentTag tag= RepeaterUtil.get().getComponentTag(quick);
        String actual= RepeaterUtil.get().insertBefore(quick,quick.getParent());
-       String expected=String.format("insertBefore('%s','%s','%s')",tag.getName(),quick.getMarkupId(),quick.getParent().getMarkupId());
+       String expected=String.format("insertBefore('%s','%s','%s');",tag.getName(),quick.getMarkupId(),quick.getParent().getMarkupId());
          Assert.assertEquals(actual.trim(),expected.trim());
     }
 
@@ -86,7 +88,7 @@ public class RepeaterUtilTest {
     public void insertAfter_1(){
         final String child="child" ,parent="parent",tag="div";
         String call= RepeaterUtil.get().insertAfter(tag, child, parent);
-        String expected="insertAfter('div','child','parent')";
+        String expected="insertAfter('div','child','parent');";
         Assert.assertEquals(call,expected);
     }
     @Test(groups = {"utilTests"})
@@ -97,14 +99,14 @@ public class RepeaterUtilTest {
         QuickView quick=   panel.getQuickView();
         ComponentTag tag= RepeaterUtil.get().getComponentTag(quick);
         String actual= RepeaterUtil.get().insertAfter(quick, quick.getParent());
-        String expected=String.format("insertAfter('%s','%s','%s')",tag.getName(),quick.getMarkupId(),quick.getParent().getMarkupId());
+        String expected=String.format("insertAfter('%s','%s','%s');",tag.getName(),quick.getMarkupId(),quick.getParent().getMarkupId());
         Assert.assertEquals(actual.trim(),expected.trim());
     }
 
     @Test(groups = {"utilTests"})
     public void removeItem_1(){
       final String repeaterMarkupId="quick";
-      final String expected="removeItem('quick')";
+      final String expected="removeItem('quick');";
        final  String actual=RepeaterUtil.get().removeItem(repeaterMarkupId);
         Assert.assertEquals(actual.trim(),expected.trim());
     }
@@ -115,7 +117,41 @@ public class RepeaterUtilTest {
         Item item=Mockito.mock(Item.class);
         Mockito.when(item.getMarkupId()).thenReturn(repeaterMarkupId);
         final  String actual=RepeaterUtil.get().removeItem(item);
-        final String expected="removeItem('quick')";
+        final String expected="removeItem('quick');";
+        Assert.assertEquals(actual.trim(),expected.trim());
+    }
+
+
+    @Test(groups = {"utilTests"})
+    public void scrollToTop(){
+        final String repeaterMarkupId="quick";
+        final String expected="scrollToTop('quick');";
+        final  String actual=RepeaterUtil.get().scrollToTop(repeaterMarkupId);
+        Assert.assertEquals(actual.trim(),expected.trim());
+    }
+
+    @Test(groups = {"utilTests"})
+    public void scrollToBottom(){
+        final String repeaterMarkupId="quick";
+        final String expected="scrollToBottom('quick');";
+        final  String actual=RepeaterUtil.get().scrollToBottom(repeaterMarkupId);
+        Assert.assertEquals(actual.trim(),expected.trim());
+    }
+
+    @Test(groups = {"utilTests"})
+    public void scrollTo_1(){
+        final int height=7;
+        final String repeaterMarkupId="quick";
+        final String expected="scrollTo('quick',7);";
+        final  String actual=RepeaterUtil.get().scrollTo(repeaterMarkupId,height);
+        Assert.assertEquals(actual.trim(),expected.trim());
+    }
+    @Test(groups = {"utilTests"})
+    public void scrollTo_2(){
+        final int height=9;
+        final String repeaterMarkupId="quick";
+        final String expected="scrollTo('quick',9);";
+        final  String actual=RepeaterUtil.get().scrollTo(repeaterMarkupId,height);
         Assert.assertEquals(actual.trim(),expected.trim());
     }
 
@@ -334,6 +370,7 @@ public class RepeaterUtilTest {
         RepeaterUtil.get().parentNotSuitable(quickView);
     }
 
+
     /**
      * parent children size=1,reuse= ReUse.ALL
      */
@@ -346,6 +383,22 @@ public class RepeaterUtilTest {
         Mockito.when(quickView.getParent()).thenReturn(parent);
         Mockito.when(quickView.getReuse()).thenReturn(ReUse.ALL);
         RepeaterUtil.get().parentNotSuitable(quickView);
+    }
+
+    @Test(groups = {"utilTests"})
+    public void isComponentScrollBarAtBottom(){
+        WebMarkupContainer c=new WebMarkupContainer("parent");
+        c.setMarkupId("parent");
+        String actual= RepeaterUtil.get().isComponentScrollBarAtBottom(c);
+        String expected= "isComponentScrollBarAtBottom('parent');";
+        Assert.assertEquals(actual,expected);
+    }
+
+    @Test(groups = {"utilTests"})
+    public void isPageScrollBarAtBottom(){
+        String actual= RepeaterUtil.get().isPageScrollBarAtBottom();
+        String expected= "isPageScrollBarAtBottom();";
+        Assert.assertEquals(actual,expected);
     }
 
     @Test(groups = {"utilTests"})
@@ -387,11 +440,14 @@ public class RepeaterUtilTest {
         Assert.assertEquals(actualAppendScripts,appendJavaScripts.toString());
     }
 
+
+
      String constructAjaxRequestTargetInput(List<String>markupIdToComponent,List<String> prependJavaScripts,List<String>appendJavaScripts){
         final String input="[AjaxRequestTarget@" + "xyz" + " markupIdToComponent [" + markupIdToComponent +
                 "], prependJavaScript [" + prependJavaScripts + "], appendJavaScript [" +
                 appendJavaScripts + "]" ;
          return input;
     }
+
 
 }

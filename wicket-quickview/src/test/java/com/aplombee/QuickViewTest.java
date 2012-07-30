@@ -517,7 +517,7 @@ public class QuickViewTest {
             }
         };
         QuickView spy = Mockito.spy(repeater);
-        List<Item<TestObj>> items = spy.addComponentsFromIndex(4);
+        List<Item<TestObj>> items = spy.addItemsFromIndex(4);
         Mockito.verify(spy, Mockito.times(1)).simpleRemoveAllIfNotReuse();
         Assert.assertEquals(items.size(), 2);
         Mockito.verify(spy, Mockito.times(1)).add(items.get(0));
@@ -564,7 +564,7 @@ public class QuickViewTest {
             }
         };
         QuickView spy = Mockito.spy(repeater);
-        List<Item<TestObj>> items = spy.addComponentsFromIndex(index);
+        List<Item<TestObj>> items = spy.addItemsFromIndex(index);
 
         Mockito.verify(spy, Mockito.times(1)).simpleRemoveAllIfNotReuse();
         Assert.assertEquals(items.size(), 1);
@@ -612,13 +612,13 @@ public class QuickViewTest {
             }
 
             @Override
-            public List<Item<TestObj>> addComponentsFromIndex(long index) {
+            public List<Item<TestObj>> addItemsFromIndex(long index) {
                 return null;
             }
         };
         QuickView spy = Mockito.spy(repeater);
-        List<Item<TestObj>> items = spy.addComponentsForPage(page);
-        Mockito.verify(spy).addComponentsFromIndex(start);
+        List<Item<TestObj>> items = spy.addItemsForPage(page);
+        Mockito.verify(spy).addItemsFromIndex(start);
 
     }
 
@@ -1958,13 +1958,144 @@ public void childVisitor_1(){
                 return id;
             }
         } ;
-       // final String id="99";
+
         final TestObj object=Mockito.mock(TestObj.class);
         QuickView<TestObj>spy=Mockito.spy(quickView);
         Item <TestObj>actual= spy.buildItem(object);
         Assert.assertEquals(actual,item);
         Mockito.verify(spy,Mockito.times(1)).buildItem(id,object);
     }
+
+
+    @Test(groups = {"wicketTests"})
+    public void addItemsForNextPage_1() {
+        final long dataProviderSize = 12;
+        final long current=5,next=6 ,pages=7;
+        IDataProvider dataProvider=Mockito.mock(IDataProvider.class);
+        Mockito.when(dataProvider.size()).thenReturn(dataProviderSize);
+        final AjaxRequestTarget target=Mockito.mock(AjaxRequestTarget.class);
+        final List<Item> items=Mockito.mock(List.class);
+        QuickView quickview=new QuickView("quick",dataProvider,ReUse.DEFAULT_ITEMSNAVIGATION) {
+            @Override
+            protected void populate(Item item) {
+            }
+
+            @Override
+            protected long _getPageCount() {
+                return pages;
+            }
+
+            @Override
+            protected long _getCurrentPage() {
+                return current;
+            }
+
+            @Override
+            public AjaxRequestTarget getAjaxRequestTarget() {
+                return  target;
+            }
+
+            @Override
+            public List addItemsForPage(long page) {
+                        return items;
+            }
+        };
+
+        QuickView spy= Mockito.spy(quickview);
+        List<Item>actual= spy.addItemsForNextPage();
+        Mockito.verify(spy,Mockito.times(1))._setCurrentPage(next);
+        Mockito.verify(spy,Mockito.times(1)).addItemsForPage(next);
+        Assert.assertEquals(actual, items);
+    }
+
+    /**
+     * when current page= pages count
+     *
+     */
+    @Test(groups = {"utilTests"})
+    public void addItemsForNextPage_2() {
+
+        final long dataProviderSize = 12;
+        final long current=5,next=6 ,pages=6;
+        IDataProvider dataProvider=Mockito.mock(IDataProvider.class);
+        Mockito.when(dataProvider.size()).thenReturn(dataProviderSize);
+        final AjaxRequestTarget target=Mockito.mock(AjaxRequestTarget.class);
+        final List<Item> items=Mockito.mock(List.class);
+        QuickView quickview=new QuickView("quick",dataProvider,ReUse.DEFAULT_ITEMSNAVIGATION) {
+            @Override
+            protected void populate(Item item) {
+            }
+
+            @Override
+            protected long _getPageCount() {
+                return pages;
+            }
+
+            @Override
+            protected long _getCurrentPage() {
+                return current;
+            }
+            @Override
+            public AjaxRequestTarget getAjaxRequestTarget() {
+                return  target;
+            }
+
+            @Override
+            public List addItemsForPage(long page) {
+                return items;
+            }
+        };
+        QuickView spy= Mockito.spy(quickview);
+        List<Item>actual= spy.addItemsForNextPage();
+        Mockito.verify(spy,Mockito.never())._setCurrentPage(next);
+        Mockito.verify(spy,Mockito.never()).addItemsForPage(next);
+        Assert.assertTrue(actual.isEmpty());
+    }
+
+    /**
+     * when current page> pages count
+     *
+     */
+    @Test(groups = {"utilTests"})
+    public void addItemsForNextPage_3() {
+        final long dataProviderSize = 12;
+        final long current=7,next=6 ,pages=6;
+        final AjaxRequestTarget target=Mockito.mock(AjaxRequestTarget.class);
+        final List<Item> items=Mockito.mock(List.class);
+        IDataProvider dataProvider=Mockito.mock(IDataProvider.class);
+        Mockito.when(dataProvider.size()).thenReturn(dataProviderSize);
+        QuickView quickview=new QuickView("quick",dataProvider,ReUse.DEFAULT_ITEMSNAVIGATION) {
+            @Override
+            protected void populate(Item item) {
+            }
+
+            @Override
+            protected long _getPageCount() {
+                return pages;
+            }
+
+            @Override
+            protected long _getCurrentPage() {
+                return current;
+            }
+
+            @Override
+            public AjaxRequestTarget getAjaxRequestTarget() {
+                return  target;
+            }
+
+            @Override
+            public List addItemsForPage(long page) {
+                return items;
+            }
+        };
+        QuickView spy= Mockito.spy(quickview);
+        List<Item>actual= spy.addItemsForNextPage();
+        Mockito.verify(spy,Mockito.never())._setCurrentPage(next);
+        Mockito.verify(spy,Mockito.never()).addItemsForPage(next);
+        Assert.assertTrue(actual.isEmpty());
+    }
+
 
     public AjaxRequestTarget mockTarget() {
         AjaxRequestTarget target = mock(AjaxRequestTarget.class);

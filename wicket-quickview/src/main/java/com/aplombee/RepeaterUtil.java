@@ -23,7 +23,6 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.util.lang.Args;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,7 +41,7 @@ public class RepeaterUtil implements IRepeaterUtil {
      * {@inheritDoc}
      */
     public String insertBefore(String tag, String markupId, String parentMarkupId) {
-        String script = String.format("insertBefore('%s','%s','%s')", tag, markupId, parentMarkupId);
+        String script = String.format("insertBefore('%s','%s','%s');", tag, markupId, parentMarkupId);
         return script;
     }
 
@@ -62,7 +61,7 @@ public class RepeaterUtil implements IRepeaterUtil {
      */
     @Override
     public String insertAfter(String tag, String markupId, String parentMarkupId) {
-        String script = String.format("insertAfter('%s','%s','%s')", tag, markupId, parentMarkupId);
+        String script = String.format("insertAfter('%s','%s','%s');", tag, markupId, parentMarkupId);
         return script;
 
     }
@@ -91,7 +90,7 @@ public class RepeaterUtil implements IRepeaterUtil {
      */
     @Override
     public String removeItem(String markupId) {
-        String script = String.format("removeItem('%s')", markupId);
+        String script = String.format("removeItem('%s');", markupId);
         return script;
     }
 
@@ -208,6 +207,60 @@ public class RepeaterUtil implements IRepeaterUtil {
         return end;
     }
 
+    @Override
+    public String scrollToBottom(String markupId){
+      return String.format("scrollToBottom('%s');",markupId);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String scrollToBottom(IQuickView quickView){
+      return scrollToBottom(quickView.getParent().getMarkupId());
+    }
+
+    @Override
+    public String scrollToTop(String markupId){
+        return String.format("scrollToTop('%s');",markupId);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String scrollToTop(IQuickView quickView){
+        return  scrollToTop(quickView.getParent().getMarkupId());
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String scrollTo(IQuickView quickView,int height){
+            return scrollTo(quickView.getParent().getMarkupId(),height);
+    }
+
+    @Override
+    public String scrollTo(String markupId,int height){
+        return String.format("scrollTo('%s',%d);",markupId,height);
+    }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String isComponentScrollBarAtBottom(MarkupContainer component) {
+        return String.format("isComponentScrollBarAtBottom('%s');",component.getMarkupId());
+    }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String isPageScrollBarAtBottom(){
+       return "isPageScrollBarAtBottom();";
+    }
+
 
     public static class QuickViewNotAddedToParentException extends RuntimeException {
         public QuickViewNotAddedToParentException(String message) {
@@ -238,5 +291,8 @@ public class RepeaterUtil implements IRepeaterUtil {
             super(message);
         }
     }
+
+
+
 
 }
