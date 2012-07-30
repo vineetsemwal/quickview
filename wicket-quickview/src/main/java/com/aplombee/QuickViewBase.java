@@ -631,7 +631,8 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     }
 
     /**
-     * when called on ajax event ,this method moves navigation-bar to bottom
+     * when called on ajax event ,this method moves navigation-bar to bottom,
+     * this works when parent has scroll specified in css by defining overflow-y property
      *
      */
     public void scrollToBottom(){
@@ -642,7 +643,8 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     }
 
     /**
-     * when called on ajax event, this method moves navigation-bar to top
+     * when called on ajax event, this method moves navigation-bar to top ,
+     * this works when parent has scroll specified in css by defining overflow-y property
      *
      */
     public void scrollToTop(){
@@ -653,7 +655,8 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     }
 
     /**
-     * when called on ajax event, this method moves navigation-bar to height passed in method
+     * when called on ajax event, this method moves navigation-bar to height passed in method ,
+     * this works when parent has scroll specified in css by defining overflow-y property
      *
      */
     public void scrollTo(int height){
