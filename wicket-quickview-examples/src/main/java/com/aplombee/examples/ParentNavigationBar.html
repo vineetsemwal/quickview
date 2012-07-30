@@ -15,21 +15,17 @@ Copyright 2012 Vineet Semwal
 -->
 <!DOCTYPE html>
 <html xmlns:wicket="http://wicket.apache.org">
-
 <head style="margin-left:50px;">
-      <h2> Quick View Examples  </h2>
-	</head>
+    <title>Rows Navigator Example</title>
+    <h2>  Rows Navigation displaying all items from 0-99</h2>
+    <h2>Scroll the navigation-bar of quickview's parent and more item/rows will be added</h2>
+</head>
+<body style="margin-left:50px;margin-top:50px;">
+<ul wicket:id="numbers" style="overflow-y:auto;height:150px;width:50%" >
+    <li wicket:id="number" style="margin-bottom:20px;">
+        number=<label wicket:id="display"></label>
+    </li>
+</ul>
 
-	<body style="margin-left:50px;margin-top:50px;">
-
-     <ul>
-	<li><a  wicket:id="rowsNavLink">Quick View with Rows Navigation Example</a>   </li>
-   <li> <a wicket:id="ajaxPagingLink">Quick View with Ajax Paging Navigation Example</a> </li>
-   <li> <a wicket:id="ajaxLink">QuickView with AjaxLink Example </a> </li>
-         <li> <a wicket:id="removeLink">Remove QuickView items Example </a></li>
-         <li> <a wicket:id="scrollLink">Scroll on Parent </a> </li>
-         <li><a wicket:id="pageScrollLink">Scroll on Body</a></li>
-     </ul>
-	</body>
-
+</body>
 </html>
