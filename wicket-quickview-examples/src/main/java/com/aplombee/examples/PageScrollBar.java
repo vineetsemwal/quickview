@@ -35,12 +35,12 @@ import java.util.List;
  * @author Vineet Semwal
  *
  */
-public class PageNavigationBar extends WebPage{
+public class PageScrollBar extends WebPage{
     private QuickView<Integer> quickView;
 
     private List<Integer> list=new ArrayList<Integer>();
 
-    public PageNavigationBar(){
+    public PageScrollBar(){
         for(int i=0;i<100;i++){
             list.add(i)  ;
         }

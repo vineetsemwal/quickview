@@ -35,12 +35,12 @@ import java.util.List;
  * @author Vineet Semwal
  *
  */
-public class ParentNavigationBar extends WebPage {
+public class ParentScrollBar extends WebPage {
     QuickView<Integer> quickView;
 
     private List<Integer> list=new ArrayList<Integer>();
 
-    public ParentNavigationBar(){
+    public ParentScrollBar(){
         for(int i=0;i<100;i++){
             list.add(i)  ;
         }
@@ -66,7 +66,7 @@ public class ParentNavigationBar extends WebPage {
         numbers.add(new AjaxComponentScrollEventBehavior(){
             @Override
             protected void onEvent(AjaxRequestTarget target) {
-               quickView.addItemsForNextPage();
+        quickView.addItemsForNextPage();
             }
         });
     }

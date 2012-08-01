@@ -36,10 +36,10 @@ public class HomePage extends WebPage {
         BookmarkablePageLink removeLink=new BookmarkablePageLink("removeLink",RemoveItemsPage.class);
         add(removeLink);
 
-        BookmarkablePageLink scrollLink=new BookmarkablePageLink("scrollLink",ParentNavigationBar.class);
+        BookmarkablePageLink scrollLink=new BookmarkablePageLink("scrollLink",ParentScrollBar.class);
         add(scrollLink);
 
-        BookmarkablePageLink pageScrollLink=new BookmarkablePageLink("pageScrollLink",PageNavigationBar.class);
+        BookmarkablePageLink pageScrollLink=new BookmarkablePageLink("pageScrollLink",PageScrollBar.class);
         add(pageScrollLink);
     }
 }
