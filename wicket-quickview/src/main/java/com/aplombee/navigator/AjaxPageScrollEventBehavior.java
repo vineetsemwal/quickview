@@ -24,7 +24,7 @@ import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 
 /**
- * behavior that can be attached to page ,on page scroll event will be fired if navigation-bar
+ * behavior that can be attached to page ,on page scroll event will be fired if scroll-bar
  * is moved to the the bottom of page.
  *
  * <strong>you need to call {@link com.aplombee.IQuickView#addItemsForNextPage()} when you implement {@link this#onEvent(org.apache.wicket.ajax.AjaxRequestTarget)}</strong>
