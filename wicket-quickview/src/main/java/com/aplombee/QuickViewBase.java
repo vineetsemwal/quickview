@@ -15,6 +15,7 @@
  limitations under the License.
  */
 package com.aplombee;
+import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -325,6 +326,10 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
          response.render(JavaScriptHeaderItem.forReference(RepeaterUtilReference.get()));
+        /**
+         * jquery reference added,it's not important as wicket itself uses jquery in ajax use case but still added to be safe
+         */
+        response.render(JavaScriptHeaderItem.forReference(Application.get().getJavaScriptLibrarySettings().getJQueryReference()));
          }
 
     public final long getItemsCount(){
