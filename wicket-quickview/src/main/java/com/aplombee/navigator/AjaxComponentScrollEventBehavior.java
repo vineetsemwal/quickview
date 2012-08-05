@@ -33,6 +33,8 @@ import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
  *<strong>you need to call {@link com.aplombee.IQuickView#addItemsForNextPage()} when you implement {@link this#onEvent(org.apache.wicket.ajax.AjaxRequestTarget)}</strong>
  *
  *
+ *  @author Vineet Semwal
+ *
  */
 public abstract class AjaxComponentScrollEventBehavior extends AjaxEventBehavior {
     protected IRepeaterUtil getRepeaterUtil(){
