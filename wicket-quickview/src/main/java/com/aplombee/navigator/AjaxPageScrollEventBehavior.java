@@ -16,10 +16,8 @@
  */
 package com.aplombee.navigator;
 
-import com.aplombee.IRepeaterUtil;
 import com.aplombee.RepeaterUtil;
 import org.apache.wicket.Component;
-import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 
@@ -27,20 +25,13 @@ import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
  * behavior that can be attached to page ,on page scroll event will be fired if scroll-bar
  * is moved to the the bottom of page.
  *
- * <strong>you need to call {@link com.aplombee.IQuickView#addItemsForNextPage()} when you implement {@link this#onEvent(org.apache.wicket.ajax.AjaxRequestTarget)}</strong>
+ * <strong>you need to call {@link this#addItemsForNextPage()} when you implement {@link this#onScroll(org.apache.wicket.ajax.AjaxRequestTarget)}</strong>
  *
  *
  * @author Vineet Semwal
  *
  */
-public abstract class AjaxPageScrollEventBehavior extends AjaxEventBehavior {
-    protected IRepeaterUtil getRepeaterUtil(){
-        return RepeaterUtil.get();
-    }
-    public AjaxPageScrollEventBehavior(){
-       super("scroll");
-    }
-
+public abstract class AjaxPageScrollEventBehavior extends AjaxScrollEventBehaviorBase {
 
     @Override
     protected void updateAjaxAttributes(AjaxRequestAttributes attributes) {
@@ -57,7 +48,6 @@ public abstract class AjaxPageScrollEventBehavior extends AjaxEventBehavior {
             return "return "+ call;
         }
     }
-
 
 }
 

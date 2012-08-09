@@ -46,7 +46,7 @@ public class AjaxComponentScrollEventBehaviorTest {
     public void updateAjaxAttributes(){
     AjaxComponentScrollEventBehavior behavior=new AjaxComponentScrollEventBehavior(){
         @Override
-        protected void onEvent(AjaxRequestTarget target) {
+        protected void onScroll(AjaxRequestTarget target) {
         }
     };
         AjaxRequestAttributes attributes=new AjaxRequestAttributes();

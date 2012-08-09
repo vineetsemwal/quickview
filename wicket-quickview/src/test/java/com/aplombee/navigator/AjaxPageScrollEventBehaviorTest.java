@@ -43,7 +43,7 @@ public class AjaxPageScrollEventBehaviorTest {
     public void updateAjaxAttributes(){
         AjaxPageScrollEventBehavior behavior=new AjaxPageScrollEventBehavior(){
             @Override
-            protected void onEvent(AjaxRequestTarget target) {
+            protected void onScroll(AjaxRequestTarget target) {
             }
         };
         AjaxRequestAttributes attributes=new AjaxRequestAttributes();

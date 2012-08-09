@@ -17,11 +17,9 @@
 
 package com.aplombee.navigator;
 
-import com.aplombee.IRepeaterUtil;
 import com.aplombee.RepeaterUtil;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 
@@ -30,27 +28,19 @@ import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
  * behavior that can be attached to quickview's parent ,on scroll event will be fired if scroll-bar
  * is moved to the bottom,for this to happen,you must specify the parent to have scroll in css by defining overflow-y property.
  *
- *<strong>you need to call {@link com.aplombee.IQuickView#addItemsForNextPage()} when you implement {@link this#onEvent(org.apache.wicket.ajax.AjaxRequestTarget)}</strong>
+ *<strong>you need to call {@link this#addItemsForNextPage()} when you implement {@link this#onScroll(org.apache.wicket.ajax.AjaxRequestTarget)}</strong>
  *
  *
  *  @author Vineet Semwal
  *
  */
-public abstract class AjaxComponentScrollEventBehavior extends AjaxEventBehavior {
-    protected IRepeaterUtil getRepeaterUtil(){
-        return RepeaterUtil.get();
-    }
-
-    public AjaxComponentScrollEventBehavior(){
-       super("scroll");
-      }
+public abstract class AjaxComponentScrollEventBehavior extends AjaxScrollEventBehaviorBase {
 
     @Override
     protected void updateAjaxAttributes(AjaxRequestAttributes attributes) {
         super.updateAjaxAttributes(attributes);
         attributes.getAjaxCallListeners().add(new ParentScrollListener());
     }
-
 
     public static class ParentScrollListener extends AjaxCallListener {
         @Override
@@ -60,4 +50,5 @@ public abstract class AjaxComponentScrollEventBehavior extends AjaxEventBehavior
             return "return "+ call;
             }
     }
+
 }
