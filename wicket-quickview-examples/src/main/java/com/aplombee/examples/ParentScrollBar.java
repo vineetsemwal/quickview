@@ -65,8 +65,8 @@ public class ParentScrollBar extends WebPage {
         add(numbers);
         numbers.add(new AjaxComponentScrollEventBehavior(){
             @Override
-            protected void onEvent(AjaxRequestTarget target) {
-        quickView.addItemsForNextPage();
+            protected void onScroll(AjaxRequestTarget target) {
+             addItemsForNextPage(quickView);
             }
         });
     }
