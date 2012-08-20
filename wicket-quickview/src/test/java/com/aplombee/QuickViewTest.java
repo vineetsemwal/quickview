@@ -490,6 +490,7 @@ public class QuickViewTest {
         final TestObj to = Mockito.mock(TestObj.class);
         final AjaxRequestTarget target = Mockito.mock(AjaxRequestTarget.class);
         // final long page=2l;
+       // final String id="78";
         Iterator it = mockIterator();
         // long start=itemsPerRequest*page;
         Mockito.when(dataProvider.iterator(4, itemsPerRequest)).thenReturn(it);
@@ -497,14 +498,6 @@ public class QuickViewTest {
         QuickView<TestObj> repeater = new QuickView<TestObj>("repeater", dataProvider, ReUse.DEFAULT_ITEMSNAVIGATION, itemsPerRequest) {
 
             public void populate(Item<TestObj> item) {
-            }
-
-            @Override
-            public Item buildItem(long id, TestObj object) {
-                Item item = Mockito.mock(Item.class);
-                Mockito.when(item.getMarkupId()).thenReturn(String.valueOf(id));
-                // Mockito.when(item.getIndex()).thenReturn(id);
-                return item;
             }
 
             @Override
@@ -522,8 +515,10 @@ public class QuickViewTest {
         Assert.assertEquals(items.size(), 2);
         Mockito.verify(spy, Mockito.times(1)).add(items.get(0));
         Mockito.verify(spy, Mockito.times(1)).add(items.get(1));
-        Assert.assertEquals(Integer.valueOf(items.get(0).getMarkupId()).intValue(), 4);
-        Assert.assertEquals(Integer.valueOf(items.get(1).getMarkupId()).intValue(), 5);
+        Assert.assertEquals(items.get(0).getIndex(), 4);
+        Assert.assertEquals(items.get(1).getIndex(), 5);
+        Assert.assertEquals(items.get(0).getMarkupId(),String.valueOf(1));
+        Assert.assertEquals(items.get(1).getMarkupId(),String.valueOf(2));
     }
 
     /**
@@ -547,12 +542,6 @@ public class QuickViewTest {
             public void populate(Item<TestObj> item) {
             }
 
-            @Override
-            public Item buildItem(long id, TestObj object) {
-                Item item = Mockito.mock(Item.class);
-                Mockito.when(item.getMarkupId()).thenReturn(String.valueOf(id));
-                return item;
-            }
 
             @Override
             public void simpleRemoveAllIfNotReuse() {
@@ -569,7 +558,8 @@ public class QuickViewTest {
         Mockito.verify(spy, Mockito.times(1)).simpleRemoveAllIfNotReuse();
         Assert.assertEquals(items.size(), 1);
         Mockito.verify(spy, Mockito.times(1)).add(items.get(0));
-        Assert.assertEquals(Integer.valueOf(items.get(0).getMarkupId()).intValue(), 3);
+        Assert.assertEquals(items.get(0).getIndex(), 3);
+        Assert.assertEquals(items.get(0).getMarkupId(), String.valueOf(1));
     }
 
 
@@ -595,10 +585,10 @@ public class QuickViewTest {
             }
 
             @Override
-            public Item buildItem(long id, TestObj object) {
+            public Item buildItem(String id,long index, TestObj object) {
                 Item item = Mockito.mock(Item.class);
-                Mockito.when(item.getMarkupId()).thenReturn(String.valueOf(id));
-                // Mockito.when(item.getIndex()).thenReturn(id);
+                Mockito.when(item.getMarkupId()).thenReturn(id);
+                // Mockito.when(item.getChildId()).thenReturn(id);
                 return item;
             }
 
@@ -915,9 +905,7 @@ public class QuickViewTest {
 
     @Test(groups = {"wicketTests"})
     public void createChildren_1() {
-
         int itemsPerRequest = 3;
-
         IDataProvider provider = Mockito.mock(IDataProvider.class);
         Iterator it = mockIterator();
         Mockito.when(provider.iterator(0, itemsPerRequest)).thenReturn(it);
@@ -935,9 +923,8 @@ public class QuickViewTest {
             }
 
             @Override
-            public Item buildItem(long id, TestObj object) {
-                Item i = Mockito.mock(Item.class);
-                Mockito.when(i.getMarkupId()).thenReturn(String.valueOf(id));
+            public Item buildItem(String id,long index, TestObj object) {
+               Item i= super.buildItem(id,index,object);
                 list.add(i);
                 return i;
             }
@@ -948,11 +935,14 @@ public class QuickViewTest {
 
         Mockito.verify(spy, Mockito.times(3)).simpleAdd(Mockito.any(Item.class));
         Mockito.verify(spy, Mockito.times(1)).simpleAdd(list.get(0));
-        Assert.assertEquals(Long.parseLong(list.get(0).getMarkupId()), 0l);
+        Assert.assertEquals(list.get(0).getMarkupId(), String.valueOf(1));
+        Assert.assertEquals(list.get(0).getIndex(), 0);
         Mockito.verify(spy, Mockito.times(1)).simpleAdd(list.get(1));
-        Assert.assertEquals(Long.parseLong(list.get(1).getMarkupId()), 1l);
+        Assert.assertEquals(list.get(1).getMarkupId(), String.valueOf(2));
+        Assert.assertEquals(list.get(1).getIndex(), 1);
         Mockito.verify(spy, Mockito.times(1)).simpleAdd(list.get(2));
-        Assert.assertEquals(Long.parseLong(list.get(2).getMarkupId()), 2l);
+        Assert.assertEquals(list.get(2).getIndex(), 2);
+        Assert.assertEquals(list.get(2).getMarkupId(), String.valueOf(3));
     }
 
 
@@ -981,23 +971,24 @@ public class QuickViewTest {
             }
 
             @Override
-            public Item buildItem(long id, TestObj object) {
-                Item i = Mockito.mock(Item.class);
-                Mockito.when(i.getMarkupId()).thenReturn(String.valueOf(id));
+            public Item buildItem(String id,long index, TestObj object) {
+                Item i= super.buildItem(id, index, object);
                 list.add(i);
                 return i;
             }
         };
+
 
         QuickView spy = Mockito.spy(arc);
         spy.createChildren(2);
 
         Mockito.verify(spy, Mockito.times(2)).simpleAdd(Mockito.any(Item.class));
         Mockito.verify(spy, Mockito.times(1)).simpleAdd(list.get(0));
-        Assert.assertEquals(Long.parseLong(list.get(0).getMarkupId()), 6l);
+        Assert.assertEquals(list.get(0).getMarkupId(), String.valueOf(1));
+        Assert.assertEquals(list.get(0).getIndex(), 6);
         Mockito.verify(spy, Mockito.times(1)).simpleAdd(list.get(1));
-        Assert.assertEquals(Long.parseLong(list.get(1).getMarkupId()), 7l);
-
+        Assert.assertEquals(list.get(1).getMarkupId(), String.valueOf(2));
+        Assert.assertEquals(list.get(1).getIndex(), 7);
     }
 
     /**
@@ -1022,9 +1013,8 @@ public class QuickViewTest {
             }
 
             @Override
-            public Item buildItem(long id, TestObj object) {
-                Item i = Mockito.mock(Item.class);
-                Mockito.when(i.getMarkupId()).thenReturn(String.valueOf(id));
+            public Item buildItem(String id,long index, TestObj object) {
+                Item i= super.buildItem(id, index, object);
                 list.add(i);
                 return i;
             }
@@ -1035,11 +1025,14 @@ public class QuickViewTest {
 
         Mockito.verify(spy, Mockito.times(3)).simpleAdd(Mockito.any(Item.class));
         Mockito.verify(spy, Mockito.times(1)).simpleAdd(list.get(0));
-        Assert.assertEquals(Long.parseLong(list.get(0).getMarkupId()), 0l);
+        Assert.assertEquals(list.get(0).getMarkupId(), String.valueOf(1));
+        Assert.assertEquals(list.get(0).getIndex(), 0);
         Mockito.verify(spy, Mockito.times(1)).simpleAdd(list.get(1));
-        Assert.assertEquals(Long.parseLong(list.get(1).getMarkupId()), 1l);
+        Assert.assertEquals(list.get(1).getMarkupId(), String.valueOf(2));
+        Assert.assertEquals(list.get(1).getIndex(), 1);
         Mockito.verify(spy, Mockito.times(1)).simpleAdd(list.get(2));
-        Assert.assertEquals(Long.parseLong(list.get(2).getMarkupId()), 2l);
+        Assert.assertEquals(list.get(2).getMarkupId(), String.valueOf(3));
+        Assert.assertEquals(list.get(2).getIndex(), 2);
     }
 
 
@@ -1738,53 +1731,9 @@ public class QuickViewTest {
         quick.renderHead(response);
         Mockito.verify(response, Mockito.times(1)).render(JavaScriptHeaderItem.forReference(RepeaterUtilReference.get()));
     }
-    /*
-@Test(groups = {"wicketTests"})
-public void childVisitor_1(){
- QuickViewBase.ChildVisitor visitor=new QuickViewBase.ChildVisitor(searchFor);
 
-}       */
 
-    @Test(groups = {"wicketTests"})
-    public void clearIndex_1() {
-        IDataProvider data=Mockito.mock(IDataProvider.class);
-         QuickView quickView=new QuickView("id",data) {
-             @Override
-             protected void populate(Item item) {
-             }
-         } ;
-        quickView.incrementIndexByNumber(7);
-        quickView.clearChildId();
-        Assert.assertEquals(quickView.getIndex(),0l);
-    }
 
-    @Test(groups = {"wicketTests"})
-    public void incrementIndexByNumber_1() {
-        IDataProvider data=Mockito.mock(IDataProvider.class);
-        QuickView quickView=new QuickView("id",data) {
-            @Override
-            protected void populate(Item item) {
-            }
-        } ;
-        quickView.incrementIndexByNumber(7);
-        Assert.assertEquals(quickView.getIndex(),7l);
-    }
-    @Test(groups = {"wicketTests"})
-    public void incrementIndexByNumber_2() {
-        IDataProvider data=Mockito.mock(IDataProvider.class);
-        QuickView quickView=new QuickView("id",data) {
-            @Override
-            protected void populate(Item item) {
-            }
-        } ;
-        quickView.incrementIndexByNumber(10);
-        quickView.incrementIndexByNumber(-7);
-        Assert.assertEquals(quickView.getIndex(),3l);
-    }
-
-    /**
-     * added two,removed one
-     */
     @Test(groups = {"wicketTests"})
     public void simpleRemove(){
         IDataProvider data=Mockito.mock(IDataProvider.class);
@@ -1793,11 +1742,11 @@ public void childVisitor_1(){
             protected void populate(Item item) {
             }
         } ;
-        Item one=quickView.buildItem(0, 67);
-        Item two=quickView.buildItem(1, 68);
+        Item one=quickView.buildItem( 67);
+        Item two=quickView.buildItem( 68);
         quickView.simpleAdd(one,two);
         quickView.simpleRemove(one);
-        Assert.assertEquals(quickView.getIndex(), 1l);
+        Assert.assertEquals(quickView.getChildId(), 2l);
         Assert.assertEquals(quickView.size(),1);
     }
 
@@ -1812,11 +1761,11 @@ public void childVisitor_1(){
             protected void populate(Item item) {
             }
         } ;
-        Item one=quickView.buildItem(0, 67);
-        Item two=quickView.buildItem(1, 68);
+        Item one=quickView.buildItem( 67);
+        Item two=quickView.buildItem(68);
         quickView.simpleAdd(one,two);
         quickView.simpleRemoveAll();
-         Assert.assertEquals(quickView.getIndex(),0l);
+         Assert.assertEquals(quickView.getChildId(),2l);
         Assert.assertEquals(quickView.size(),0);
     }
 
@@ -1828,13 +1777,13 @@ public void childVisitor_1(){
             protected void populate(Item item) {
             }
         } ;
-        Item one=quickView.buildItem(0, 67);
+        Item one=quickView.buildItem( 67);
         quickView.simpleAdd(one);
-        Assert.assertEquals(quickView.getIndex(), 1);
+        Assert.assertEquals(quickView.getChildId(), 1);
         Assert.assertEquals(quickView.size(), 1);
-        Item two=quickView.buildItem(1, 68);
+        Item two=quickView.buildItem( 68);
         quickView.simpleAdd(two);
-        Assert.assertEquals(quickView.getIndex(),2);
+        Assert.assertEquals(quickView.getChildId(),2);
         Assert.assertEquals(quickView.size(),2);
 
     }
@@ -1853,11 +1802,13 @@ public void childVisitor_1(){
             protected void populate(Item<Integer> item) {
             }
         } ;
-        final long id=9l;
-
-       Item <Integer>item= quickView.newItem(id,object);
+        final long index=9l;
+        final String id="67";
+       Item <Integer>item= quickView.newItem(id,index,object);
         Assert.assertEquals(item.getModelObject().intValue(), 89);
-        Assert.assertEquals(Long.parseLong(item.getMarkupId()),id);
+        Assert.assertEquals(item.getMarkupId(),id);
+        Assert.assertEquals(item.getIndex(),index);
+        Assert.assertTrue(item.getOutputMarkupId());
     }
 
     /**
@@ -1874,16 +1825,17 @@ public void childVisitor_1(){
             protected void populate(Item<String> item) {
             }
         } ;
-        final long id=9l;
-
-        Item <String>item= quickView.newItem(id,object);
+        final long index=9l;
+        final String id="345";
+        Item <String>item= quickView.newItem(id,index,object);
         Assert.assertEquals(item.getModelObject(),object);
-        Assert.assertEquals(Long.parseLong(item.getMarkupId()),id);
+        Assert.assertEquals(item.getMarkupId(),id);
         Assert.assertTrue(item.getOutputMarkupId());
+        Assert.assertEquals(item.getIndex(),index);
     }
 
     /**
-     * test for  {@link QuickViewBase#buildItem(long, Object)}
+     * test for  {@link QuickViewBase#buildItem(id,index,object)}
      */
     @Test(groups = {"wicketTests"})
     public void buildItem_1(){
@@ -1895,78 +1847,55 @@ public void childVisitor_1(){
             }
 
             @Override
-            protected Item newItem(long id, TestObj object) {
+            protected Item newItem(String id,long index, TestObj object) {
                 return item;
             }
         } ;
-        final long id=9l;
+        final long index=9l;
+        final String id="87";
        final TestObj object=Mockito.mock(TestObj.class);
         QuickView<TestObj>spy=Mockito.spy(quickView);
-        Item <TestObj>actual= spy.buildItem(id,object);
+        Item <TestObj>actual= spy.buildItem(id,index,object);
         Assert.assertEquals(actual,item);
        InOrder order= Mockito.inOrder(spy, item);
-         order.verify(spy, Mockito.times(1)).newItem(id,object);
+         order.verify(spy, Mockito.times(1)).newItem(id,index,object);
          order.verify(spy, Mockito.times(1)).populate(item);
      }
 
+
     /**
-     * test for  {@link QuickViewBase#buildItem(String, Object)}
+     * test for  {@link QuickViewBase#buildItem(object)}
      */
     @Test(groups = {"wicketTests"})
     public void buildItem_2(){
         IDataProvider data=Mockito.mock(IDataProvider.class);
         final Item item=Mockito.mock(Item.class);
+         final String childId="78";
         QuickView<TestObj> quickView=new QuickView<TestObj>("id",data,ReUse.DEFAULT_ITEMSNAVIGATION) {
             @Override
-            protected void populate(Item item) {
-            }
+            protected void populate(Item<TestObj> item) {}
 
             @Override
-            public Item<TestObj> buildItem(long id, TestObj object) {
-                return item;
-            }
-        } ;
-        final String id="99";
-        final TestObj object=Mockito.mock(TestObj.class);
-        QuickView<TestObj>spy=Mockito.spy(quickView);
-        Item <TestObj>actual= spy.buildItem(id,object);
-        Assert.assertEquals(actual,item);
-       Mockito.verify(spy,Mockito.times(1)).buildItem(99l, object);
-    }
-
-
-    /**
-     * test for  {@link QuickViewBase#buildItem(String, Object)}
-     */
-    @Test(groups = {"wicketTests"})
-    public void buildItem_3(){
-        final String id="78";
-        IDataProvider data=Mockito.mock(IDataProvider.class);
-        final Item item=Mockito.mock(Item.class);
-        QuickView<TestObj> quickView=new QuickView<TestObj>("id",data,ReUse.DEFAULT_ITEMSNAVIGATION) {
-            @Override
-            protected void populate(Item item) {
-            }
-
-            @Override
-            public Item<TestObj> buildItem(long id, TestObj object) {
+            public Item<TestObj> buildItem(String id, long index, TestObj object) {
                 return item;
             }
 
             @Override
             public String newChildId() {
-                return id;
+                return childId;
+            }
+
+            @Override
+            public long getChildId() {
+                return Long.parseLong(childId);
             }
         } ;
+       QuickView<TestObj>spy= Mockito.spy(quickView);
+        TestObj obj=Mockito.mock(TestObj.class);
+        spy.buildItem(obj);
+        Mockito.verify(spy).buildItem(childId,78,obj);
 
-        final TestObj object=Mockito.mock(TestObj.class);
-        QuickView<TestObj>spy=Mockito.spy(quickView);
-        Item <TestObj>actual= spy.buildItem(object);
-        Assert.assertEquals(actual,item);
-        Mockito.verify(spy,Mockito.times(1)).buildItem(id,object);
     }
-
-
     @Test(groups = {"wicketTests"})
     public void addItemsForNextPage_1() {
         final long dataProviderSize = 12;

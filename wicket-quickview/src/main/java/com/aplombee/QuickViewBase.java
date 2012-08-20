@@ -47,25 +47,16 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         return itemsPerRequest;
     }
 
-    /**
-     * for newchildId
-     */
-    private long index=0;
-    public long getIndex(){
-        return  index;
+     private long childId =0;
+
+    public long getChildId(){
+        return childId;
     }
 
-
-    /**
-     * increment index by the number passed in argument
-     * @param number  number by which index is incremented
-     * @return   new index
-     */
-    protected long incrementIndexByNumber(int number){
-        return index=index+number;
-    }
-    protected void clearChildId(){
-        index=0;
+    @Override
+    public String newChildId() {
+        childId++;
+        return String.valueOf(childId);
     }
 
     public void setItemsPerRequest(int items) {
@@ -80,17 +71,16 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
             {
                 addStateChange();
             }
+            this.itemsPerRequest = items;
+
+            // because items per page can effect the total number of pages we always
+            // reset the current page back to zero
+            _setCurrentPage(0);
         }
 
-        this.itemsPerRequest = items;
-
-        // because items per page can effect the total number of pages we always
-        // reset the current page back to zero
-        _setCurrentPage(0);
     }
 
     private transient long itemsCount=-1;
-
 
     private IDataProvider<T> dataProvider;
 
@@ -148,34 +138,19 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     }
 
 
-    /**
-     * @param object model object
-     * @param id     child id
-     * @return Child created
-     */
-    protected Item<T> newItem(long id, T object) {
-        Item<T> item = new Item<T>(String.valueOf(id), getRepeaterUtil().safeLongToInt(id), getDataProvider().model(object));
+    protected Item<T> newItem(String id,long index, T object) {
+        Item<T> item = new Item<T>(id, getRepeaterUtil().safeLongToInt(index), getDataProvider().model(object));
         item.setMarkupId(String.valueOf(id));
         item.setOutputMarkupId(true);
         return item;
     }
 
-    public Item<T> buildItem(String id, T object) {
-        return buildItem(Long.parseLong(id), object);
-    }
 
-    /**
-     * creates new item,this method can be used in stateless environment,unique id is what you have to provide
-     *
-     * @param id    id of the item
-     * @param object   model object
-     * @return     item
-     */
-    public Item<T> buildItem(long id, T object) {
-        Item<T> item = newItem(id, object);
-         populate(item);
+    public Item<T> buildItem(String id,long index, T object) {
+        Item<T> item = newItem(id,index, object);
+        populate(item);
         return item;
-    }
+       }
 
 
     /**
@@ -186,8 +161,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      * @return    item
      */
     public Item buildItem(T object) {
-       String id=newChildId();
-      return buildItem(id, object);
+       return buildItem(newChildId(), getChildId(), object);
     }
 
     public boolean isAjax() {
@@ -201,11 +175,8 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      */
     public MarkupContainer simpleAdd(Component... c) {
          super.add(c);
-        incrementIndexByNumber(c.length)  ;
-        return this;
+         return this;
     }
-
-
 
 
     /**
@@ -215,13 +186,11 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      */
     public MarkupContainer simpleRemove(Component c) {
         super.remove(c);
-        incrementIndexByNumber(-1)        ;
-         return this;
+        return this;
     }
 
     public MarkupContainer simpleRemoveAll() {
-        clearChildId();
-        return super.removeAll();
+         return super.removeAll();
     }
 
 
@@ -282,11 +251,6 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         return (Item) get(getRepeaterUtil().safeLongToInt(index));
     }
 
-    @Override
-    public String newChildId() {
-        return String.valueOf(index);
-    }
-
     /**
      * remove pages from startpage till stop page, including stopPage
      *
@@ -317,7 +281,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         Iterator<? extends T> iterator = getDataProvider().iterator(items, getItemsPerRequest());
         for (long i = items; iterator.hasNext(); i++) {
             T obj = iterator.next();
-            Component item = buildItem(i, obj);
+            Component item = buildItem(newChildId(), i,obj);
             simpleAdd(item);
         }
     }
@@ -558,7 +522,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     }
 
     /**
-     * create and draw children from the provided index ,number of
+     * create and draw children from the provided childId ,number of
      * children created are smaller than equal to getItemsPerRequest()
      *
      * @return list of components created
@@ -573,7 +537,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         // long i = newIndex;
         while (iterator.hasNext()) {
             T t = iterator.next();
-            Item<T> c = buildItem(newIndex, t);
+            Item<T> c = buildItem(newChildId(),newIndex, t);
             components.add(c);
             add(c);
             newIndex++;
@@ -581,6 +545,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
 
         return components;
     }
+
 
     @Override
     public MarkupContainer remove(final Component component) {
