@@ -483,7 +483,7 @@ public class QuickViewTest {
 
 
     @Test(groups = {"wicketTests"})
-    public void addComponentsFromIndex_1() {
+    public void addItemsFromIndex_1() {
         int itemsPerRequest = 2;
         final WebMarkupContainer parent = Mockito.mock(WebMarkupContainer.class);
         IDataProvider dataProvider = Mockito.mock(IDataProvider.class);
@@ -526,7 +526,7 @@ public class QuickViewTest {
      */
 
     @Test(groups = {"wicketTests"})
-    public void addComponentsFromIndex_2() {
+    public void addItemsFromIndex_2() {
         final int itemsPerRequest = 2;
         final WebMarkupContainer parent = Mockito.mock(WebMarkupContainer.class);
         IDataProvider dataProvider = Mockito.mock(IDataProvider.class);
@@ -568,7 +568,7 @@ public class QuickViewTest {
      */
 
     @Test(groups = {"wicketTests"})
-    public void addComponentForPage_1() {
+    public void addItemsForPage_1() {
         int itemsPerRequest = 2;
         final WebMarkupContainer parent = Mockito.mock(WebMarkupContainer.class);
         IDataProvider dataProvider = Mockito.mock(IDataProvider.class);
