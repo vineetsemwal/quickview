@@ -22,7 +22,7 @@ import org.apache.wicket.markup.repeater.data.IDataProvider;
 
 /**
  *
- * adds,deletes elements without the need to re-render the whole repeater
+ * adds,deletes elements without the need to repaint the parent in ajax case( adding parent to AjaxRequestTarget causes re-rendering of the whole repeater)
  *
  * the type of reuse constant to use  must be set ,for {@link org.apache.wicket.markup.html.navigation.paging.PagingNavigator}
  * or {@link org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigator} {@link ReUse.DEFAULT_PAGING} is preferred
