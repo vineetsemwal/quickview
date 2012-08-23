@@ -54,7 +54,7 @@ public class QuickViewTest {
 
     WicketTester tester;
 
-    @BeforeTest
+    @BeforeTest(groups = {"wicketTests"})
     void setup() {
         tester = new WicketTester(createMockApplication());
     }
@@ -1493,8 +1493,10 @@ public class QuickViewTest {
             }
 
         };
-        repeater.setItemsPerRequest(itemsPerRequest);
-        Assert.assertEquals(repeater.getItemsPerRequest(), 3);
+       QuickView spy= Mockito.spy(repeater);
+        spy.setItemsPerRequest(itemsPerRequest);
+        Assert.assertEquals(spy.getItemsPerRequest(), 3);
+        Mockito.verify(spy,Mockito.times(1))._setCurrentPage(0);
     }
 
     /**
@@ -1524,6 +1526,60 @@ public class QuickViewTest {
             isException = true;
         }
         Assert.assertTrue(isException);
+    }
+
+    /**
+     * itemsPerRequest changed
+     */
+    @Test(groups = {"wicketTests"})
+    public void setItemsPerRequest_3() {
+        final int oldItemsPerRequest = 3;
+        final int newItemsPerRequest = 5;
+        IDataProvider provider = Mockito.mock(IDataProvider.class);
+        Mockito.when(provider.size()).thenReturn(10l);
+        QuickView repeater = new QuickView("repeater", provider) {
+            @Override
+            protected void populate(Item item) {
+            }
+
+            @Override
+            public boolean isVisible() {
+                return true;
+            }
+
+        };
+        repeater.setItemsPerRequest(oldItemsPerRequest);
+       QuickView spy= Mockito.spy(repeater);
+       spy.setItemsPerRequest(newItemsPerRequest);
+       Assert.assertEquals(spy.getItemsPerRequest(),newItemsPerRequest);
+        Mockito.verify(spy,Mockito.times(1)).setItemsPerRequest(newItemsPerRequest);
+        Mockito.verify(spy,Mockito.times(1))._setCurrentPage(0);
+    }
+
+    /**
+     * itemsPerRequest not changed  ie. if itemsPerRequest is not changed but it's set again
+     */
+    @Test(groups = {"wicketTests"})
+    public void setItemsPerRequest_4() {
+        final int itemsPerRequest = 3;
+        IDataProvider provider = Mockito.mock(IDataProvider.class);
+        Mockito.when(provider.size()).thenReturn(10l);
+        QuickView repeater = new QuickView("repeater", provider) {
+            @Override
+            protected void populate(Item item) {
+            }
+
+            @Override
+            public boolean isVisible() {
+                return true;
+            }
+
+        };
+        repeater.setItemsPerRequest(itemsPerRequest);
+        QuickView spy= Mockito.spy(repeater);
+        spy.setItemsPerRequest(itemsPerRequest);
+        Assert.assertEquals(spy.getItemsPerRequest(),itemsPerRequest);
+        Mockito.verify(spy,Mockito.never())._setCurrentPage(0);
     }
 
     @Test(groups = {"wicketTests"})
