@@ -41,13 +41,13 @@ import java.util.List;
 public abstract class QuickViewBase<T> extends RepeatingView implements IQuickView {
 
       //items created per request ,if used with PagingNavigator/AjaxPagingNavigator then it's the items per page
-    private int itemsPerRequest=Integer.MAX_VALUE;
+    private long itemsPerRequest=Integer.MAX_VALUE;
 
-    public int getItemsPerRequest() {
+    public long getItemsPerRequest() {
         return itemsPerRequest;
     }
 
-     private long childId =0;
+    private long childId =0;
 
     public long getChildId(){
         return childId;
@@ -59,7 +59,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         return String.valueOf(childId);
     }
 
-    public void setItemsPerRequest(int items) {
+    public void setItemsPerRequest(long items) {
         if (items < 1)
         {
             throw new IllegalArgumentException("itemsPerRequest cannot be less than 1");
