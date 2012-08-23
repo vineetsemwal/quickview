@@ -43,5 +43,6 @@ public class WicketApplication extends WebApplication
 		super.init();
 
 		// add your configuration here
+
 	}
 }

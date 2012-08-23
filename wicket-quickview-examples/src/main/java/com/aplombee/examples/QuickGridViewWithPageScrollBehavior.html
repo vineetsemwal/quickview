@@ -13,21 +13,22 @@ Copyright 2012 Vineet Semwal
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
+
 <!DOCTYPE html>
 
 <html xmlns:wicket="http://wicket.apache.org" style="height: 101% ;">
-<head style="margin-left:50px;">
-    <title>Rows Navigator Example</title>
-    <h2>  Rows Navigation displaying all items from 0-99</h2>
-    <h2>Move down the scroll-bar of page and more item/rows will be added</h2>
+<head  style="margin-left:50px;">
+    <title>QuickGridView with AjaxPageScrollEventBehavior</title>
+     <h2>Move down the scroll-bar of page and more rows will be added</h2>
 </head>
-<body style="margin-left:50px;margin-top:50px;" >
-
-<ul wicket:id="numbers"   >
-    <li wicket:id="number" style="margin-bottom:20px;">
-        number=<label wicket:id="display"></label>
-    </li>
-</ul>
+<body  style="margin-left:50px;margin-top:50px;" >
+<table wicket:id="parent" cellspacing="0" cellpadding="20" border="1">
+    <tr wicket:id="gv" >
+        <td wicket:id="cols">
+            <label wicket:id="label"></label>
+        </td>
+    </tr>
+</table>
 
 </body>
 </html>

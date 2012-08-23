@@ -41,5 +41,18 @@ public class HomePage extends WebPage {
 
         BookmarkablePageLink pageScrollLink=new BookmarkablePageLink("pageScrollLink",PageScrollBar.class);
         add(pageScrollLink);
+
+        BookmarkablePageLink gvLink=new BookmarkablePageLink("gvLink",QuickGridViewWithItemsNavigatorPage.class);
+        add(gvLink);
+
+        BookmarkablePageLink gvScrollLink=new BookmarkablePageLink("gvScrollLink",QuickGridViewWithPageScrollBehavior.class);
+        add(gvScrollLink);
+
+        BookmarkablePageLink gvPagingLink=new BookmarkablePageLink("gvPagingLink",QuickGridViewWithAjaxPagingNavigator.class);
+        add(gvPagingLink);
+
+        BookmarkablePageLink gvAjaxLink=new BookmarkablePageLink("gvAjaxLink",QuickGridViewWithAjaxLink.class);
+        add(gvAjaxLink);
+
     }
 }
