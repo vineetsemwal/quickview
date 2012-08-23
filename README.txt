@@ -1,10 +1,14 @@
-  QuickView
+  QuickView and QuickGridView
 -----------------------------
-QuickView is a wicket component(RepeatingView) ,it lets you add new rows or remove the rows without the need to re-render the whole repeater again in ajax use cases.
+QuickView is a wicket component(RepeatingView) ,it lets you add or remove the rows without the need to re-render the whole repeater again in ajax use cases.
 AjaxItemsNavigator which is provided in this package creates new rows on click.Quickview can be also be used with PagingNavigator or AjaxPagingNavigator .
-it should work in all the scenarios where the DataView works.the way of using it is exactly like DataView .
 
-read more about QuickView at https://github.com/vineetsemwal/quickview/wiki
+
+QuickGridView extends QuickView ,it renders items in rows and columns in table/grid format.it also lets you add or remove the rows without the need to 
+re-render the whole repeater again in ajax use cases.it works well with AjaxItemsNavigator or PagingNavigator.
+
+
+read more about QuickView and QuickGridView at https://github.com/vineetsemwal/quickview/wiki
 
 Please use simple examples which comes with the package .
 
