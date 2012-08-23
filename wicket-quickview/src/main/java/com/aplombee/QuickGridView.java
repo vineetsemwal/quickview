@@ -31,7 +31,8 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * a gridview that can add and remove rows in ajax cases without the need to repaint parent(adding parent to AjaxRequestTarget causes re-rendering of whole repeater)
+ * it renders items in rows and columns in table/grid format(same as GridView).it also lets you add and remove rows in ajax cases
+ * without the need to repaint parent(adding parent to AjaxRequestTarget causes re-rendering of whole repeater)
  *
  * @author Vineet Semwal
  */
