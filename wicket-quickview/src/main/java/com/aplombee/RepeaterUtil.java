@@ -261,31 +261,52 @@ public class RepeaterUtil implements IRepeaterUtil {
        return "isPageScrollBarAtBottom();";
     }
 
-
+    /**
+     *  throw this exception if quickview's parent is not found
+     *
+     * @author Vineet Semwal
+     */
     public static class QuickViewNotAddedToParentException extends RuntimeException {
         public QuickViewNotAddedToParentException(String message) {
             super(message);
         }
     }
 
+    /**
+     * throw this exception if outmarkupid is not set to true
+     * @author Vineet Semwal
+     */
     public static class OutputMarkupIdNotTrueException extends RuntimeException {
         public OutputMarkupIdNotTrueException(String message) {
             super(message);
         }
     }
 
+    /**
+     *  throw this exception if reuse constant set is not supported
+     * @author Vineet Semwal
+     */
     public static class ReuseStrategyNotSupportedException extends RuntimeException {
         public ReuseStrategyNotSupportedException(String message) {
             super(message);
         }
     }
 
+    /**
+     *  throw this exception if quickview's parent has more than one child in case of items navigation
+     * @author Vineet Semwal
+     */
     public static class ParentNotUnaryException extends RuntimeException {
         public ParentNotUnaryException(String message) {
             super(message);
         }
     }
 
+
+    /**
+     *  throw this exception if quickview is not initialized with reuse constant
+     * @author Vineet Semwal
+     */
     public static class ReuseNotInitializedException extends RuntimeException {
         public ReuseNotInitializedException(String message) {
             super(message);
