@@ -47,7 +47,7 @@ public class RowsNavigatorPage extends WebPage {
         super.onInitialize();
         IDataProvider<Integer>data=new ListDataProvider<Integer>(list);
         final int itemsPerRequest=4;//rows created per request
-        final ReUse reuse= ReUse.DEFAULT_ITEMSNAVIGATION;//default reuse strategy that should be used with rowsnavigator
+        final ReUse reuse= ReUse.ITEMSNAVIGATION;//default reuse strategy that should be used with rowsnavigator
 
         QuickView<Integer> quickView=new QuickView<Integer>("number",data,reuse,itemsPerRequest) {
             @Override

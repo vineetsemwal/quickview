@@ -47,7 +47,7 @@ public class QuickGridViewWithPageScrollBehavior extends WebPage {
         super.onInitialize();
         IDataProvider<Integer> data=new ListDataProvider<Integer>(list);
 
-        final ReUse reuse= ReUse.DEFAULT_ITEMSNAVIGATION;//default reuse strategy that should be used with rowsnavigator
+        final ReUse reuse= ReUse.ITEMSNAVIGATION;//default reuse strategy that should be used with rowsnavigator
 
         gridView=new QuickGridView<Integer>("gv",data,reuse) {
             @Override

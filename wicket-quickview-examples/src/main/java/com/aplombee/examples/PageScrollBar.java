@@ -52,7 +52,7 @@ public class PageScrollBar extends WebPage{
 
         IDataProvider<Integer> data=new ListDataProvider<Integer>(list);
         final int itemsPerRequest=14;//rows created per request
-        final ReUse reuse= ReUse.DEFAULT_ITEMSNAVIGATION;//default reuse strategy that should be used with rowsnavigator
+        final ReUse reuse= ReUse.ITEMSNAVIGATION;//default reuse strategy that should be used with rowsnavigator
 
         quickView=new QuickView<Integer>("number",data,reuse,itemsPerRequest) {
             @Override

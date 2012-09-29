@@ -120,7 +120,7 @@ public class RepeaterUtil implements IRepeaterUtil {
     @Override
     public final void parentNotSuitable(IQuickView quickView) {
         Args.notNull(quickView,"quickview") ;
-        if (quickView.getReuse() == ReUse.DEFAULT_PAGING || quickView.getReuse() == ReUse.CURRENTPAGE) {
+        if (quickView.getReuse() == ReUse.PAGING || quickView.getReuse() == ReUse.CURRENTPAGE) {
             return;
         }
         MarkupContainer parent = quickView.getParent();
@@ -164,8 +164,8 @@ public class RepeaterUtil implements IRepeaterUtil {
     public final void reuseStategyNotSupportedForItemsNavigation(IQuickView quickView) {
         Args.notNull(quickView,"quickview") ;
         reuseNotInitialized(quickView);
-        if (ReUse.DEFAULT_PAGING == quickView.getReuse() || ReUse.CURRENTPAGE==quickView.getReuse()) {
-            throw new ReuseStrategyNotSupportedException(ReUse.DEFAULT_PAGING + " stategy is not supported for itemsnavigator ");
+        if (ReUse.PAGING == quickView.getReuse() || ReUse.CURRENTPAGE==quickView.getReuse()) {
+            throw new ReuseStrategyNotSupportedException(ReUse.PAGING + " stategy is not supported for itemsnavigator ");
         }
     }
 

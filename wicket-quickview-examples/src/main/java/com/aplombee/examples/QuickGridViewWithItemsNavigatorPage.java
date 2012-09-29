@@ -19,8 +19,6 @@ package com.aplombee.examples;
 import com.aplombee.ReUse;
 import com.aplombee.QuickGridView;
 import com.aplombee.navigator.AjaxItemsNavigator;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -49,7 +47,7 @@ public class QuickGridViewWithItemsNavigatorPage extends WebPage{
         super.onInitialize();
         IDataProvider<Integer> data=new ListDataProvider<Integer>(list);
 
-        final ReUse reuse= ReUse.DEFAULT_ITEMSNAVIGATION;//default reuse strategy that should be used with rowsnavigator
+        final ReUse reuse= ReUse.ITEMSNAVIGATION;//default reuse strategy that should be used with rowsnavigator
 
         gridView=new QuickGridView<Integer>("gv",data,reuse) {
             @Override

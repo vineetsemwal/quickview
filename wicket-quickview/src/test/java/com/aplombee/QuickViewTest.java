@@ -72,7 +72,7 @@ public class QuickViewTest {
         int oneBlock = 2;
         final String repeaterId = "repeater";
         IDataProvider<TestObj> provider = mockProvider(oneBlock);
-        QuickView<TestObj> repeater = new QuickView<TestObj>(repeaterId, provider, ReUse.DEFAULT_ITEMSNAVIGATION, oneBlock) {
+        QuickView<TestObj> repeater = new QuickView<TestObj>(repeaterId, provider, ReUse.ITEMSNAVIGATION, oneBlock) {
 
             @Override
             protected void populate(Item<TestObj> item) {
@@ -80,7 +80,7 @@ public class QuickViewTest {
 
         };
         repeater.setMarkupId("con");
-        Assert.assertEquals(ReUse.DEFAULT_ITEMSNAVIGATION, repeater.getReuse());
+        Assert.assertEquals(ReUse.ITEMSNAVIGATION, repeater.getReuse());
         Assert.assertEquals(repeater.getDataProvider(), provider);
         //  Assert.assertEquals(repeater.getFirstInitialization(), start);
         Assert.assertEquals(repeater.getItemsPerRequest(), oneBlock);
@@ -241,8 +241,8 @@ public class QuickViewTest {
         };
         boolean isexception = false;
 
-        repeater.setReuse(ReUse.DEFAULT_ITEMSNAVIGATION);
-        Assert.assertEquals(repeater.getReuse(), ReUse.DEFAULT_ITEMSNAVIGATION);
+        repeater.setReuse(ReUse.ITEMSNAVIGATION);
+        Assert.assertEquals(repeater.getReuse(), ReUse.ITEMSNAVIGATION);
     }
 
 
@@ -495,7 +495,7 @@ public class QuickViewTest {
         // long start=itemsPerRequest*page;
         Mockito.when(dataProvider.iterator(4, itemsPerRequest)).thenReturn(it);
         Mockito.when(it.hasNext()).thenReturn(true).thenReturn(true).thenReturn(false);
-        QuickView<TestObj> repeater = new QuickView<TestObj>("repeater", dataProvider, ReUse.DEFAULT_ITEMSNAVIGATION, itemsPerRequest) {
+        QuickView<TestObj> repeater = new QuickView<TestObj>("repeater", dataProvider, ReUse.ITEMSNAVIGATION, itemsPerRequest) {
 
             public void populate(Item<TestObj> item) {
             }
@@ -579,7 +579,7 @@ public class QuickViewTest {
         long start = itemsPerRequest * page;
         Mockito.when(dataProvider.iterator(start, itemsPerRequest)).thenReturn(it);
         Mockito.when(it.hasNext()).thenReturn(true).thenReturn(true).thenReturn(false);
-        QuickView<TestObj> repeater = new QuickView<TestObj>("repeater", dataProvider, ReUse.DEFAULT_ITEMSNAVIGATION, itemsPerRequest) {
+        QuickView<TestObj> repeater = new QuickView<TestObj>("repeater", dataProvider, ReUse.ITEMSNAVIGATION, itemsPerRequest) {
 
             public void populate(Item<TestObj> item) {
             }
@@ -1080,7 +1080,7 @@ public class QuickViewTest {
                 return 2;
             }
         };
-        repeater.setReuse(ReUse.DEFAULT_PAGING);
+        repeater.setReuse(ReUse.PAGING);
         QuickView spy = Mockito.spy(repeater);
         spy.onPopulate();
         Mockito.verify(util,Mockito.times(1)).reuseNotInitialized(spy);
@@ -1132,7 +1132,7 @@ public class QuickViewTest {
                 return 2;
             }
         };
-        repeater.setReuse(ReUse.DEFAULT_ITEMSNAVIGATION);
+        repeater.setReuse(ReUse.ITEMSNAVIGATION);
         QuickView spy = Mockito.spy(repeater);
         spy.onPopulate();
         Mockito.verify(util,Mockito.times(1)).reuseNotInitialized(spy);
@@ -1606,7 +1606,7 @@ public class QuickViewTest {
             }
         };
 
-        repeater.setReuse(ReUse.DEFAULT_PAGING);
+        repeater.setReuse(ReUse.PAGING);
         QuickView spy = Mockito.spy(repeater);
         spy.removePages(1, 2);
         Mockito.verify(spy, Mockito.times(4)).simpleRemove(Mockito.any(Item.class));
@@ -1853,7 +1853,7 @@ public class QuickViewTest {
         final Model<Integer>model=new Model<Integer>(object);
         IDataProvider<Integer> data=Mockito.mock(IDataProvider.class);
         Mockito.when(data.model(object)).thenReturn(model);
-        QuickView<Integer> quickView=new QuickView<Integer>("id",data,ReUse.DEFAULT_ITEMSNAVIGATION) {
+        QuickView<Integer> quickView=new QuickView<Integer>("id",data,ReUse.ITEMSNAVIGATION) {
             @Override
             protected void populate(Item<Integer> item) {
             }
@@ -1876,7 +1876,7 @@ public class QuickViewTest {
         IDataProvider data=Mockito.mock(IDataProvider.class);
         Model<String>model=new Model<String>(object);
         Mockito.when(data.model(object)).thenReturn(model);
-        QuickView<String> quickView=new QuickView<String>("id",data,ReUse.DEFAULT_ITEMSNAVIGATION) {
+        QuickView<String> quickView=new QuickView<String>("id",data,ReUse.ITEMSNAVIGATION) {
             @Override
             protected void populate(Item<String> item) {
             }
@@ -1897,7 +1897,7 @@ public class QuickViewTest {
     public void buildItem_1(){
         IDataProvider data=Mockito.mock(IDataProvider.class);
         final Item item=Mockito.mock(Item.class);
-        QuickView<TestObj> quickView=new QuickView<TestObj>("id",data,ReUse.DEFAULT_ITEMSNAVIGATION) {
+        QuickView<TestObj> quickView=new QuickView<TestObj>("id",data,ReUse.ITEMSNAVIGATION) {
             @Override
             protected void populate(Item item) {
             }
@@ -1927,7 +1927,7 @@ public class QuickViewTest {
         IDataProvider data=Mockito.mock(IDataProvider.class);
         final Item item=Mockito.mock(Item.class);
          final String childId="78";
-        QuickView<TestObj> quickView=new QuickView<TestObj>("id",data,ReUse.DEFAULT_ITEMSNAVIGATION) {
+        QuickView<TestObj> quickView=new QuickView<TestObj>("id",data,ReUse.ITEMSNAVIGATION) {
             @Override
             protected void populate(Item<TestObj> item) {}
 
@@ -1960,7 +1960,7 @@ public class QuickViewTest {
         Mockito.when(dataProvider.size()).thenReturn(dataProviderSize);
         final AjaxRequestTarget target=Mockito.mock(AjaxRequestTarget.class);
         final List<Item> items=Mockito.mock(List.class);
-        QuickView quickview=new QuickView("quick",dataProvider,ReUse.DEFAULT_ITEMSNAVIGATION) {
+        QuickView quickview=new QuickView("quick",dataProvider,ReUse.ITEMSNAVIGATION) {
             @Override
             protected void populate(Item item) {
             }
@@ -2006,7 +2006,7 @@ public class QuickViewTest {
         Mockito.when(dataProvider.size()).thenReturn(dataProviderSize);
         final AjaxRequestTarget target=Mockito.mock(AjaxRequestTarget.class);
         final List<Item> items=Mockito.mock(List.class);
-        QuickView quickview=new QuickView("quick",dataProvider,ReUse.DEFAULT_ITEMSNAVIGATION) {
+        QuickView quickview=new QuickView("quick",dataProvider,ReUse.ITEMSNAVIGATION) {
             @Override
             protected void populate(Item item) {
             }
@@ -2049,7 +2049,7 @@ public class QuickViewTest {
         final List<Item> items=Mockito.mock(List.class);
         IDataProvider dataProvider=Mockito.mock(IDataProvider.class);
         Mockito.when(dataProvider.size()).thenReturn(dataProviderSize);
-        QuickView quickview=new QuickView("quick",dataProvider,ReUse.DEFAULT_ITEMSNAVIGATION) {
+        QuickView quickview=new QuickView("quick",dataProvider,ReUse.ITEMSNAVIGATION) {
             @Override
             protected void populate(Item item) {
             }

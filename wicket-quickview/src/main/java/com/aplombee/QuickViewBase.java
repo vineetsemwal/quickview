@@ -207,14 +207,14 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
              // all children might have got removed ,if true then create children of last page
              //for first render currentpage will be 0
 
-            if (ReUse.DEFAULT_PAGING == reuse) {
+            if (ReUse.PAGING == reuse) {
                 createChildren(current);
             }
 
 
              //   not first render but items were removed
 
-            if ((ReUse.DEFAULT_ITEMSNAVIGATION == reuse) )  {
+            if ((ReUse.ITEMSNAVIGATION == reuse) )  {
                 createChildren(0);
                 _setCurrentPage(0);
             }
@@ -595,7 +595,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      * removes all children if reuse is not true
      */
     public void simpleRemoveAllIfNotReuse() {
-        if (reuse == ReUse.DEFAULT_PAGING || reuse == ReUse.DEFAULT_ITEMSNAVIGATION) {
+        if (reuse == ReUse.PAGING || reuse == ReUse.ITEMSNAVIGATION) {
             simpleRemoveAll();
         }
     }

@@ -18,7 +18,6 @@ package com.aplombee.examples;
 
 import com.aplombee.QuickGridView;
 import com.aplombee.ReUse;
-import com.aplombee.navigator.AjaxItemsNavigator;
 import org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigator;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
@@ -48,7 +47,7 @@ public class QuickGridViewWithAjaxPagingNavigator extends WebPage {
         super.onInitialize();
         IDataProvider<Integer> data=new ListDataProvider<Integer>(list);
 
-        final ReUse reuse= ReUse.DEFAULT_PAGING;//default reuse strategy that should be used with PagingNavigator
+        final ReUse reuse= ReUse.PAGING;//default reuse strategy that should be used with PagingNavigator
 
         gridView=new QuickGridView<Integer>("gv",data,reuse) {
             @Override

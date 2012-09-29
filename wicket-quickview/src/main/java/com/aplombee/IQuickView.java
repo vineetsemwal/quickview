@@ -51,5 +51,6 @@ public interface IQuickView<T> extends IPageable{
      *
      */
     List<Item<T>> addItemsForNextPage();
+
     }
 

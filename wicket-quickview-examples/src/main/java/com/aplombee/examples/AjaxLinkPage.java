@@ -18,7 +18,6 @@ package com.aplombee.examples;
 
 import com.aplombee.QuickView;
 import com.aplombee.ReUse;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -51,7 +50,7 @@ public class AjaxLinkPage extends WebPage {
         IDataProvider<Integer> data = new ListDataProvider<Integer>(list);
         WebMarkupContainer numbers = new WebMarkupContainer("numbers");   //parent for quickview
         numbers.setOutputMarkupId(true);  //needed for ajax
-        final QuickView<Integer> number = new QuickView<Integer>("number", data, ReUse.DEFAULT_ITEMSNAVIGATION) {
+        final QuickView<Integer> number = new QuickView<Integer>("number", data, ReUse.ITEMSNAVIGATION) {
             @Override
             protected void populate(Item<Integer> item) {
                 item.add(new Label("display", item.getModel()));

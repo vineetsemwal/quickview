@@ -27,12 +27,12 @@ public enum ReUse {
      * all children are removed and children of last page visited are created ,used for paging say with {@link org.apache.wicket.markup.html.navigation.paging.PagingNavigator} or
      * {@link org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigator}  ,this is the prefered strategy for paging navigation
      */
- DEFAULT_PAGING,
+ PAGING,
 
     /**
      * all children are removed and children of first page are created again ,mostly used and preferred for {@link com.aplombee.navigator.AjaxItemsNavigator}
      */
-    DEFAULT_ITEMSNAVIGATION,
+    ITEMSNAVIGATION,
 
 
     /**
