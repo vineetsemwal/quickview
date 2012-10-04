@@ -64,18 +64,7 @@ public class RepeaterUtilTest {
         quickView.setReuse(ReUse.ITEMSNAVIGATION);
         parent.setOutputMarkupId(true);
         parent.add(quickView);
-
-
-
         TestQuickViewContainer panel = new TestQuickViewContainer("panel") {
-            @Override
-            public AbstractLink newLink() {
-                return new Link("link"){
-                    @Override
-                    public void onClick() {
-                    }
-                };
-            }
 
             @Override
             public QuickViewParent newParent() {
@@ -116,16 +105,7 @@ public class RepeaterUtilTest {
         parent.setOutputMarkupId(true);
         parent.add(quickView);
 
-
         TestQuickGridViewContainer panel = new TestQuickGridViewContainer("panel") {
-            @Override
-            public AbstractLink newLink() {
-                return new Link("link"){
-                    @Override
-                    public void onClick() {
-                    }
-                };
-            }
 
             @Override
             public QuickViewParent newParent() {
@@ -144,7 +124,6 @@ public class RepeaterUtilTest {
 
     @Test(groups = {"utilTests"})
     public void getComponentTag_2() {
-
         QuickMockApplication app = new QuickMockApplication();
         WicketTester tester = new WicketTester(app);
         final QuickViewParent parent = new QuickViewParent("parent");
@@ -159,19 +138,7 @@ public class RepeaterUtilTest {
         quickView.setReuse(ReUse.ITEMSNAVIGATION);
         parent.setOutputMarkupId(true);
         parent.add(quickView);
-
-
-
         TestQuickViewContainer panel = new TestQuickViewContainer("panel") {
-            @Override
-            public AbstractLink newLink() {
-                return new Link("link"){
-                    @Override
-                    public void onClick() {
-                    }
-                };
-            }
-
             @Override
             public QuickViewParent newParent() {
                 return parent;
@@ -208,14 +175,7 @@ public class RepeaterUtilTest {
         parent.add(quickView);
 
         TestQuickViewContainer panel = new TestQuickViewContainer("panel") {
-            @Override
-            public AbstractLink newLink() {
-                return new Link("link"){
-                    @Override
-                    public void onClick() {
-                    }
-                };
-            }
+
             @Override
             public QuickViewParent newParent() {
                 return parent;

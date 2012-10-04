@@ -42,7 +42,7 @@ Copyright 2012 Vineet Semwal
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
     <dependencyManagement>
-	<dependencies>
+        <dependencies>
 		<!--  WICKET DEPENDENCIES -->
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
