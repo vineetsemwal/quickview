@@ -101,7 +101,7 @@ public class QuickGridViewWithAjaxLink extends WebPage {
                 QuickGridView.CellItem<Integer> cell1 = number.buildCellItem(newObject); // cell created
 
                 int newObject2=list.get(0) -1;
-                list.add(1, newObject2);
+                list.add(0, newObject2);
                 QuickGridView.CellItem<Integer> cell2 = number.buildCellItem(newObject2); //another cell created
                 number.addCells(row,cell1,cell2);         //add cells to row
                 number.addRowAtStart(row);    //just enough to add row  and render it  at start
