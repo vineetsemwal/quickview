@@ -43,7 +43,7 @@ public class RepeaterUtil implements  IRepeaterUtil{
      * {@inheritDoc}
      */
     public String insertBefore(String tag, String markupId, String parentMarkupId) {
-        String script = String.format("insertBefore('%s','%s','%s')", tag, markupId, parentMarkupId);
+        String script = String.format("insertBefore('%s','%s','%s');", tag, markupId, parentMarkupId);
         return script;
     }
 
@@ -63,7 +63,7 @@ public class RepeaterUtil implements  IRepeaterUtil{
      */
     @Override
     public String insertAfter(String tag, String markupId, String parentMarkupId) {
-        String script = String.format("insertAfter('%s','%s','%s')", tag, markupId, parentMarkupId);
+        String script = String.format("insertAfter('%s','%s','%s');", tag, markupId, parentMarkupId);
         return script;
 
     }
@@ -92,7 +92,7 @@ public class RepeaterUtil implements  IRepeaterUtil{
      */
     @Override
     public String removeItem(String markupId) {
-        String script = String.format("removeItem('%s')", markupId);
+        String script = String.format("removeItem('%s');", markupId);
         return script;
     }
 

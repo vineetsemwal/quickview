@@ -16,17 +16,20 @@
  */
 package com.aplombee;
 
-import com.aplombee.navigator.TestPanel2;
-import junit.framework.Assert;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.link.AbstractLink;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
+import org.apache.wicket.markup.repeater.data.ListDataProvider;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.WicketTester;
 import org.mockito.Mockito;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
@@ -42,80 +45,204 @@ public class RepeaterUtilTest {
     public void insertBefore_1(){
         final String child="child" ,parent="parent",tag="div";
                String actual= RepeaterUtil.get().insertBefore(tag,child,parent);
-        String expected="insertBefore('div','child','parent')";
-        Assert.assertEquals(actual.trim(),expected.trim());
+        String expected="insertBefore('div','child','parent');";
+        Assert.assertEquals(actual.trim(), expected.trim());
     }
     @Test(groups = {"utilTests"})
-    public void insertBefore_2(){
-        WicketTester tester=new WicketTester(createMockApplication()) ;
-        TestPanel panel=new TestPanel("id");
+    public void insertBefore_2() {
+        QuickMockApplication app = new QuickMockApplication();
+        WicketTester tester = new WicketTester(app);
+        final QuickViewParent parent = new QuickViewParent("parent");
+        List<Integer> list = new ArrayList<Integer>();
+        list.add(100);
+        IDataProvider<Integer> dataProvider = new ListDataProvider<Integer>(list);
+        final QuickView<Integer> quickView = new QuickView<Integer>("quickview", dataProvider, 2) {
+            @Override
+            protected void populate(Item<Integer> item) {
+            }
+        };
+        quickView.setReuse(ReUse.ITEMSNAVIGATION);
+        parent.setOutputMarkupId(true);
+        parent.add(quickView);
+
+
+
+        TestQuickViewContainer panel = new TestQuickViewContainer("panel") {
+            @Override
+            public AbstractLink newLink() {
+                return new Link("link"){
+                    @Override
+                    public void onClick() {
+                    }
+                };
+            }
+
+            @Override
+            public QuickViewParent newParent() {
+                return parent;
+            }
+        };
         tester.startComponentInPage(panel);
-        QuickView quick=   panel.getQuickView();
-        ComponentTag tag= RepeaterUtil.get().getComponentTag(quick);
-       String actual= RepeaterUtil.get().insertBefore(quick,quick.getParent());
-       String expected=String.format("insertBefore('%s','%s','%s')",tag.getName(),quick.getMarkupId(),quick.getParent().getMarkupId());
-         Assert.assertEquals(actual.trim(),expected.trim());
+        final Item<Integer> item = (Item) quickView.get(0);
+        String expected = String.format("insertBefore('%s','%s','%s');", TestQuickViewContainer.TAG_NAME, item.getMarkupId(), parent.getMarkupId());
+        String actual = RepeaterUtil.get().insertBefore(item, parent);
+        Assert.assertEquals(actual.trim(), expected.trim());
     }
 
     /**
      * check with testpanel
      */
+
     @Test(groups = {"utilTests"})
-    public void getComponentTag_1(){
-        WicketTester tester=new WicketTester(createMockApplication()) ;
-        TestPanel panel=new TestPanel("id");
-             tester.startComponentInPage(panel);
-        QuickView quick=   panel.getQuickView();
-         ComponentTag tag= RepeaterUtil.get().getComponentTag(quick);
-         Assert.assertEquals(tag.getName(),"div");
+    public void getComponentTag_1() {
+        QuickMockApplication app = new QuickMockApplication();
+        WicketTester tester = new WicketTester(app);
+        final QuickViewParent parent = new QuickViewParent("parent");
+        List<Integer> list = new ArrayList<Integer>();
+        list.add(100);
+        list.add(500);
+        IDataProvider<Integer> dataProvider = new ListDataProvider<Integer>(list);
+        final QuickGridView<Integer> quickView = new QuickGridView<Integer>("quickview", dataProvider) {
+            @Override
+            protected void populate(CellItem<Integer> item) {
+            }
+
+            @Override
+            protected void populateEmptyItem(CellItem<Integer> item) {
+            }
+        };
+        quickView.setColumns(2);
+        quickView.setReuse(ReUse.ITEMSNAVIGATION);
+        parent.setOutputMarkupId(true);
+        parent.add(quickView);
+
+
+        TestQuickGridViewContainer panel = new TestQuickGridViewContainer("panel") {
+            @Override
+            public AbstractLink newLink() {
+                return new Link("link"){
+                    @Override
+                    public void onClick() {
+                    }
+                };
+            }
+
+            @Override
+            public QuickViewParent newParent() {
+                return parent;
+            }
+        };
+        tester.startComponentInPage(panel);
+        final Item<Integer> item = (Item) quickView.getRow(0);
+        ComponentTag actual=   RepeaterUtil.get().getComponentTag(item);
+        Assert.assertEquals(actual.getName(),"tr");
     }
+
     /**
      * check with testpanel2
      */
+
     @Test(groups = {"utilTests"})
-    public void getComponentTag_2(){
-        WicketTester tester=new WicketTester(createMockApplication()) ;
-        TestPanel2 panel=new TestPanel2("id");
+    public void getComponentTag_2() {
+
+        QuickMockApplication app = new QuickMockApplication();
+        WicketTester tester = new WicketTester(app);
+        final QuickViewParent parent = new QuickViewParent("parent");
+        List<Integer> list = new ArrayList<Integer>();
+        list.add(100);
+        IDataProvider<Integer> dataProvider = new ListDataProvider<Integer>(list);
+        final QuickView<Integer> quickView = new QuickView<Integer>("quickview", dataProvider, 2) {
+            @Override
+            protected void populate(Item<Integer> item) {
+            }
+        };
+        quickView.setReuse(ReUse.ITEMSNAVIGATION);
+        parent.setOutputMarkupId(true);
+        parent.add(quickView);
+
+
+
+        TestQuickViewContainer panel = new TestQuickViewContainer("panel") {
+            @Override
+            public AbstractLink newLink() {
+                return new Link("link"){
+                    @Override
+                    public void onClick() {
+                    }
+                };
+            }
+
+            @Override
+            public QuickViewParent newParent() {
+                return parent;
+            }
+        };
         tester.startComponentInPage(panel);
-        QuickView quick=   panel.getQuickView();
-        ComponentTag tag= RepeaterUtil.get().getComponentTag(quick);
-        Assert.assertEquals(tag.getName(),"li");
+        final Item<Integer> item = (Item) quickView.get(0);
+      ComponentTag actual=   RepeaterUtil.get().getComponentTag(item);
+        Assert.assertEquals(actual.getName(),TestQuickViewContainer.TAG_NAME);
     }
 
     @Test(groups = {"utilTests"})
     public void insertAfter_1(){
         final String child="child" ,parent="parent",tag="div";
         String call= RepeaterUtil.get().insertAfter(tag, child, parent);
-        String expected="insertAfter('div','child','parent')";
+        String expected="insertAfter('div','child','parent');";
         Assert.assertEquals(call,expected);
     }
     @Test(groups = {"utilTests"})
-    public void insertAfter_2(){
+    public void insertAfter_2() {
+        QuickMockApplication app = new QuickMockApplication();
         WicketTester tester=new WicketTester(createMockApplication()) ;
-        TestPanel panel=new TestPanel("id");
+        final QuickViewParent parent = new QuickViewParent("parent");
+        List<Integer> list = new ArrayList<Integer>();
+        list.add(100);
+        IDataProvider<Integer> dataProvider = new ListDataProvider<Integer>(list);
+        final QuickView<Integer> quickView = new QuickView<Integer>("quickview", dataProvider, 2) {
+            @Override
+            protected void populate(Item<Integer> item) {
+            }
+        };
+        quickView.setReuse(ReUse.ITEMSNAVIGATION);
+        parent.setOutputMarkupId(true);
+        parent.add(quickView);
+
+        TestQuickViewContainer panel = new TestQuickViewContainer("panel") {
+            @Override
+            public AbstractLink newLink() {
+                return new Link("link"){
+                    @Override
+                    public void onClick() {
+                    }
+                };
+            }
+            @Override
+            public QuickViewParent newParent() {
+                return parent;
+            }
+        };
         tester.startComponentInPage(panel);
-        QuickView quick=   panel.getQuickView();
-        ComponentTag tag= RepeaterUtil.get().getComponentTag(quick);
-        String actual= RepeaterUtil.get().insertAfter(quick, quick.getParent());
-        String expected=String.format("insertAfter('%s','%s','%s')",tag.getName(),quick.getMarkupId(),quick.getParent().getMarkupId());
-        Assert.assertEquals(actual.trim(),expected.trim());
+        final Item<Integer> item = (Item) quickView.get(0);
+        String expected = String.format("insertAfter('%s','%s','%s');", TestQuickViewContainer.TAG_NAME, item.getMarkupId(), parent.getMarkupId());
+        String actual = RepeaterUtil.get().insertAfter(item, parent);
+        Assert.assertEquals(actual.trim(), expected.trim());
     }
 
     @Test(groups = {"utilTests"})
     public void removeItem_1(){
       final String repeaterMarkupId="quick";
-      final String expected="removeItem('quick')";
+      final String expected="removeItem('quick');";
        final  String actual=RepeaterUtil.get().removeItem(repeaterMarkupId);
         Assert.assertEquals(actual.trim(),expected.trim());
     }
 
     @Test(groups = {"utilTests"})
-    public void removeItem(){
+    public void removeItem_2(){
         final String repeaterMarkupId="quick";
         Item item=Mockito.mock(Item.class);
         Mockito.when(item.getMarkupId()).thenReturn(repeaterMarkupId);
         final  String actual=RepeaterUtil.get().removeItem(item);
-        final String expected="removeItem('quick')";
+        final String expected="removeItem('quick');";
         Assert.assertEquals(actual.trim(),expected.trim());
     }
 
@@ -363,7 +490,7 @@ public class RepeaterUtilTest {
         String actualPrependScripts=RepeaterUtil.get().prependedScripts(input);
         Assert.assertEquals(actualPrependScripts,prependJavaScripts.toString());
         String actualAppendScripts=RepeaterUtil.get().appendedScripts(input);
-        Assert.assertEquals(actualAppendScripts,appendJavaScripts.toString());
+        Assert.assertEquals(actualAppendScripts, appendJavaScripts.toString());
     }
 
     @Test(groups = {"utilTests"})

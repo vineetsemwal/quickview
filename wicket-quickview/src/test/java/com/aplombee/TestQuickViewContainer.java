@@ -31,7 +31,8 @@ import org.apache.wicket.util.resource.StringResourceStream;
  * @author Vineet Semwal
  */
 public abstract class TestQuickViewContainer extends WebMarkupContainer  implements IMarkupResourceStreamProvider {
-    public static final String quickViewId="quickview",parentId="parent",ajaxLinkId="link",navigatorId="navigator";
+    public static final String quickViewId="quickview",parentId="parent",ajaxLinkId="link",navigatorId="navigator",
+    TAG_NAME="div";
     private AbstractLink link;
     private QuickViewParent parent ;
     private ItemsNavigatorBase navigator;
