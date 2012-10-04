@@ -139,13 +139,10 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
         if (!isAjax()) {
             return rowItem;
         }
-        if (isParentAddedInAjaxRequestTarget()) {
-            return rowItem;
-        }
-        AjaxRequestTarget target = getAjaxRequestTarget();
-        String call = getRepeaterUtil().insertBefore(rowItem, _getParent());
-        target.prependJavaScript(call);
-        target.add(rowItem);
+
+       String call = getRepeaterUtil().insertBefore(rowItem, _getParent());
+        getSynchronizer().getPrependScripts().add(call);
+        getSynchronizer().add(rowItem);
         return rowItem;
     }
 
@@ -155,23 +152,19 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
         if (!isAjax()) {
             return this;
         }
-        if (isParentAddedInAjaxRequestTarget()) {
-            return this;
-        }
-        AjaxRequestTarget target = getAjaxRequestTarget();
         String call = getRepeaterUtil().insertAfter(rowItem, _getParent());
-        target.prependJavaScript(call);
-        target.add(rowItem);
+        Synchronizer listener= getSynchronizer();
+        listener.getPrependScripts().add(call);
+        listener.add(rowItem);
         return this;
     }
 
     public void removeRow(RowItem<T> rowItem) {
         Args.notNull(rowItem, "rowItem can't be null");
-        if (isAjax() && !isParentAddedInAjaxRequestTarget()) {
-            AjaxRequestTarget target = getAjaxRequestTarget();
+        if (isAjax()) {
             String call = getRepeaterUtil().removeItem(rowItem);
-            target.prependJavaScript(call);
-            target.add(rowItem);
+             getSynchronizer().getPrependScripts().add(call);
+            getSynchronizer().add(rowItem);
         }
         simpleRemove(rowItem);
     }

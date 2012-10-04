@@ -19,6 +19,9 @@ package com.aplombee;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.IMarkupResourceStreamProvider;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
@@ -973,12 +976,14 @@ public class QuickGridViewTest {
 
 
     /**
-     *    ajax=true  ,parrentaddedtotarget=false
+     *    ajax=true
      */
     @Test(groups = {"wicketTests"})
     public void addRow_1(){
         IDataProvider provider = Mockito.mock(IDataProvider.class);
-        final AjaxRequestTarget target=Mockito.mock(AjaxRequestTarget.class);
+        List<String> scripts=Mockito.mock(List.class);
+        final QuickViewBase.Synchronizer synchronizer=Mockito.mock(QuickViewBase.Synchronizer.class);
+        Mockito.when(synchronizer.getPrependScripts()).thenReturn(scripts);
         final IRepeaterUtil util=Mockito.mock(IRepeaterUtil.class);
         final String call="insert after";
         QuickGridView.RowItem row=Mockito.mock(QuickGridView.RowItem.class);
@@ -994,8 +999,8 @@ public class QuickGridViewTest {
             }
 
             @Override
-            public AjaxRequestTarget getAjaxRequestTarget() {
-                return target;
+            public Synchronizer getSynchronizer() {
+                return synchronizer;
             }
 
             @Override
@@ -1018,77 +1023,13 @@ public class QuickGridViewTest {
                 return parent;
             }
 
-            @Override
-            public boolean isParentAddedInAjaxRequestTarget() {
-                return false;
-            }
         } ;
         QuickGridView spy=Mockito.spy(grid);
 
         spy.addRow(row);
           Mockito.verify(spy,Mockito.times(1)).simpleAdd(row);
-           Mockito.verify(target,Mockito.times(1)).prependJavaScript(call);
-        Mockito.verify(target,Mockito.times(1)).add(row);
-    }
-
-
-    /**
-     *    ajax=true  ,parrentaddedtotarget=true
-     */
-    @Test(groups = {"wicketTests"})
-    public void addRow_2(){
-        IDataProvider provider = Mockito.mock(IDataProvider.class);
-        final AjaxRequestTarget target=Mockito.mock(AjaxRequestTarget.class);
-        final IRepeaterUtil util=Mockito.mock(IRepeaterUtil.class);
-        final String call="insert after";
-        QuickGridView.RowItem row=Mockito.mock(QuickGridView.RowItem.class);
-        final MarkupContainer parent=Mockito.mock(MarkupContainer.class);
-        Mockito.when(util.insertAfter(row,parent)).thenReturn(call);
-        QuickGridView<Integer> grid=new QuickGridView<Integer>("grid",provider) {
-            @Override
-            protected void populate(CellItem<Integer> item) {
-            }
-
-            @Override
-            protected void populateEmptyItem(CellItem<Integer> item) {
-            }
-
-            @Override
-            public AjaxRequestTarget getAjaxRequestTarget() {
-                return target;
-            }
-
-            @Override
-            public boolean isAjax() {
-                return true;
-            }
-
-            @Override
-            public MarkupContainer simpleAdd(Component... c) {
-                return this;
-            }
-
-            @Override
-            protected IRepeaterUtil getRepeaterUtil() {
-                return util;
-            }
-
-            @Override
-            protected MarkupContainer _getParent() {
-                return parent;
-            }
-
-            @Override
-            public boolean isParentAddedInAjaxRequestTarget() {
-                return true;
-            }
-        } ;
-        QuickGridView spy=Mockito.spy(grid);
-
-        spy.addRow(row);
-        Mockito.verify(spy,Mockito.times(1)).simpleAdd(row);
-        Mockito.verify(target,Mockito.never()).prependJavaScript(call);
-        Mockito.verify(target,Mockito.never() ).add(row);
+           Mockito.verify(scripts,Mockito.times(1)).add(call);
+        Mockito.verify(synchronizer,Mockito.times(1)).add(row);
     }
 
 
@@ -1096,9 +1037,8 @@ public class QuickGridViewTest {
      *    ajax=false
      */
     @Test(groups = {"wicketTests"})
-    public void addRow_3(){
+    public void addRow_2(){
         IDataProvider provider = Mockito.mock(IDataProvider.class);
-        final AjaxRequestTarget target=Mockito.mock(AjaxRequestTarget.class);
         final IRepeaterUtil util=Mockito.mock(IRepeaterUtil.class);
         final String call="insert after";
         QuickGridView.RowItem row=Mockito.mock(QuickGridView.RowItem.class);
@@ -1113,10 +1053,7 @@ public class QuickGridViewTest {
             protected void populateEmptyItem(CellItem<Integer> item) {
             }
 
-            @Override
-            public AjaxRequestTarget getAjaxRequestTarget() {
-                return target;
-            }
+
 
             @Override
             public boolean isAjax() {
@@ -1138,29 +1075,25 @@ public class QuickGridViewTest {
                 return parent;
             }
 
-            @Override
-            public boolean isParentAddedInAjaxRequestTarget() {
-                return true;
-            }
-        } ;
+          } ;
         QuickGridView spy=Mockito.spy(grid);
 
         spy.addRow(row);
         Mockito.verify(spy,Mockito.times(1)).simpleAdd(row);
-        Mockito.verify(spy,Mockito.never()).isParentAddedInAjaxRequestTarget();
-        Mockito.verify(target,Mockito.never()).prependJavaScript(call);
-        Mockito.verify(target,Mockito.never() ).add(row);
+
     }
 
 
 
     /**
-     *    ajax=true  ,parrentaddedtotarget=false
+     *    ajax=true
      */
     @Test(groups = {"wicketTests"})
     public void addRowAtStart_1(){
         IDataProvider provider = Mockito.mock(IDataProvider.class);
-        final AjaxRequestTarget target=Mockito.mock(AjaxRequestTarget.class);
+        List<String> scripts=Mockito.mock(List.class);
+        final QuickViewBase.Synchronizer synchronizer=Mockito.mock(QuickViewBase.Synchronizer.class);
+        Mockito.when(synchronizer.getPrependScripts()).thenReturn(scripts);
         final IRepeaterUtil util=Mockito.mock(IRepeaterUtil.class);
         final String call="insert before";
         QuickGridView.RowItem row=Mockito.mock(QuickGridView.RowItem.class);
@@ -1176,8 +1109,8 @@ public class QuickGridViewTest {
             }
 
             @Override
-            public AjaxRequestTarget getAjaxRequestTarget() {
-                return target;
+            public Synchronizer getSynchronizer() {
+                return synchronizer;
             }
 
             @Override
@@ -1200,85 +1133,25 @@ public class QuickGridViewTest {
                 return parent;
             }
 
-            @Override
-            public boolean isParentAddedInAjaxRequestTarget() {
-                return false;
-            }
         } ;
         QuickGridView spy=Mockito.spy(grid);
         spy.addRowAtStart(row);
         Mockito.verify(spy,Mockito.times(1)).simpleAdd(row);
-        Mockito.verify(target,Mockito.times(1)).prependJavaScript(call);
-        Mockito.verify(target,Mockito.times(1)).add(row);
-    }
-
-    /**
-     *    ajax=true  ,parrentaddedtotarget=true
-     */
-    @Test(groups = {"wicketTests"})
-    public void addRowAtStart_2(){
-        IDataProvider provider = Mockito.mock(IDataProvider.class);
-        final AjaxRequestTarget target=Mockito.mock(AjaxRequestTarget.class);
-        final IRepeaterUtil util=Mockito.mock(IRepeaterUtil.class);
-        final String call="insert before";
-        QuickGridView.RowItem row=Mockito.mock(QuickGridView.RowItem.class);
-        final MarkupContainer parent=Mockito.mock(MarkupContainer.class);
-        Mockito.when(util.insertBefore(row,parent)).thenReturn(call);
-        QuickGridView<Integer> grid=new QuickGridView<Integer>("grid",provider) {
-            @Override
-            protected void populate(CellItem<Integer> item) {
-            }
-
-            @Override
-            protected void populateEmptyItem(CellItem<Integer> item) {
-            }
-
-            @Override
-            public AjaxRequestTarget getAjaxRequestTarget() {
-                return target;
-            }
-
-            @Override
-            public boolean isAjax() {
-                return true;
-            }
-
-            @Override
-            public MarkupContainer simpleAdd(Component... c) {
-                return this;
-            }
-
-            @Override
-            protected IRepeaterUtil getRepeaterUtil() {
-                return util;
-            }
-
-            @Override
-            protected MarkupContainer _getParent() {
-                return parent;
-            }
-
-            @Override
-            public boolean isParentAddedInAjaxRequestTarget() {
-                return true;
-            }
-        } ;
-        QuickGridView spy=Mockito.spy(grid);
-        spy.addRowAtStart(row);
-        Mockito.verify(spy,Mockito.times(1)).simpleAdd(row);
-        Mockito.verify(target,Mockito.never()).prependJavaScript(call);
-        Mockito.verify(target,Mockito.never()).add(row);
+        Mockito.verify(scripts,Mockito.times(1)).add(call);
+        Mockito.verify(synchronizer,Mockito.times(1)).add(row);
     }
 
 
 
     /**
-     *    ajax=true  ,parrentaddedtotarget=false
+     *    ajax=true
      */
     @Test(groups = {"wicketTests"})
     public void removeRow_1(){
         IDataProvider provider = Mockito.mock(IDataProvider.class);
-        final AjaxRequestTarget target=Mockito.mock(AjaxRequestTarget.class);
+        List<String> scripts=Mockito.mock(List.class);
+        final QuickViewBase.Synchronizer synchronizer=Mockito.mock(QuickViewBase.Synchronizer.class);
+        Mockito.when(synchronizer.getPrependScripts()).thenReturn(scripts);
         final IRepeaterUtil util=Mockito.mock(IRepeaterUtil.class);
         final String call="remove row";
         QuickGridView.RowItem row=Mockito.mock(QuickGridView.RowItem.class);
@@ -1294,8 +1167,8 @@ public class QuickGridViewTest {
             }
 
             @Override
-            public AjaxRequestTarget getAjaxRequestTarget() {
-                return target;
+            public Synchronizer getSynchronizer() {
+                return  synchronizer;
             }
 
             @Override
@@ -1318,16 +1191,12 @@ public class QuickGridViewTest {
                 return parent;
             }
 
-            @Override
-            public boolean isParentAddedInAjaxRequestTarget() {
-                return false;
-            }
-        } ;
+          } ;
         QuickGridView spy=Mockito.spy(grid);
         spy.removeRow(row);
         Mockito.verify(spy,Mockito.times(1)).simpleRemove(row);
-        Mockito.verify(target,Mockito.times(1)).prependJavaScript(call);
-        Mockito.verify(target,Mockito.times(1)).add(row);
+        Mockito.verify(scripts,Mockito.times(1)).add(call);
+        Mockito.verify(synchronizer,Mockito.times(1)).add(row);
     }
 
 
@@ -1377,10 +1246,6 @@ public class QuickGridViewTest {
                 return parent;
             }
 
-            @Override
-            public boolean isParentAddedInAjaxRequestTarget() {
-                return true;
-            }
         } ;
         QuickGridView spy=Mockito.spy(grid);
         spy.removeRow(row);
@@ -1669,5 +1534,12 @@ public class QuickGridViewTest {
     }
 
 
+    List<Integer>data(int size){
+        List<Integer>list=new ArrayList<Integer>();
+        for(int i=0;i<size;i++){
+            list.add(i) ;
+        }
+        return list;
+    }
 
 }
