@@ -122,7 +122,7 @@ public class RepeaterUtil implements  IRepeaterUtil{
     @Override
     public final void parentNotSuitable(IQuickView quickView) {
         Args.notNull(quickView,"quickview") ;
-        if (quickView.getReuse() == ReUse.DEFAULT_PAGING || quickView.getReuse() == ReUse.CURRENTPAGE) {
+        if (quickView.getReuse() == ReUse.PAGING || quickView.getReuse() == ReUse.CURRENTPAGE) {
             return;
         }
         MarkupContainer parent = quickView.getParent();
@@ -166,8 +166,8 @@ public class RepeaterUtil implements  IRepeaterUtil{
     public final void reuseStategyNotSupportedForItemsNavigation(IQuickView quickView) {
         Args.notNull(quickView,"quickview") ;
         reuseNotInitialized(quickView);
-        if (ReUse.DEFAULT_PAGING == quickView.getReuse() || ReUse.CURRENTPAGE==quickView.getReuse()) {
-            throw new ReuseStrategyNotSupportedException(ReUse.DEFAULT_PAGING + " stategy is not supported for itemsnavigator ");
+        if (ReUse.PAGING == quickView.getReuse() || ReUse.CURRENTPAGE==quickView.getReuse()) {
+            throw new ReuseStrategyNotSupportedException(ReUse.PAGING + " stategy is not supported for itemsnavigator ");
         }
     }
 
@@ -209,35 +209,113 @@ public class RepeaterUtil implements  IRepeaterUtil{
         return end;
     }
 
+    @Override
+    public String scrollToBottom(String markupId){
+      return String.format("scrollToBottom('%s');",markupId);
+    }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String scrollToBottom(IQuickView quickView){
+      return scrollToBottom(quickView.getParent().getMarkupId());
+    }
+
+    @Override
+    public String scrollToTop(String markupId){
+        return String.format("scrollToTop('%s');",markupId);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String scrollToTop(IQuickView quickView){
+        return  scrollToTop(quickView.getParent().getMarkupId());
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String scrollTo(IQuickView quickView,int height){
+            return scrollTo(quickView.getParent().getMarkupId(),height);
+    }
+
+    @Override
+    public String scrollTo(String markupId,int height){
+        return String.format("scrollTo('%s',%d);",markupId,height);
+    }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String isComponentScrollBarAtBottom(MarkupContainer component) {
+        return String.format("isComponentScrollBarAtBottom('%s');",component.getMarkupId());
+    }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String isPageScrollBarAtBottom(){
+       return "isPageScrollBarAtBottom();";
+    }
+
+    /**
+     *  throw this exception if quickview's parent is not found
+     *
+     * @author Vineet Semwal
+     */
     public static class QuickViewNotAddedToParentException extends RuntimeException {
         public QuickViewNotAddedToParentException(String message) {
             super(message);
         }
     }
 
+    /**
+     * throw this exception if outmarkupid is not set to true
+     * @author Vineet Semwal
+     */
     public static class OutputMarkupIdNotTrueException extends RuntimeException {
         public OutputMarkupIdNotTrueException(String message) {
             super(message);
         }
     }
 
+    /**
+     *  throw this exception if reuse constant set is not supported
+     * @author Vineet Semwal
+     */
     public static class ReuseStrategyNotSupportedException extends RuntimeException {
         public ReuseStrategyNotSupportedException(String message) {
             super(message);
         }
     }
 
+    /**
+     *  throw this exception if quickview's parent has more than one child in case of items navigation
+     * @author Vineet Semwal
+     */
     public static class ParentNotUnaryException extends RuntimeException {
         public ParentNotUnaryException(String message) {
             super(message);
         }
     }
 
+
+    /**
+     *  throw this exception if quickview is not initialized with reuse constant
+     * @author Vineet Semwal
+     */
     public static class ReuseNotInitializedException extends RuntimeException {
         public ReuseNotInitializedException(String message) {
             super(message);
         }
     }
+
+
+
 
 }

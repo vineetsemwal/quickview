@@ -16,49 +16,60 @@
  */
 package com.aplombee.examples;
 
-import com.aplombee.QuickView;
+import com.aplombee.QuickGridView;
 import com.aplombee.ReUse;
 import org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigator;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * QuickGridView with {@link AjaxPagingNavigator}
+ *
  * @author Vineet Semwal
  *
  */
-public class AjaxPagingNavigatorPage extends WebPage {
+public class QuickGridViewWithAjaxPagingNavigator extends WebPage {
     private List<Integer> list=new ArrayList<Integer>();
-
-    public AjaxPagingNavigatorPage(){
-              for(int i=0;i<20;i++){
-                list.add(i)  ;
-            }
+    QuickGridView<Integer> gridView;
+    public QuickGridViewWithAjaxPagingNavigator(){
+        for(int i=0;i<200;i++){
+            list.add(i)  ;
+        }
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
         IDataProvider<Integer> data=new ListDataProvider<Integer>(list);
-        final int itemsPerRequest=4;//rows created per request
-        final ReUse reuse= ReUse.PAGING;//default reuse strategy that should be used with pagingnavigator
 
-        QuickView<Integer> quickView=new QuickView<Integer>("number",data,reuse,itemsPerRequest) {
+        final ReUse reuse= ReUse.PAGING;//default reuse strategy that should be used with PagingNavigator
+
+        gridView=new QuickGridView<Integer>("gv",data,reuse) {
             @Override
-            protected void populate(Item<Integer> item) {
-                item.add(new Label("display",item.getModel()));
+            protected void populateEmptyItem(final CellItem<Integer> item) {
+                item.add(new Label("label"));
             }
-        } ;
-        WebMarkupContainer numbers=new WebMarkupContainer("numbers");   //don't forget adding quickview to parent with any ajax navigator
-        numbers.add(quickView);
-        numbers.setOutputMarkupId(true); //don't forget required when using ajax navigators
-        add(numbers);
-        AjaxPagingNavigator navigator=new AjaxPagingNavigator("navigator",quickView);
-        add(navigator) ;
+
+            @Override
+            protected void populate(final CellItem<Integer> item) {
+                item.add(new Label("label", item.getModel()));
+
+            }
+        };
+        gridView.setColumns(10);
+        gridView.setRows(5);
+        WebMarkupContainer parent=new WebMarkupContainer("parent");
+        parent.add(gridView);
+        parent.setOutputMarkupPlaceholderTag(true);
+        add(parent);
+        AjaxPagingNavigator navigator=new AjaxPagingNavigator("nav",gridView);
+        add(navigator);
+
     }
+
 }

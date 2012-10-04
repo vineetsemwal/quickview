@@ -33,7 +33,7 @@ public class RemoveItemsPage extends WebPage {
         ListDataProvider<Integer>data=new ListDataProvider<Integer>(list);
         WebMarkupContainer numbers = new WebMarkupContainer("numbers");   //parent for quickview
         numbers.setOutputMarkupId(true);  //needed for ajax
-         quickView=new QuickView<Integer>("number",data, ReUse.DEFAULT_ITEMSNAVIGATION) {
+         quickView=new QuickView<Integer>("number",data, ReUse.ITEMSNAVIGATION) {
            @Override
                 protected void populate(final Item<Integer> item) {
                  item.add(new Label("display", item.getModel()));

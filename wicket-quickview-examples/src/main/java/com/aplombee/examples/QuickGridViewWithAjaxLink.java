@@ -14,31 +14,31 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
+
 package com.aplombee.examples;
 
-import com.aplombee.QuickView;
+import com.aplombee.QuickGridView;
 import com.aplombee.ReUse;
-import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * QuickGridView with AjaxLink
+ *
  * @author Vineet Semwal
  */
-public class AjaxLinkPage extends WebPage {
+public class QuickGridViewWithAjaxLink extends WebPage {
     private List<Integer> list = new ArrayList<Integer>();
 
-    public AjaxLinkPage() {
-        for (int i = 0; i < 4; i++) {
+    public QuickGridViewWithAjaxLink() {
+        for (int i = 0; i < 10; i++) {
             list.add(i);
         }
     }
@@ -51,12 +51,18 @@ public class AjaxLinkPage extends WebPage {
         IDataProvider<Integer> data = new ListDataProvider<Integer>(list);
         WebMarkupContainer numbers = new WebMarkupContainer("numbers");   //parent for quickview
         numbers.setOutputMarkupId(true);  //needed for ajax
-        final QuickView<Integer> number = new QuickView<Integer>("number", data, ReUse.ITEMSNAVIGATION) {
+        final QuickGridView<Integer> number = new QuickGridView<Integer>("number", data, ReUse.ITEMSNAVIGATION) {
             @Override
-            protected void populate(Item<Integer> item) {
+            protected void populate(CellItem<Integer> item) {
                 item.add(new Label("display", item.getModel()));
             }
+
+            @Override
+            protected void populateEmptyItem(CellItem<Integer> item) {
+                item.add(new Label("display"));
+            }
         };
+        number.setColumns(2);
         numbers.add(number);
         add(numbers);
 
@@ -66,35 +72,47 @@ public class AjaxLinkPage extends WebPage {
             public void onClick(AjaxRequestTarget target) {
                 int newObject=list.get(list.size()-1) +1;
                 list.add( newObject);
-                Item<Integer> item = number.buildItem( newObject);
-                item.setOutputMarkupId(true);
-                number.add(item);  //just enough to create a new row at last
-                 }
+                QuickGridView.RowItem<Integer> row=number.buildRowItem(); //new row created
+                QuickGridView.CellItem<Integer> cell1 = number.buildCellItem(newObject); // cell created
+
+                int newObject2=list.get(list.size()-1) +1;
+                list.add( newObject2);
+                QuickGridView.CellItem<Integer> cell2 = number.buildCellItem(newObject2); //another cell created
+                number.addCells(row,cell1,cell2);    //add cells to row
+                number.addRow(row);    //just enough to add row and render it
+
+            }
 
         };
         addLink.setOutputMarkupPlaceholderTag(true);
         add(addLink);
 
 
-        final AttributeModifier start = new AttributeModifier("class", "start");
+
+
         AjaxLink addAtStartLink = new AjaxLink("addAtStartLink") {
 
 
             @Override
             public void onClick(AjaxRequestTarget target) {
-                int newObject=list.get(0)-1;
-                list.add(0,newObject);
-                Item<Integer> item = number.buildItem( newObject);
-                number.addAtStart(item);  //just enough to create a new row at start
-                Component display = item.get("display");
-                item.setOutputMarkupId(true);
-                display.add(start);
+                int newObject=list.get(0) -1;
+                list.add(0, newObject);
+                QuickGridView.RowItem<Integer> row=number.buildRowItem(); //new row created
+                QuickGridView.CellItem<Integer> cell1 = number.buildCellItem(newObject); // cell created
+
+                int newObject2=newObject -1;
+                list.add(0, newObject2);
+                QuickGridView.CellItem<Integer> cell2 = number.buildCellItem(newObject2); //another cell created
+                number.addCells(row,cell1,cell2);         //add cells to row
+                number.addRowAtStart(row);    //just enough to add row  and render it  at start
 
             }
 
         };
         addAtStartLink.setOutputMarkupPlaceholderTag(true);
         add(addAtStartLink);
+
+
     }
 
 }

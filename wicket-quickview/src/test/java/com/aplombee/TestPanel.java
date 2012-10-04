@@ -48,7 +48,7 @@ public class TestPanel extends Panel {
         list.add(2);
         IDataProvider<Integer>data= new ListDataProvider<Integer>(list);
 
-        quickView=new QuickView("quick",data,ReUse.DEFAULT_ITEMSNAVIGATION) {
+        quickView=new QuickView("quick",data,ReUse.ITEMSNAVIGATION) {
             @Override
             protected void populate(Item item) {
             }

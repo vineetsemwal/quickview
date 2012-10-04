@@ -131,17 +131,8 @@ public abstract class ItemsNavigatorBase extends Panel {
      * @return list of items created
      */
     public List<Item> onStatefulEvent() {
-        AjaxRequestTarget target = getAjaxRequestTarget();
-        List<Item> list = new ArrayList<Item>();
-        int current = getRepeater().getCurrentPage();
-
-         // page for which new items have to created
-
-        int next = current + 1;
-        if (next < getRepeater().getPageCount()) {
-            list = getRepeater().addComponentsForPage(next);
-            getRepeater().setCurrentPage(next);
-        }
+        AjaxRequestTarget target=getAjaxRequestTarget();
+        List<Item>list=getRepeater().addItemsForNextPage();
         target.add(getMore());
         return list;
     }

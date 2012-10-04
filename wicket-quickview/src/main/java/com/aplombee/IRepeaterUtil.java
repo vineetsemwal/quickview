@@ -136,4 +136,49 @@ public interface IRepeaterUtil {
      *  @return  appendedscripts string as displayed by List.toString() of appendedscripts
      */
     String appendedScripts(String input);
+
+    /**
+     *  js call to scroll to top
+     *
+     * @param quickView
+     * @return   js call  string
+     */
+    String scrollToTop(IQuickView quickView) ;
+
+    String scrollToTop(String markupId);
+
+    /**
+     *
+     * js call to scroll to bottom
+     * @param quickView
+     * @return  js call  string
+     */
+    String scrollToBottom(IQuickView quickView);
+
+    String scrollToBottom(String markupId);
+
+    String scrollTo(String markupId,int height);
+
+    /**
+     * js call to scroll to height
+     *
+     * @param quickView
+     * @param height
+     * @return  js call string
+     */
+    String scrollTo(IQuickView quickView,int height);
+
+    /**
+     * js calls which calls methods that when fired returns true if component's navigation-bar is at the bottom
+     * @param component
+     * @return   js call string
+     */
+    public String isComponentScrollBarAtBottom(MarkupContainer component);
+
+    /**
+     * js calls which calls methods that when fired returns true if page's navigation-bar is at the bottom
+     * @param component
+     * @return  js call string
+     */
+    public String isPageScrollBarAtBottom();
 }

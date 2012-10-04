@@ -61,11 +61,11 @@ public abstract class TestComponentPanel extends Panel {
         public Parent(String id){
                super(id);
            }
-        public QuickView getChild(){
+        public QuickViewBase getChild(){
             Iterator<Component> it=iterator();
             Component child=it.next();
-            if(child instanceof  QuickView)
-            {QuickView quickView= (QuickView)child;
+            if(child instanceof  IQuickView)
+            {QuickViewBase quickView= (QuickViewBase)child;
             return quickView;
             }
             throw new RuntimeException("quickview not found as first child");

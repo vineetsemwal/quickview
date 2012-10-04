@@ -15,6 +15,30 @@ function insertAfter(tag,theId,parentContainerId){
         Wicket.$(parentContainerId).appendChild(item);
 }
 
+
+function scrollToBottom(id)
+{
+ var element=document.getElementById(id);
+ var height=getDocumentHeight();
+ scrollTo(id,height);
+}
+
+function scrollToTop(id){
+ scrollTo(id,0);
+}
+
+function scrollTo(id,height){
+ var element=document.getElementById(id);
+ element.scrollTop =height;
+}
+
+function getDocumentHeight() {
+    return Math.max(
+        Math.max(document.body.scrollHeight, document.documentElement.scrollHeight),
+        Math.max(document.body.offsetHeight, document.documentElement.offsetHeight),
+        Math.max(document.body.clientHeight, document.documentElement.clientHeight)
+    );
+}
 function insertBefore(tag,theId,parentContainerId){
     var item=document.createElement(tag);
     item.id=theId;
@@ -26,4 +50,5 @@ function insertBefore(tag,theId,parentContainerId){
 		parentContainer.appendChild(item);
 	}
 }
+
 

@@ -15,12 +15,11 @@
  limitations under the License.
  */
 package com.aplombee;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.repeater.Item;
@@ -47,22 +46,15 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     /**
      * for newchildId
      */
-    private long index=0;
-    public long getIndex(){
-        return  index;
+    private int childId =0;
+    public int getChildId(){
+        return  childId;
     }
 
-
-    /**
-     * increment index by the number passed in argument
-     * @param number  number by which index is incremented
-     * @return   new index
-     */
-    protected long incrementIndexByNumber(int number){
-        return index=index+number;
-    }
-    protected void clearChildId(){
-        index=0;
+    @Override
+    public String newChildId() {
+        childId++;
+        return String.valueOf(childId);
     }
 
     public void setItemsPerRequest(int items) {
@@ -77,13 +69,14 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
             {
                 addStateChange();
             }
+            this.itemsPerRequest = items;
+
+            // because items per page can effect the total number of pages we always
+            // reset the current page back to zero
+            _setCurrentPage(0);
         }
 
-        this.itemsPerRequest = items;
 
-        // because items per page can effect the total number of pages we always
-        // reset the current page back to zero
-        _setCurrentPage(0);
     }
 
     private transient int itemsCount=-1;
@@ -150,16 +143,14 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      * @param id     child id
      * @return Child created
      */
-    protected Item<T> newItem(long id, T object) {
-        Item<T> item = new Item<T>(String.valueOf(id), getRepeaterUtil().safeLongToInt(id), getDataProvider().model(object));
+    protected Item<T> newItem(String id,int index, T object) {
+        Item<T> item = new Item<T>(id, index, getDataProvider().model(object));
         item.setMarkupId(String.valueOf(id));
         item.setOutputMarkupId(true);
         return item;
     }
 
-    public Item buildItem(String id, T object) {
-        return buildItem(Integer.parseInt(id), object);
-    }
+
 
     /**
      * creates new item,this method can be used in stateless environment,unique id is what you have to provide
@@ -168,8 +159,8 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      * @param object   model object
      * @return     item
      */
-    public Item buildItem(int id, T object) {
-        Item<T> item = newItem(id, object);
+    public Item<T> buildItem(String id,int index, T object) {
+        Item<T> item = newItem(id,index, object);
         item.setMarkupId(String.valueOf(id));
         item.setOutputMarkupId(true);
         populate(item);
@@ -186,8 +177,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      * @return    item
      */
     public Item buildItem(T object) {
-       String id=newChildId();
-      return buildItem(id, object);
+       return buildItem(newChildId(), getChildId(), object);
     }
 
     public boolean isAjax() {
@@ -201,11 +191,8 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      */
     public MarkupContainer simpleAdd(Component... c) {
          super.add(c);
-        incrementIndexByNumber(c.length)  ;
-        return this;
+         return this;
     }
-
-
 
 
     /**
@@ -215,12 +202,10 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      */
     public MarkupContainer simpleRemove(Component c) {
         super.remove(c);
-        incrementIndexByNumber(-1)        ;
          return this;
     }
 
     public MarkupContainer simpleRemoveAll() {
-        clearChildId();
         return super.removeAll();
     }
 
@@ -238,14 +223,14 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
              // all children might have got removed ,if true then create children of last page
              //for first render currentpage will be 0
 
-            if (ReUse.DEFAULT_PAGING == reuse) {
+            if (ReUse.PAGING == reuse) {
                 createChildren(current);
             }
 
 
              //   not first render but items were removed
 
-            if ((ReUse.DEFAULT_ITEMSNAVIGATION == reuse) )  {
+            if ((ReUse.ITEMSNAVIGATION == reuse) )  {
                 createChildren(0);
                 _setCurrentPage(0);
             }
@@ -282,10 +267,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         return (Item) get(index);
     }
 
-    @Override
-    public String newChildId() {
-        return String.valueOf(index);
-    }
+
 
     /**
      * remove pages from startpage till stop page, including stopPage
@@ -317,7 +299,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         Iterator<? extends T> iterator = getDataProvider().iterator(getRepeaterUtil().safeLongToInt(items),getItemsPerRequest());
          for (long i = items; iterator.hasNext(); i++) {
             T obj = iterator.next();
-            Component item = buildItem(getRepeaterUtil().safeLongToInt(i), obj);
+            Component item = buildItem(newChildId(),getRepeaterUtil().safeLongToInt(i), obj);
             simpleAdd(item);
         }
     }
@@ -326,6 +308,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
         response.renderJavaScriptReference(RepeaterUtilReference.get());
+
          }
 
     public final int getItemsCount(){
@@ -442,18 +425,31 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      *
      * @return true if parent of repeatingview is added to A.R.T
      */
+
+    public boolean isParentAddedInAjaxRequestTarget() {
+     return isParentAddedInAjaxRequestTarget(getAjaxRequestTarget());
+    }
+    public boolean isParentAddedInAjaxRequestTarget(MarkupContainer searchFor) {
+        return isParentAddedInAjaxRequestTarget(searchFor, getAjaxRequestTarget());
+    }
+
     public boolean isParentAddedInAjaxRequestTarget(AjaxRequestTarget target) {
         MarkupContainer searchFor = _getParent();
-        Collection<? extends Component> cs = target.getComponents();
+       return isParentAddedInAjaxRequestTarget(searchFor,target);
+    }
+
+
+    public boolean isParentAddedInAjaxRequestTarget(MarkupContainer searchFor,AjaxRequestTarget target) {
+      Collection<? extends Component> cs = target.getComponents();
         if (cs == null) {
             return false;
         }
         if (cs.isEmpty()) {
             return false;
         }
-        //if repeater's parent is added to component return true
+      //if repeater's parent is added to component return true
         if (cs.contains(searchFor)) {
-            return true;
+             return true;
         }
         //search repeater's parent in children of components added in A.R.T
         boolean found = false;
@@ -510,33 +506,42 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         if (!isAjax()) {
             return this;
         }
-        AjaxRequestTarget target = getAjaxRequestTarget();
-        if (isParentAddedInAjaxRequestTarget(target)) {
-            return this;
-        }
 
         for (int i = 0; i < c.length; i++) {
             MarkupContainer parent = _getParent();
             String script = getRepeaterUtil().insertAfter((Item)c[i], parent);
-            target.prependJavaScript(script);
-        }
-        target.add(c);
-
+            getSynchronizer().getPrependScripts().add(script);
+          }
+        getSynchronizer().add(c);
         return this;
     }
 
+
     /**
-     *
-     * create and draw children for the provided page ,number of
-     * children created are smaller than equal to getItemsPerRequest()
-     *
-     * @param page
-     * @return   list of components created
+     * {@inheritDoc}
+     */
+    public  List<Item<T>> addItemsForNextPage(){
+        List<Item<T>> list = new ArrayList<Item<T>>();
+        int current = getCurrentPage();
+
+        // page for which new items have to created
+
+        int next = current + 1;
+        if (next < _getPageCount()) {
+            list = addItemsForPage(next);
+           _setCurrentPage(next);
+        }
+        return list;
+    }
+
+
+    /**
+     * {@inheritDoc}
      */
     @Override
-    public List<Item<T>> addComponentsForPage(final int page) {
+   public List<Item<T>> addItemsForPage(final int page) {
         int newIndex=page* getItemsPerRequest();
-        return addComponentsFromIndex(newIndex);
+        return addItemsFromIndex(newIndex);
     }
     /**
      * create and draw children from the provided index ,number of
@@ -546,7 +551,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      */
 
 
-    public List<Item<T>> addComponentsFromIndex(final int index) {
+    public List<Item<T>> addItemsFromIndex(final int index) {
         clearCachedItemCount();
         simpleRemoveAllIfNotReuse();
         int newIndex=index;
@@ -555,7 +560,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         // long i = newIndex;
         while (iterator.hasNext()) {
             T t = iterator.next();
-            Item<T> c = buildItem(newIndex, t);
+            Item<T> c = buildItem(newChildId(),newIndex, t);
             components.add(c);
             add(c);
             newIndex++;
@@ -567,10 +572,11 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     public MarkupContainer remove(final Component component) {
         Args.notNull(component, "component can't be null");
         AjaxRequestTarget target = getAjaxRequestTarget();
-        if (isAjax() && !isParentAddedInAjaxRequestTarget(target)) {
+        if (isAjax()) {
             String removeScript = getRepeaterUtil().removeItem(component);
-            target.prependJavaScript(removeScript);
-            target.add(component);
+            //target.prependJavaScript(removeScript);
+            getSynchronizer().getPrependScripts().add(removeScript);
+           getSynchronizer().add(component);
         }
         return simpleRemove(component);
     }
@@ -594,16 +600,13 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         if (!isAjax()) {
             return this;
         }
-        AjaxRequestTarget target = getAjaxRequestTarget();
-        if (isParentAddedInAjaxRequestTarget(target)) {
-            return this;
-        }
+
         for (int i = 0; i < c.length; i++) {
             MarkupContainer parent = _getParent();
             String updateBeforeScript = getRepeaterUtil().insertBefore((Item)c[i], parent);
-            target.prependJavaScript(updateBeforeScript);
+            getSynchronizer().getPrependScripts().add(updateBeforeScript);
         }
-        target.add(c);
+        getSynchronizer().add(c);
         return this;
     }
 
@@ -611,17 +614,121 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      * removes all children if reuse is not true
      */
     public void simpleRemoveAllIfNotReuse() {
-        if (reuse == ReUse.DEFAULT_PAGING || reuse == ReUse.DEFAULT_ITEMSNAVIGATION) {
+        if (reuse == ReUse.PAGING || reuse == ReUse.ITEMSNAVIGATION) {
             simpleRemoveAll();
         }
     }
+
+    /**
+     * when called on ajax event ,this method moves navigation-bar to bottom,
+     * this works when parent has scroll specified in css by defining overflow-y property
+     *
+     */
+    public void scrollToBottom(){
+     if(isAjax()){
+        AjaxRequestTarget target= this.getAjaxRequestTarget();
+         target.appendJavaScript(getRepeaterUtil().scrollToBottom(this));
+     }
+    }
+
+    /**
+     * when called on ajax event, this method moves navigation-bar to top ,
+     * this works when parent has scroll specified in css by defining overflow-y property
+     *
+     */
+    public void scrollToTop(){
+        if(isAjax()){
+            AjaxRequestTarget target= this.getAjaxRequestTarget();
+            target.appendJavaScript(getRepeaterUtil().scrollToTop(this));
+        }
+    }
+
+    /**
+     * when called on ajax event, this method moves navigation-bar to height passed in method ,
+     * this works when parent has scroll specified in css by defining overflow-y property
+     *
+     */
+    public void scrollTo(int height){
+        if(isAjax()){
+            AjaxRequestTarget target= this.getAjaxRequestTarget();
+            target.appendJavaScript(getRepeaterUtil().scrollTo(this,height));
+        }
+    }
+
+    /**
+     *  Synchronizer basically adds components(repeater's items) and scripts to the the AjaxRequestTarget after
+     *  checking parent is not added to AjaxRequestTarget .If parent is added scripts and
+     *  items are not added to the AjaxRequestTarget
+     *
+     *
+     * less complex or preferred solution would have been checking if listener is already added in AjaxRequestTarget but
+     * since there is no getter for IListeners,there is no way to know listener is added ,it might be added in later versions
+     * see WICKET-4800
+     *
+     * @return  Synchronizer
+     */
+
+    public Synchronizer getSynchronizer(){
+        AjaxRequestTarget target=getAjaxRequestTarget();
+        if(target==null){
+            return null;
+        }
+        Synchronizer listener=(Synchronizer)getRequestCycle().getMetaData(synchronizerKey);
+          if(listener==null){
+             listener=new Synchronizer();
+              getRequestCycle().setMetaData(synchronizerKey,listener);
+              target.addListener(listener);
+           }
+
+        return listener;
+    }
+
+    public  class Synchronizer implements AjaxRequestTarget.IListener{
+        private List<String> prependScripts =new ArrayList<String>();
+        private List<Component>components=new ArrayList<Component>();
+        public List<String> getPrependScripts(){
+            return prependScripts;
+        }
+        public List<Component>getComponents(){
+            return components;
+        }
+        @Override
+        public void onBeforeRespond(Map<String, Component> map, AjaxRequestTarget target) {
+            MarkupContainer searchFor=_getParent();
+            if(!isParentAddedInAjaxRequestTarget(searchFor)){
+                for(String script: prependScripts){
+                   target.prependJavaScript(script);
+                }
+
+               target.add(components.toArray(new Component[0]));
+            }
+        }
+
+        public void add(Component... cs)
+        {
+            for (final Component component : cs)
+            {
+                Args.notNull(component, "component");
+                components.add(component);
+            }
+        }
+
+        @Override
+        public void onAfterRespond(Map<String, Component> map, AjaxRequestTarget.IJavaScriptResponse response) {
+        }
+    }
+
+    /**
+     * key corresponding to AjaxRequestTarget.IListener in request metadata
+     */
+    private MetaDataKey<AjaxRequestTarget.IListener> synchronizerKey =new MetaDataKey<AjaxRequestTarget.IListener>() {
+    };
 
     @Override
     protected void onDetach() {
         dataProvider.detach();
         super.onDetach();
     }
-
 
 
 }

@@ -18,7 +18,6 @@ package com.aplombee.navigator;
 
 import com.aplombee.*;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
@@ -29,7 +28,6 @@ import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import java.util.List;
-import  org.mockito.Mockito;
 
 /**
  * @author Vineet Semwal
@@ -68,88 +66,21 @@ public class AjaxItemsNavigatorTest {
 
     @Test(groups = {"wicketTests"})
     public void OnStatefulEvent_1() {
-        final String id = "id";
-        final int repeaterSize = 2;
-        final int dataProviderSize = 12;
-        final int current = 5, next = 6, pages = 7;
-        IQuickView repeater = Mockito.mock(IQuickView.class);
-        Mockito.when(repeater.getCurrentPage()).thenReturn(current);
-        Mockito.when(repeater.getPageCount()).thenReturn(pages);
-        final AjaxRequestTarget target = Mockito.mock(AjaxRequestTarget.class);
-        final List<Item> items = Mockito.mock(List.class);
-        AjaxItemsNavigator navigator = new AjaxItemsNavigator("nav", repeater) {
+        IQuickView quickView=Mockito.mock(IQuickView.class);
+        final AjaxRequestTarget target=Mockito.mock(AjaxRequestTarget.class);
+        final List<Item> items=Mockito.mock(List.class);
+        AjaxItemsNavigator navigator=new AjaxItemsNavigator("nav",quickView){
             @Override
             public AjaxRequestTarget getAjaxRequestTarget() {
                 return target;
             }
         };
-        AjaxItemsNavigator spy = Mockito.spy(navigator);
-        List<Item> actual = navigator.onStatefulEvent();
-        Mockito.verify(repeater, Mockito.times(1)).setCurrentPage(next);
-        Mockito.verify(repeater, Mockito.times(1)).addComponentsForPage(next);
-        Mockito.verify(target, Mockito.times(1)).add(navigator.getMore());
-        Assert.assertEquals(actual, items);
+        AjaxItemsNavigator spy=Mockito.spy(navigator);
+        List<Item>actual= spy.onStatefulEvent();
+        Mockito.verify(target,Mockito.times(1)).add(spy.getMore());
+        Mockito.verify(quickView,Mockito.times(1)).addItemsForNextPage();
+        Assert.assertEquals(actual,items);
     }
-
-    /**
-     * when current page= pages count
-     */
-    @Test(groups = {"wicketTests"})
-    public void OnStatefulEvent_2() {
-        final String id = "id";
-        final int repeaterSize = 2;
-        final int dataProviderSize = 12;
-        final int current = 5, next = 6, pages = 6;
-
-        IQuickView repeater = Mockito.mock(IQuickView.class);
-        Mockito.when(repeater.getCurrentPage()).thenReturn(current);
-        Mockito.when(repeater.getPageCount()).thenReturn(pages);
-        final AjaxRequestTarget target = Mockito.mock(AjaxRequestTarget.class);
-        final List<Item> items = Mockito.mock(List.class);
-        AjaxItemsNavigator navigator = new AjaxItemsNavigator("nav", repeater) {
-            @Override
-            public AjaxRequestTarget getAjaxRequestTarget() {
-                return target;
-            }
-        };
-        AjaxItemsNavigator spy = Mockito.spy(navigator);
-        List<Item> actual = navigator.onStatefulEvent();
-        Mockito.verify(repeater, Mockito.never()).setCurrentPage(next);
-        Mockito.verify(repeater, Mockito.never()).addComponentsForPage(next);
-        Mockito.verify(target, Mockito.times(1)).add(navigator.getMore());
-        Assert.assertTrue(actual.isEmpty());
-    }
-
-    /**
-     * when current page> pages count
-     */
-    @Test(groups = {"wicketTests"})
-    public void OnStatefulEvent_3() {
-        final String id = "id";
-        final int repeaterSize = 2;
-        final int dataProviderSize = 12;
-        final int current = 7, next = 6, pages = 6;
-
-        IQuickView repeater = Mockito.mock(IQuickView.class);
-        Mockito.when(repeater.getCurrentPage()).thenReturn(current);
-        Mockito.when(repeater.getPageCount()).thenReturn(pages);
-        final AjaxRequestTarget target = Mockito.mock(AjaxRequestTarget.class);
-        final List<Item> items = Mockito.mock(List.class);
-        AjaxItemsNavigator navigator = new AjaxItemsNavigator("nav", repeater) {
-            @Override
-            public AjaxRequestTarget getAjaxRequestTarget() {
-                return target;
-            }
-        };
-        AjaxItemsNavigator spy = Mockito.spy(navigator);
-        List<Item> actual = navigator.onStatefulEvent();
-        Mockito.verify(repeater, Mockito.never()).setCurrentPage(next);
-        Mockito.verify(repeater, Mockito.never()).addComponentsForPage(next);
-        Mockito.verify(target, Mockito.times(1)).add(navigator.getMore());
-        Assert.assertTrue(actual.isEmpty());
-    }
-
-
 
     /**
      * parent not null ,OutputMarkupPlaceholderTag set to true
@@ -164,7 +95,7 @@ public class AjaxItemsNavigatorTest {
             protected void populate(Item item) {
             }
         };
-        repeater.setReuse(ReUse.DEFAULT_ITEMSNAVIGATION);
+        repeater.setReuse(ReUse.ITEMSNAVIGATION);
         parent.add(repeater);
         parent.setOutputMarkupPlaceholderTag(true);
 
@@ -173,7 +104,7 @@ public class AjaxItemsNavigatorTest {
     }
 
     /**
-     * parent not null ,reusestrategy=  ReUse.DEFAULT_PAGING
+     * parent not null ,reusestrategy=  ReUse.PAGING
      * reuse stategy not correct exception
      */
     @Test(groups = {"wicketTests"})
@@ -185,7 +116,7 @@ public class AjaxItemsNavigatorTest {
             protected void populate(Item item) {
             }
         };
-        repeater.setReuse(ReUse.DEFAULT_ITEMSNAVIGATION);
+        repeater.setReuse(ReUse.ITEMSNAVIGATION);
         parent.add(repeater);
         parent.setOutputMarkupId(true);
 
