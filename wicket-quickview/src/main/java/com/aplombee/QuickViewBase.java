@@ -419,61 +419,8 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
 
     protected abstract void populate(Item<T> item);
 
-    /**
-     * checks if parent of repeater is added to the components added to
-     * A.R.T(ajaxrequesttarget)
-     *
-     * @return true if parent of repeatingview is added to A.R.T
-     */
-
-    public boolean isParentAddedInAjaxRequestTarget() {
-     return isParentAddedInAjaxRequestTarget(getAjaxRequestTarget());
-    }
-    public boolean isParentAddedInAjaxRequestTarget(MarkupContainer searchFor) {
-        return isParentAddedInAjaxRequestTarget(searchFor, getAjaxRequestTarget());
-    }
-
-    public boolean isParentAddedInAjaxRequestTarget(AjaxRequestTarget target) {
-        MarkupContainer searchFor = _getParent();
-       return isParentAddedInAjaxRequestTarget(searchFor,target);
-    }
 
 
-    public boolean isParentAddedInAjaxRequestTarget(MarkupContainer searchFor,AjaxRequestTarget target) {
-      Collection<? extends Component> cs = target.getComponents();
-        if (cs == null) {
-            return false;
-        }
-        if (cs.isEmpty()) {
-            return false;
-        }
-      //if repeater's parent is added to component return true
-        if (cs.contains(searchFor)) {
-             return true;
-        }
-        //search repeater's parent in children of components added in A.R.T
-        boolean found = false;
-        for (Component c : cs) {
-            if (c instanceof MarkupContainer) {
-                MarkupContainer mc = (MarkupContainer) c;
-                Boolean result = addNewChildVisitor(mc, searchFor);
-                if (Boolean.TRUE.equals(result)) {
-                    found = true;
-                    break;
-                }
-            }
-        }
-        return found;
-    }
-
-    /**
-     * @param parent    parent on which ChildVisitor is added
-     * @param searchFor ,searchFor is the component which visitor search for
-     * @return true if searchFor is found
-     */
-    protected Boolean addNewChildVisitor(MarkupContainer parent, Component searchFor) {
-        return parent.visitChildren(new ChildVisitor(searchFor));
-    }
 
     public static class ChildVisitor implements IVisitor<Component, Boolean> {
 
@@ -656,12 +603,9 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     }
 
     /**
-     *  Synchronizer basically adds components(repeater's items) and scripts to the the AjaxRequestTarget after
-     *  checking parent is not added to AjaxRequestTarget .If parent is added scripts and
-     *  items are not added to the AjaxRequestTarget
      *
      *
-     * less complex or preferred solution would have been checking if listener is already added in AjaxRequestTarget but
+     * less complex/preferred/clear solution would have been checking if listener is already added in AjaxRequestTarget but
      * since there is no getter for IListeners,there is no way to know listener is added ,it might be added in later versions
      * see WICKET-4800
      *
@@ -675,7 +619,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         }
         Synchronizer listener=(Synchronizer)getRequestCycle().getMetaData(synchronizerKey);
           if(listener==null){
-             listener=new Synchronizer();
+             listener=new Synchronizer(_getParent());
               getRequestCycle().setMetaData(synchronizerKey,listener);
               target.addListener(listener);
            }
@@ -683,8 +627,19 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         return listener;
     }
 
+    /**
+     Synchronizer basically adds components(repeater's items) and scripts to the the AjaxRequestTarget after
+     *  checking parent is not added to AjaxRequestTarget .If parent is added scripts and
+     *  items are not added to the AjaxRequestTarget
+     *
+     *
+     * @author Vineet Semwal
+     */
     public  class Synchronizer implements AjaxRequestTarget.IListener{
         private List<String> prependScripts =new ArrayList<String>();
+        /**
+         * mostly contains items od repeater that will be added to AjaxRequestTarget
+         */
         private List<Component>components=new ArrayList<Component>();
         public List<String> getPrependScripts(){
             return prependScripts;
@@ -692,10 +647,17 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         public List<Component>getComponents(){
             return components;
         }
+
+        private MarkupContainer searchFor;
+
+        public Synchronizer(MarkupContainer searchFor){
+            Args.notNull(searchFor,"searchFor");
+            this.searchFor=searchFor;
+        }
+
         @Override
         public void onBeforeRespond(Map<String, Component> map, AjaxRequestTarget target) {
-            MarkupContainer searchFor=_getParent();
-            if(!isParentAddedInAjaxRequestTarget(searchFor)){
+           if(!isParentAddedInAjaxRequestTarget(target)){
                 for(String script: prependScripts){
                    target.prependJavaScript(script);
                 }
@@ -716,8 +678,54 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         @Override
         public void onAfterRespond(Map<String, Component> map, AjaxRequestTarget.IJavaScriptResponse response) {
         }
+
+        /**
+         * checks if parent of repeater is added to the components added to
+         * A.R.T(ajaxrequesttarget)
+         *
+         * @return true if parent of repeatingview is added to A.R.T
+         */
+        public boolean isParentAddedInAjaxRequestTarget(AjaxRequestTarget target) {
+          Collection<? extends Component> cs = target.getComponents();
+            if (cs == null) {
+                return false;
+            }
+            if (cs.isEmpty()) {
+                return false;
+            }
+            //if repeater's parent is added to component return true
+            if (cs.contains(searchFor)) {
+                return true;
+            }
+            //search repeater's parent in children of components added in A.R.T
+            boolean found = false;
+            for (Component c : cs) {
+                if (c instanceof MarkupContainer) {
+                    MarkupContainer mc = (MarkupContainer) c;
+                    Boolean result = addNewChildVisitor(mc, searchFor);
+                    if (Boolean.TRUE.equals(result)) {
+                        found = true;
+                        break;
+                    }
+                }
+            }
+            return found;
+        }
+
+        /**
+         * @param parent    parent on which ChildVisitor is added
+         * @param searchFor ,searchFor is the component which visitor search for
+         * @return true if searchFor is found
+         */
+        protected Boolean addNewChildVisitor(MarkupContainer parent, Component searchFor) {
+            return parent.visitChildren(new ChildVisitor(searchFor));
+        }
+
     }
 
+    public final MetaDataKey<AjaxRequestTarget.IListener>getSynchronizerKey(){
+        return synchronizerKey;
+    }
     /**
      * key corresponding to AjaxRequestTarget.IListener in request metadata
      */

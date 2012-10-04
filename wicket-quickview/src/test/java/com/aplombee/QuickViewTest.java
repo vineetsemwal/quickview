@@ -253,17 +253,17 @@ public class QuickViewTest {
     public void add_1() {
         items.clear();
         final int itemsPerRequest=1;
-        final TestComponentPanel.Parent parent = new TestComponentPanel.Parent(TestComponentPanel.parentId);
+        final QuickViewParent parent = new QuickViewParent("parent");
         parent.setOutputMarkupId(true);
         final IDataProvider dataProvider =  new ListDataProvider(data(10));
         QuickMockApplication app=new QuickMockApplication();
         WicketTester tester=new WicketTester(app);
-        final QuickView<Integer> quickView = new QuickView<Integer>(TestComponentPanel.quickViewId, dataProvider,itemsPerRequest) {
+        final QuickView<Integer> quickView = new QuickView<Integer>("quickview", dataProvider,itemsPerRequest) {
 
             public void populate(Item<Integer> item) {
             }
         };
-        final AjaxLink link=new AjaxLink(TestComponentPanel.ajaxLinkId) {
+        final AjaxLink link=new AjaxLink("link") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 Iterator<Integer> it=  dataProvider.iterator(1,itemsPerRequest);
@@ -279,9 +279,9 @@ public class QuickViewTest {
         parent.add(quickView);
         quickView.setReuse(ReUse.ITEMSNAVIGATION);
 
-        TestComponentPanel panel=new TestComponentPanel("panel"){
+        TestQuickViewContainer panel=new TestQuickViewContainer("panel"){
             @Override
-            public Parent newParent() {
+            public QuickViewParent newParent() {
                 return parent;
             }
 
@@ -319,17 +319,17 @@ public class QuickViewTest {
         items.clear();
         final int itemsPerRequest=2;
 
-        final TestComponentPanel.Parent parent = new TestComponentPanel.Parent(TestComponentPanel.parentId);
+        final QuickViewParent parent = new QuickViewParent("parent");
         parent.setOutputMarkupId(true);
         final IDataProvider dataProvider =  new ListDataProvider(data(10));
         QuickMockApplication app=new QuickMockApplication();
         WicketTester tester=new WicketTester(app);
-        final QuickView<Integer> quickView = new QuickView<Integer>(TestComponentPanel.quickViewId, dataProvider,itemsPerRequest) {
+        final QuickView<Integer> quickView = new QuickView<Integer>("quickview", dataProvider,itemsPerRequest) {
 
             public void populate(Item<Integer> item) {
             }
         };
-        final AjaxLink link=new AjaxLink(TestComponentPanel.ajaxLinkId) {
+        final AjaxLink link=new AjaxLink("link") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 Iterator<Integer> it=  dataProvider.iterator(2,itemsPerRequest);
@@ -344,9 +344,9 @@ public class QuickViewTest {
         parent.add(quickView);
         quickView.setReuse(ReUse.ITEMSNAVIGATION);
 
-        TestComponentPanel panel=new TestComponentPanel("panel"){
+        TestQuickViewContainer panel=new TestQuickViewContainer("panel"){
             @Override
-            public Parent newParent() {
+            public QuickViewParent newParent() {
                 return parent;
             }
 
@@ -393,17 +393,17 @@ public class QuickViewTest {
         items.clear();
         final int itemsPerRequest=1;
 
-        final TestComponentPanel.Parent parent = new TestComponentPanel.Parent(TestComponentPanel.parentId);
+        final QuickViewParent parent = new QuickViewParent("parent");
         parent.setOutputMarkupId(true);
         final IDataProvider dataProvider =  new ListDataProvider(data(10));
         QuickMockApplication app=new QuickMockApplication();
         WicketTester tester=new WicketTester(app);
-        final QuickView<Integer> quickView = new QuickView<Integer>(TestComponentPanel.quickViewId, dataProvider,itemsPerRequest) {
+        final QuickView<Integer> quickView = new QuickView<Integer>("quickview", dataProvider,itemsPerRequest) {
 
             public void populate(Item<Integer> item) {
             }
         };
-        final Link link=new Link(TestComponentPanel.ajaxLinkId) {
+        final Link link=new Link("link") {
             @Override
             public void onClick() {
                 Iterator<Integer> it=  dataProvider.iterator(1,itemsPerRequest);
@@ -419,9 +419,9 @@ public class QuickViewTest {
         //reuse all is intentionally set because quickview is rendered again and any other strategy would not retail all  which we need to check for quickview.size()
         quickView.setReuse(ReUse.ALL);
 
-        TestComponentPanel panel=new TestComponentPanel("panel"){
+        TestQuickViewContainer panel=new TestQuickViewContainer("panel"){
             @Override
-            public Parent newParent() {
+            public QuickViewParent newParent() {
                 return parent;
             }
 
@@ -447,17 +447,17 @@ public class QuickViewTest {
     public void add_4() {
         items.clear();
         final int itemsPerRequest=1;
-        final TestComponentPanel.Parent parent = new TestComponentPanel.Parent(TestComponentPanel.parentId);
+        final QuickViewParent parent = new QuickViewParent("parent");
         parent.setOutputMarkupId(true);
         final IDataProvider dataProvider =  new ListDataProvider(data(10));
         QuickMockApplication app=new QuickMockApplication();
         WicketTester tester=new WicketTester(app);
-        final QuickView<Integer> quickView = new QuickView<Integer>(TestComponentPanel.quickViewId, dataProvider,itemsPerRequest) {
+        final QuickView<Integer> quickView = new QuickView<Integer>("quickview", dataProvider,itemsPerRequest) {
 
             public void populate(Item<Integer> item) {
             }
         };
-        final AjaxLink link=new AjaxLink(TestComponentPanel.ajaxLinkId) {
+        final AjaxLink link=new AjaxLink("link") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 Iterator<Integer> it=  dataProvider.iterator(1,itemsPerRequest);
@@ -475,9 +475,9 @@ public class QuickViewTest {
         //reuse all is intentionally set because quickview is rendered again and any other strategy would not retail all which we need to check for quickview.size()
         quickView.setReuse(ReUse.ALL);
 
-        TestComponentPanel panel=new TestComponentPanel("panel"){
+        TestQuickViewContainer panel=new TestQuickViewContainer("panel"){
             @Override
-            public Parent newParent() {
+            public QuickViewParent newParent() {
                 return parent;
             }
 
@@ -513,17 +513,17 @@ public class QuickViewTest {
     public void addAtStart_1() {
         items.clear();
         final int itemsPerRequest=1;
-        final TestComponentPanel.Parent parent = new TestComponentPanel.Parent(TestComponentPanel.parentId);
+        final QuickViewParent parent = new QuickViewParent("parent");
         parent.setOutputMarkupId(true);
         final IDataProvider dataProvider =  new ListDataProvider(data(10));
         QuickMockApplication app=new QuickMockApplication();
         WicketTester tester=new WicketTester(app);
-        final QuickView<Integer> quickView = new QuickView<Integer>(TestComponentPanel.quickViewId, dataProvider,itemsPerRequest) {
+        final QuickView<Integer> quickView = new QuickView<Integer>("quickview", dataProvider,itemsPerRequest) {
 
             public void populate(Item<Integer> item) {
             }
         };
-        final AjaxLink link=new AjaxLink(TestComponentPanel.ajaxLinkId) {
+        final AjaxLink link=new AjaxLink("link") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 Iterator<Integer> it=  dataProvider.iterator(1,itemsPerRequest);
@@ -538,9 +538,9 @@ public class QuickViewTest {
         parent.add(quickView);
         quickView.setReuse(ReUse.ITEMSNAVIGATION);
 
-        TestComponentPanel panel=new TestComponentPanel("panel"){
+        TestQuickViewContainer panel=new TestQuickViewContainer("panel"){
             @Override
-            public Parent newParent() {
+            public QuickViewParent newParent() {
                 return parent;
             }
 
@@ -577,17 +577,17 @@ public class QuickViewTest {
         items.clear();
         final int itemsPerRequest=2;
 
-        final TestComponentPanel.Parent parent = new TestComponentPanel.Parent(TestComponentPanel.parentId);
+        final QuickViewParent parent = new QuickViewParent("parent");
         parent.setOutputMarkupId(true);
         final IDataProvider dataProvider =  new ListDataProvider(data(10));
         QuickMockApplication app=new QuickMockApplication();
         WicketTester tester=new WicketTester(app);
-        final QuickView<Integer> quickView = new QuickView<Integer>(TestComponentPanel.quickViewId, dataProvider,itemsPerRequest) {
+        final QuickView<Integer> quickView = new QuickView<Integer>("quickview", dataProvider,itemsPerRequest) {
 
             public void populate(Item<Integer> item) {
             }
         };
-        final AjaxLink link=new AjaxLink(TestComponentPanel.ajaxLinkId) {
+        final AjaxLink link=new AjaxLink("link") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 Iterator<Integer> it=  dataProvider.iterator(2,itemsPerRequest);
@@ -602,9 +602,9 @@ public class QuickViewTest {
         parent.add(quickView);
         quickView.setReuse(ReUse.ITEMSNAVIGATION);
 
-        TestComponentPanel panel=new TestComponentPanel("panel"){
+        TestQuickViewContainer panel=new TestQuickViewContainer("panel"){
             @Override
-            public Parent newParent() {
+            public QuickViewParent newParent() {
                 return parent;
             }
 
@@ -650,17 +650,17 @@ public class QuickViewTest {
         items.clear();
         final int itemsPerRequest=1;
 
-        final TestComponentPanel.Parent parent = new TestComponentPanel.Parent(TestComponentPanel.parentId);
+        final QuickViewParent parent = new QuickViewParent("parent");
         parent.setOutputMarkupId(true);
         final IDataProvider dataProvider =  new ListDataProvider(data(10));
         QuickMockApplication app=new QuickMockApplication();
         WicketTester tester=new WicketTester(app);
-        final QuickView<Integer> quickView = new QuickView<Integer>(TestComponentPanel.quickViewId, dataProvider,itemsPerRequest) {
+        final QuickView<Integer> quickView = new QuickView<Integer>("quickview", dataProvider,itemsPerRequest) {
 
             public void populate(Item<Integer> item) {
             }
         };
-        final Link link=new Link(TestComponentPanel.ajaxLinkId) {
+        final Link link=new Link("link") {
             @Override
             public void onClick() {
                 Iterator<Integer> it=  dataProvider.iterator(1,itemsPerRequest);
@@ -676,9 +676,9 @@ public class QuickViewTest {
         //reuse all is intentionally set because quickview is rendered again and any other strategy would not retail all  which we need to check for quickview.size()
         quickView.setReuse(ReUse.ALL);
 
-        TestComponentPanel panel=new TestComponentPanel("panel"){
+        TestQuickViewContainer panel=new TestQuickViewContainer("panel"){
             @Override
-            public Parent newParent() {
+            public QuickViewParent newParent() {
                 return parent;
             }
 
@@ -703,17 +703,17 @@ public class QuickViewTest {
     public void addAtStart_4() {
         items.clear();
         final int itemsPerRequest=1;
-        final TestComponentPanel.Parent parent = new TestComponentPanel.Parent(TestComponentPanel.parentId);
+        final QuickViewParent parent = new QuickViewParent("parent");
         parent.setOutputMarkupId(true);
         final IDataProvider dataProvider =  new ListDataProvider(data(10));
         QuickMockApplication app=new QuickMockApplication();
         WicketTester tester=new WicketTester(app);
-        final QuickView<Integer> quickView = new QuickView<Integer>(TestComponentPanel.quickViewId, dataProvider,itemsPerRequest) {
+        final QuickView<Integer> quickView = new QuickView<Integer>("quickview", dataProvider,itemsPerRequest) {
 
             public void populate(Item<Integer> item) {
             }
         };
-        final AjaxLink link=new AjaxLink(TestComponentPanel.ajaxLinkId) {
+        final AjaxLink link=new AjaxLink("link") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 Iterator<Integer> it=  dataProvider.iterator(1,itemsPerRequest);
@@ -731,9 +731,9 @@ public class QuickViewTest {
         //reuse all is intentionally set because quickview is rendered again and any other strategy would not retail all which we need to check for quickview.size()
         quickView.setReuse(ReUse.ALL);
 
-        TestComponentPanel panel=new TestComponentPanel("panel"){
+        TestQuickViewContainer panel=new TestQuickViewContainer("panel"){
             @Override
-            public Parent newParent() {
+            public QuickViewParent newParent() {
                 return parent;
             }
 
@@ -907,17 +907,17 @@ public class QuickViewTest {
     public void remove_1() {
         items.clear();
         final int itemsPerRequest=1;
-        final TestComponentPanel.Parent parent = new TestComponentPanel.Parent(TestComponentPanel.parentId);
+        final QuickViewParent parent = new QuickViewParent("parent");
         parent.setOutputMarkupId(true);
         final IDataProvider dataProvider =  new ListDataProvider(data(10));
         QuickMockApplication app=new QuickMockApplication();
         WicketTester tester=new WicketTester(app);
-        final QuickView<Integer> quickView = new QuickView<Integer>(TestComponentPanel.quickViewId, dataProvider,itemsPerRequest) {
+        final QuickView<Integer> quickView = new QuickView<Integer>("quickview", dataProvider,itemsPerRequest) {
 
             public void populate(Item<Integer> item) {
             }
         };
-        final AjaxLink link=new AjaxLink(TestComponentPanel.ajaxLinkId) {
+        final AjaxLink link=new AjaxLink("link") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                      Item<Integer>item=quickView.getItem(0);
@@ -928,9 +928,9 @@ public class QuickViewTest {
         parent.add(quickView);
         quickView.setReuse(ReUse.ITEMSNAVIGATION);
 
-        TestComponentPanel panel=new TestComponentPanel("panel"){
+        TestQuickViewContainer panel=new TestQuickViewContainer("panel"){
             @Override
-            public Parent newParent() {
+            public QuickViewParent newParent() {
                 return parent;
             }
 
@@ -1661,142 +1661,6 @@ public class QuickViewTest {
         Mockito.verify(spy, Mockito.times(1)).simpleRemove(items.get(1));
         Mockito.verify(spy, Mockito.times(1)).simpleRemove(items.get(2));
         Mockito.verify(spy, Mockito.times(1)).simpleRemove(items.get(3));
-    }
-    /**
-     * components not empty  and repeater's parent is added to another component which is added to A.R.T
-     */
-    @Test(groups = {"wicketTests"})
-    public void isParentAdded_1() {
-        items.clear();
-        final int itemsPerRequest=1;
-        final TestComponentPanel.Parent parent = new TestComponentPanel.Parent(TestComponentPanel.parentId);
-        parent.setOutputMarkupId(true);
-        final IDataProvider dataProvider =  new ListDataProvider(data(10));
-        QuickMockApplication app=new QuickMockApplication();
-        WicketTester tester=new WicketTester(app);
-        final QuickView<Integer> quickView = new QuickView<Integer>(TestComponentPanel.quickViewId, dataProvider,itemsPerRequest) {
-
-            public void populate(Item<Integer> item) {
-            }
-        };
-        final AjaxLink link=new AjaxLink(TestComponentPanel.ajaxLinkId) {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                target.add(parent.getParent());
-            }
-        };
-        parent.add(quickView);
-        //reuse all is intentionally set because quickview is rendered again and any other strategy would not retail all which we need to check for quickview.size()
-        quickView.setReuse(ReUse.ALL);
-
-        TestComponentPanel panel=new TestComponentPanel("panel"){
-            @Override
-            public Parent newParent() {
-                return parent;
-            }
-
-            @Override
-            public AbstractLink newLink() {
-                return link;
-            }
-        };
-
-        tester.startComponentInPage(panel);
-        tester.executeAjaxEvent(link, "onclick");
-        AjaxRequestTarget target=app.getLastAjaxRequestTarget();
-        Assert.assertTrue(quickView.isParentAddedInAjaxRequestTarget(target));
-    }
-
-    /**
-     * components not empty  and repeater's parent is added directly in A.R.T
-     */
-    @Test(groups = {"wicketTests"})
-    public void isParentAdded_2() {
-        items.clear();
-        final int itemsPerRequest=1;
-        final TestComponentPanel.Parent parent = new TestComponentPanel.Parent(TestComponentPanel.parentId);
-        parent.setOutputMarkupId(true);
-        final IDataProvider dataProvider =  new ListDataProvider(data(10));
-        QuickMockApplication app=new QuickMockApplication();
-        WicketTester tester=new WicketTester(app);
-        final QuickView<Integer> quickView = new QuickView<Integer>(TestComponentPanel.quickViewId, dataProvider,itemsPerRequest) {
-
-            public void populate(Item<Integer> item) {
-            }
-        };
-        final AjaxLink link=new AjaxLink(TestComponentPanel.ajaxLinkId) {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                target.add(parent);
-
-            }
-        };
-        parent.add(quickView);
-        //reuse all is intentionally set because quickview is rendered again and any other strategy would not retail all which we need to check for quickview.size()
-        quickView.setReuse(ReUse.ALL);
-
-        TestComponentPanel panel=new TestComponentPanel("panel"){
-            @Override
-            public Parent newParent() {
-                return parent;
-            }
-
-            @Override
-            public AbstractLink newLink() {
-                return link;
-            }
-        };
-
-        tester.startComponentInPage(panel);
-        tester.executeAjaxEvent(link, "onclick");
-        AjaxRequestTarget target=app.getLastAjaxRequestTarget();
-        Assert.assertTrue(quickView.isParentAddedInAjaxRequestTarget(target));
-    }
-
-    /**
-     * parenent not added to A.R.T
-     */
-    @Test(groups = {"wicketTests"})
-    public void isParentAdded_3() {
-        items.clear();
-        final int itemsPerRequest=1;
-        final TestComponentPanel.Parent parent = new TestComponentPanel.Parent(TestComponentPanel.parentId);
-        parent.setOutputMarkupId(true);
-        final IDataProvider dataProvider =  new ListDataProvider(data(10));
-        QuickMockApplication app=new QuickMockApplication();
-        WicketTester tester=new WicketTester(app);
-        final QuickView<Integer> quickView = new QuickView<Integer>(TestComponentPanel.quickViewId, dataProvider,itemsPerRequest) {
-
-            public void populate(Item<Integer> item) {
-            }
-        };
-        final AjaxLink link=new AjaxLink(TestComponentPanel.ajaxLinkId) {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                TestComponentPanel panel=(TestComponentPanel)parent.getParent();
-                target.add(panel.getNavigator());
-            }
-        };
-        parent.add(quickView);
-        //reuse all is intentionally set because quickview is rendered again and any other strategy would not retail all which we need to check for quickview.size()
-        quickView.setReuse(ReUse.ALL);
-
-        TestComponentPanel panel=new TestComponentPanel("panel"){
-            @Override
-            public Parent newParent() {
-                return parent;
-            }
-
-            @Override
-            public AbstractLink newLink() {
-                return link;
-            }
-        };
-
-        tester.startComponentInPage(panel);
-        tester.executeAjaxEvent(link, "onclick");
-        AjaxRequestTarget target=app.getLastAjaxRequestTarget();
-        Assert.assertFalse(quickView.isParentAddedInAjaxRequestTarget(target));
     }
 
 

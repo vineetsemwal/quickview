@@ -152,10 +152,9 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
             return rowItem;
         }
 
-        AjaxRequestTarget target = getAjaxRequestTarget();
         String call = getRepeaterUtil().insertBefore(rowItem, _getParent());
         getSynchronizer().getPrependScripts().add(call);
-        target.add(rowItem);
+        getSynchronizer().add(rowItem);
         return rowItem;
     }
 
@@ -166,9 +165,8 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
             return this;
         }
         String call = getRepeaterUtil().insertAfter(rowItem, _getParent());
-        Synchronizer listener= getSynchronizer();
-        listener.getPrependScripts().add(call);
-        listener.add(rowItem);
+       getSynchronizer().getPrependScripts().add(call);
+        getSynchronizer().add(rowItem);
 
         return this;
     }

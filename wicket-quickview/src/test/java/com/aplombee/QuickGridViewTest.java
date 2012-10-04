@@ -1001,7 +1001,7 @@ public class QuickGridViewTest {
         } ;
         grid.setReuse(ReUse.ITEMSNAVIGATION);
 
-       final TestComponentPanel.Parent parent=new TestComponentPanel.Parent(TestComponentPanel.parentId);
+       final QuickViewParent parent=new QuickViewParent("parent");
         parent.setOutputMarkupPlaceholderTag(true);
         parent.add(grid);
         grid.setColumns(2);
@@ -1013,9 +1013,9 @@ public class QuickGridViewTest {
 
             }
         };
-        TestContainer container=new TestContainer("panel") {
+        TestQuickGridViewContainer container=new TestQuickGridViewContainer("panel") {
             @Override
-            public TestComponentPanel.Parent newParent() {
+            public QuickViewParent newParent() {
                 return parent;
             }
 
@@ -1061,7 +1061,7 @@ public class QuickGridViewTest {
         } ;
         grid.setReuse(ReUse.ITEMSNAVIGATION);
 
-        final TestComponentPanel.Parent parent=new TestComponentPanel.Parent(TestComponentPanel.parentId);
+        final QuickViewParent parent=new QuickViewParent("parent");
         parent.setOutputMarkupPlaceholderTag(true);
         parent.add(grid);
         grid.setColumns(2);
@@ -1076,9 +1076,9 @@ public class QuickGridViewTest {
                 target.add(parent);
             }
         };
-        TestContainer container=new TestContainer("panel") {
+        TestQuickGridViewContainer container=new TestQuickGridViewContainer("panel") {
             @Override
-            public TestComponentPanel.Parent newParent() {
+            public QuickViewParent newParent() {
                 return parent;
             }
 
@@ -1119,7 +1119,7 @@ public class QuickGridViewTest {
         } ;
         grid.setReuse(ReUse.ITEMSNAVIGATION);
 
-        final TestComponentPanel.Parent parent=new TestComponentPanel.Parent(TestComponentPanel.parentId);
+        final QuickViewParent parent=new QuickViewParent("parent");
         parent.setOutputMarkupPlaceholderTag(true);
         parent.add(grid);
         grid.setColumns(2);
@@ -1133,9 +1133,10 @@ public class QuickGridViewTest {
                 data.add(69);
             }
         };
-        TestContainer container=new TestContainer("panel") {
+
+        TestQuickGridViewContainer container=new TestQuickGridViewContainer("panel") {
             @Override
-            public TestComponentPanel.Parent newParent() {
+            public QuickViewParent newParent() {
                 return parent;
             }
 
@@ -1178,7 +1179,7 @@ public class QuickGridViewTest {
         } ;
         grid.setReuse(ReUse.ITEMSNAVIGATION);
 
-        final TestComponentPanel.Parent parent=new TestComponentPanel.Parent(TestComponentPanel.parentId);
+        final QuickViewParent parent=new QuickViewParent("parent");
         parent.setOutputMarkupPlaceholderTag(true);
         parent.add(grid);
         grid.setColumns(2);
@@ -1190,9 +1191,9 @@ public class QuickGridViewTest {
 
             }
         };
-        TestContainer container=new TestContainer("panel") {
+        TestQuickGridViewContainer container=new TestQuickGridViewContainer("panel") {
             @Override
-            public TestComponentPanel.Parent newParent() {
+            public QuickViewParent newParent() {
                 return parent;
             }
 
@@ -1240,7 +1241,7 @@ public class QuickGridViewTest {
         } ;
         grid.setReuse(ReUse.ITEMSNAVIGATION);
 
-        final TestComponentPanel.Parent parent=new TestComponentPanel.Parent(TestComponentPanel.parentId);
+        final QuickViewParent parent=new QuickViewParent("parent");
         parent.setOutputMarkupPlaceholderTag(true);
         parent.add(grid);
         grid.setColumns(2);
@@ -1255,9 +1256,9 @@ public class QuickGridViewTest {
                 target.add(parent);
             }
         };
-        TestContainer container=new TestContainer("panel") {
+        TestQuickGridViewContainer container=new TestQuickGridViewContainer("panel") {
             @Override
-            public TestComponentPanel.Parent newParent() {
+            public QuickViewParent newParent() {
                 return parent;
             }
 
@@ -1298,7 +1299,7 @@ public class QuickGridViewTest {
         } ;
         grid.setReuse(ReUse.ITEMSNAVIGATION);
 
-        final TestComponentPanel.Parent parent=new TestComponentPanel.Parent(TestComponentPanel.parentId);
+        final QuickViewParent parent=new QuickViewParent("parent");
         parent.setOutputMarkupPlaceholderTag(true);
         parent.add(grid);
         //grid.setRows(2);
@@ -1311,9 +1312,9 @@ public class QuickGridViewTest {
                 grid.removeRow(0);
             }
         };
-        TestContainer container=new TestContainer("panel") {
+        TestQuickGridViewContainer container=new TestQuickGridViewContainer("panel") {
             @Override
-            public TestComponentPanel.Parent newParent() {
+            public QuickViewParent newParent() {
                 return parent;
             }
 
@@ -1363,7 +1364,7 @@ public class QuickGridViewTest {
         } ;
         grid.setReuse(ReUse.ITEMSNAVIGATION);
 
-        final TestComponentPanel.Parent parent=new TestComponentPanel.Parent(TestComponentPanel.parentId);
+        final QuickViewParent parent=new QuickViewParent("parent");
         parent.setOutputMarkupPlaceholderTag(true);
         parent.add(grid);
         //grid.setRows(2);
@@ -1377,9 +1378,9 @@ public class QuickGridViewTest {
                 target.add(parent);
             }
         };
-        TestContainer container=new TestContainer("panel") {
+        TestQuickGridViewContainer container=new TestQuickGridViewContainer("panel") {
             @Override
-            public TestComponentPanel.Parent newParent() {
+            public QuickViewParent newParent() {
                 return parent;
             }
 
@@ -1419,7 +1420,7 @@ public class QuickGridViewTest {
         } ;
         grid.setReuse(ReUse.ITEMSNAVIGATION);
 
-        final TestComponentPanel.Parent parent=new TestComponentPanel.Parent(TestComponentPanel.parentId);
+        final QuickViewParent parent=new QuickViewParent("parent");
         parent.setOutputMarkupPlaceholderTag(true);
         parent.add(grid);
         //grid.setRows(2);
@@ -1432,9 +1433,9 @@ public class QuickGridViewTest {
                 grid.removeRow(0);
               }
         };
-        TestContainer container=new TestContainer("panel") {
+        TestQuickGridViewContainer container=new TestQuickGridViewContainer("panel") {
             @Override
-            public TestComponentPanel.Parent newParent() {
+            public QuickViewParent newParent() {
                 return parent;
             }
 
@@ -1697,53 +1698,6 @@ public class QuickGridViewTest {
         Assert.assertEquals(actual1.getIndex(),row1.getIndex());
         Assert.assertEquals(actual2.getMarkupId(),row2.getMarkupId());
         Assert.assertEquals(actual2.getIndex(),row2.getIndex());
-
-    }
-
-    private abstract class TestContainer extends WebMarkupContainer implements IMarkupResourceStreamProvider{
-     public static final String quickViewId="quickview",parentId="parent",ajaxLinkId="link",navigatorId="navigator";
-     private QuickGridView gridView;
-      private AbstractLink link;
-     private TestComponentPanel.Parent parent ;
-        private ItemsNavigatorBase navigator;
-     public TestContainer(String id){
-                super(id);
-            }
-        @Override
-        protected void onInitialize() {
-            super.onInitialize();
-           add(parent=newParent());
-            add(navigator=newNavigator());
-            add(link=newLink()) ;
-        }
-        public abstract AbstractLink newLink();
-        public abstract TestComponentPanel.Parent newParent();
-        public ItemsNavigatorBase newNavigator(){
-            AjaxItemsNavigator navigator=new AjaxItemsNavigator(navigatorId,parent.getChild());
-            return navigator;
-        }
-
-        @Override
-        protected IMarkupSourcingStrategy newMarkupSourcingStrategy()
-        {
-            return new PanelMarkupSourcingStrategy(false);
-        }
-
-        @Override
-        public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
-        {
-            return new StringResourceStream("<wicket:panel> " +
-                    "<table wicket:id=\""+ parent.getId()+ "\">" +
-                    "<tr wicket:id=\""+parent.getChild().getId()+"\"> " +
-                    "<td wicket:id=\"cols\"> </td>"+
-                    "</tr>" +
-                    "</table>" +
-                    " <div wicket:id=\""+ navigator.getId()+"\"></div>" +
-                    "<a wicket:id= \""+ link.getId()  +"\" > </a>"+
-                    "</wicket:panel>"
-
-            );
-        }
 
     }
 
