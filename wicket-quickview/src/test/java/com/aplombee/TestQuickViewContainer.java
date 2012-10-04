@@ -22,6 +22,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.AbstractLink;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
 import org.apache.wicket.markup.html.panel.PanelMarkupSourcingStrategy;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -61,7 +62,14 @@ public abstract class TestQuickViewContainer extends WebMarkupContainer  impleme
         add(navigator=newNavigator());
         add(link=newLink()) ;
     }
-    public abstract AbstractLink newLink();
+
+    public AbstractLink newLink() {
+        return new Link("link"){
+            @Override
+            public void onClick() {
+            }
+        };
+    }
     public abstract QuickViewParent newParent();
     public ItemsNavigatorBase newNavigator(){
         AjaxItemsNavigator navigator=new AjaxItemsNavigator(navigatorId,parent.getChild());

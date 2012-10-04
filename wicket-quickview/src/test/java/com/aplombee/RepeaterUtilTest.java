@@ -25,6 +25,7 @@ import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.AbstractLink;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
 import org.apache.wicket.markup.html.panel.PanelMarkupSourcingStrategy;
 import org.apache.wicket.markup.repeater.Item;
@@ -73,17 +74,7 @@ public class RepeaterUtilTest {
         parent.setOutputMarkupId(true);
         parent.add(quickView);
 
-        final AjaxLink link = new AjaxLink("link") {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-            }
-        };
-
         TestQuickViewContainer panel = new TestQuickViewContainer("panel") {
-            @Override
-            public AbstractLink newLink() {
-                return link;
-            }
 
             @Override
             public QuickViewParent newParent() {
@@ -125,17 +116,8 @@ public class RepeaterUtilTest {
         parent.setOutputMarkupId(true);
         parent.add(quickView);
 
-        final AjaxLink link = new AjaxLink("link") {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-            }
-        };
 
         TestQuickGridViewContainer panel = new TestQuickGridViewContainer("panel") {
-            @Override
-            public AbstractLink newLink() {
-                return link;
-            }
 
             @Override
             public QuickViewParent newParent() {
@@ -170,18 +152,8 @@ public class RepeaterUtilTest {
         parent.setOutputMarkupId(true);
         parent.add(quickView);
 
-        final AjaxLink link = new AjaxLink("link") {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-            }
-        };
 
         TestQuickViewContainer panel = new TestQuickViewContainer("panel") {
-            @Override
-            public AbstractLink newLink() {
-                return link;
-            }
-
             @Override
             public QuickViewParent newParent() {
                 return parent;
@@ -219,18 +191,7 @@ public class RepeaterUtilTest {
         parent.setOutputMarkupId(true);
         parent.add(quickView);
 
-        final AjaxLink link = new AjaxLink("link") {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-            }
-        };
-
         TestQuickViewContainer panel = new TestQuickViewContainer("panel") {
-            @Override
-            public AbstractLink newLink() {
-                return link;
-            }
-
             @Override
             public QuickViewParent newParent() {
                 return parent;
