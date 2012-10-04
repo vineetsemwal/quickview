@@ -102,9 +102,9 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      * set reuse strategy
      * <p/>
      * for paging ie. when used with {@link org.apache.wicket.markup.html.navigation.paging.PagingNavigator} or {@link org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigator}  the
-     * {@link ReUse.DEFAULT_PAGING} is preferred
+     * {@link ReUse.PAGING} is preferred
      * <p/>
-     * for rows navigation purpose {@link ReUse.DEFAULT_ROWSNAVIGATOR} is preferred
+     * for rows navigation purpose {@link ReUse.ITEMSNAVIGATION} is preferred
      *
      * @param reuse
      */
