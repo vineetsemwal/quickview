@@ -1573,6 +1573,46 @@ public class QuickGridViewTest {
         Mockito.verify(spy,Mockito.times(1)).addRow(rowItem2);
     }
 
+
+    @Test(groups = {"wicketTests"})
+    public void addRowsAtStart_1(){
+        IDataProvider dataProvider=Mockito.mock(IDataProvider.class);
+        QuickGridView.RowItem rowItem1=new QuickGridView.RowItem("1",1,new Model());
+        QuickGridView.RowItem rowItem2=new QuickGridView.RowItem("2",2,new Model());
+        final Iterator<QuickGridView.RowItem>rows=Mockito.mock(Iterator.class);
+        Mockito.when(rows.hasNext()).thenReturn(true).thenReturn(true).thenReturn(false);
+        Mockito.when(rows.next()).thenReturn(rowItem1).thenReturn(rowItem2);
+        QuickGridView gridView=new QuickGridView("grid",dataProvider){
+            @Override
+            protected void populateEmptyItem(CellItem item) {
+            }
+
+            @Override
+            protected void populate(CellItem item) {
+            }
+
+            @Override
+            public Iterator buildRows(Iterator iterator) {
+                return rows;
+            }
+
+
+            @Override
+            public QuickGridView addRowAtStart(RowItem rowItem) {
+                 return this;
+                }
+        };
+        gridView.setRows(2);
+        gridView.setColumns(2);
+        gridView.setItemsPerRequest(4);
+        Iterator data=Mockito.mock(Iterator.class);
+        QuickGridView spy=Mockito.spy(gridView);
+        spy.addRowsAtStart(data);
+        Mockito.verify(spy,Mockito.times(1)).buildRows(data);
+        Mockito.verify(spy,Mockito.times(1)).addRowAtStart(rowItem1);
+        Mockito.verify(spy,Mockito.times(1)).addRowAtStart(rowItem2);
+    }
+
     List<Integer>data(int size){
         List<Integer>list=new ArrayList<Integer>();
         for(int i=0;i<size;i++){

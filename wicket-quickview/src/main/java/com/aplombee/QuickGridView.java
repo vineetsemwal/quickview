@@ -127,17 +127,17 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
     abstract protected void populateEmptyItem(CellItem<T> item);
 
 
-    public RowItem<T> addRowAtStart(RowItem<T> rowItem) {
+    public QuickGridView<T> addRowAtStart(RowItem<T> rowItem) {
         Args.notNull(rowItem, "rowItem can't be null");
         simpleAdd(rowItem);
         if (!isAjax()) {
-            return rowItem;
+            return this;
         }
 
         String call = getRepeaterUtil().insertBefore(rowItem, _getParent());
         getSynchronizer().getPrependScripts().add(call);
         getSynchronizer().add(rowItem);
-        return rowItem;
+        return this;
     }
 
     public QuickGridView<T> addRow(RowItem<T> rowItem) {
@@ -163,6 +163,14 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
         Iterator<RowItem<T>> rows = buildRows(iterator);
         while (rows.hasNext()) {
             addRow(rows.next());
+        }
+        return this;
+    }
+
+    public QuickGridView<T> addRowsAtStart(Iterator<? extends T> iterator) {
+        Iterator<RowItem<T>> rows = buildRows(iterator);
+        while (rows.hasNext()) {
+            addRowAtStart(rows.next());
         }
         return this;
     }
