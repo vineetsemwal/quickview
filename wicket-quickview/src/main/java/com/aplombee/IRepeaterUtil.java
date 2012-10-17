@@ -20,6 +20,10 @@ package com.aplombee;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.repeater.Item;
+
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Vineet Semwal
@@ -181,4 +185,14 @@ public interface IRepeaterUtil {
      * @return  js call string
      */
     public String isPageScrollBarAtBottom();
+
+
+    /**
+     * return iterator of those items whose models are equal ,if the model is not equal new item is returned
+     *
+     * @param oldIterator    old iterator
+     * @param newIterator    new iterator (iterator of the list of expected modelobjects)
+     * @return
+     */
+    Iterator<Item> reuseItemsIfModelsEqual(Iterator<Item> oldIterator, Iterator<Item> newIterator);
 }

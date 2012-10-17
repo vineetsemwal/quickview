@@ -16,6 +16,7 @@
  */
 package com.aplombee;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.repeater.Item;
@@ -139,23 +140,17 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
     abstract protected void populateEmptyItem(CellItem<T> item);
 
 
-    @Override
-    public List<Item<T>> addItemsForPage(int page) {
-        long itemIndex = page * rows * columns;
-        return addItemsFromIndex(getRepeaterUtil().safeLongToInt(itemIndex));
-    }
-
-    public RowItem<T> addRowAtStart(RowItem<T> rowItem) {
+    public QuickGridView<T> addRowAtStart(RowItem<T> rowItem) {
         Args.notNull(rowItem, "rowItem can't be null");
         simpleAdd(rowItem);
         if (!isAjax()) {
-            return rowItem;
+            return this;
         }
 
         String call = getRepeaterUtil().insertBefore(rowItem, _getParent());
         getSynchronizer().getPrependScripts().add(call);
         getSynchronizer().add(rowItem);
-        return rowItem;
+        return this;
     }
 
     public QuickGridView addRow(RowItem<T> rowItem) {
@@ -165,17 +160,39 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
             return this;
         }
         String call = getRepeaterUtil().insertAfter(rowItem, _getParent());
-       getSynchronizer().getPrependScripts().add(call);
-        getSynchronizer().add(rowItem);
+        Synchronizer listener = getSynchronizer();
+        listener.getPrependScripts().add(call);
+        listener.add(rowItem);
+        return this;
+    }
 
+    /**
+     *   adds rows and their corresponding cells
+     *
+     * @param iterator data for which rows and their corresponding cells will be added
+     * @return    this
+     */
+    public QuickGridView<T> addRows(Iterator<? extends T> iterator) {
+        Iterator<RowItem<T>> rows = buildRows(iterator);
+        while (rows.hasNext()) {
+            addRow(rows.next());
+        }
+        return this;
+    }
+
+    public QuickGridView<T> addRowsAtStart(Iterator<? extends T> iterator) {
+        Iterator<RowItem<T>> rows = buildRows(iterator);
+        while (rows.hasNext()) {
+            addRowAtStart(rows.next());
+        }
         return this;
     }
 
     public void removeRow(RowItem<T> rowItem) {
         Args.notNull(rowItem, "rowItem can't be null");
         if (isAjax()) {
-           String call = getRepeaterUtil().removeItem(rowItem);
-             getSynchronizer().getPrependScripts().add(call);
+            String call = getRepeaterUtil().removeItem(rowItem);
+            getSynchronizer().getPrependScripts().add(call);
             getSynchronizer().add(rowItem);
         }
         simpleRemove(rowItem);
@@ -212,35 +229,81 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
         return rowItem;
     }
 
+
     /**
-     * @param itemIndex from where items has to be created
-     * @return list of items created
+     * reuse items if the models are equal ,iterator of RowItems is returned
      */
-
-    @Override
-    public List<Item<T>> addItemsFromIndex(int itemIndex) {
-        Iterator<? extends T> iterator = getDataProvider().iterator(itemIndex, getItemsPerRequest());
-        final long startrow = itemIndex / columns;
-        List<Item<T>> cells = new ArrayList<Item<T>>();
-        for (long ri = startrow; iterator.hasNext(); ri++) {
-            RowItem<T> rowItem = buildRowItem(newChildId(), ri);
-            addRow(rowItem);
-            List<Item<T>> rowsCells = addCells(rowItem, iterator);
-            cells.addAll(rowsCells);
-        }
-        return cells;
+    protected Iterator<Item<T>> reuseItemsForCurrentPage(final int currentPage) {
+        final long items = currentPage * getItemsPerRequest();
+        Iterator<? extends T> objects = getDataProvider().iterator(getRepeaterUtil().safeLongToInt(items), getItemsPerRequest());
+        Iterator<RowItem<T>> newRowsIterator = (Iterator) buildItems(0, objects);
+        Iterator oldCells = cells();
+        Iterator newCells = new GridView.ItemsIterator((Iterator) newRowsIterator);
+        Iterator reuseItems = getRepeaterUtil().reuseItemsIfModelsEqual(oldCells, newCells);
+        return (Iterator) buildRows(0, reuseItems);
     }
 
+    /**
+     * @param index    cellindex from where new cell items should be added
+     * @param iterator data
+     * @return iterator of RowItem which are created with their corresponding cells attached to them
+     */
     @Override
-    protected void createChildren(int page) {
-        long itemIndex = page * getItemsPerRequest();
-        Iterator<? extends T> iterator = getDataProvider().iterator(getRepeaterUtil().safeLongToInt(itemIndex), getItemsPerRequest());
-        for (long ri = 0; iterator.hasNext(); ri++) {
-            RowItem<T> rowItem = buildRowItem(newChildId(), ri);
-            simpleAdd(rowItem);
-            addCells(rowItem, iterator);
-        }
+    protected Iterator<Item<T>> buildItems(final int index, Iterator<? extends T> iterator) {
+        Iterator<CellItem<T>> cells = buildCells(index, iterator);
+        long rowIndex = index / columns;
+        return (Iterator) buildRows(rowIndex, cells);
     }
+
+    /**
+     * @param iterator data
+     * @return iterator of RowItem which are created with their corresponding cells attached to them
+     */
+    public Iterator<RowItem<T>> buildRows(Iterator<? extends T> iterator) {
+        int cellindex = 0;
+        if (ReUse.ALL == getReuse()) {
+            cellindex = gridSize();
+        }
+        return (Iterator) buildItems(cellindex, iterator);
+    }
+
+
+    protected Iterator<RowItem<T>> buildRows(final long rowIndex, Iterator<CellItem<T>> iterator) {
+        List<RowItem<T>> rowItems = new ArrayList<RowItem<T>>();
+        for (long row = rowIndex; iterator.hasNext(); row++) {
+            RowItem<T> rowItem = buildRowItem(newChildId(), row);
+            rowItems.add(rowItem);
+            for (long i = 0; i < columns; i++) {
+                if (iterator.hasNext()) {
+                    CellItem<T> cell = iterator.next();
+                    rowItem.getRepeater().add(cell);
+                } else {
+                    CellItem<T> item = buildEmptyCellItem();
+                    rowItem.getRepeater().add(item);
+                }
+            }
+
+        }
+        return rowItems.iterator();
+    }
+
+
+    protected Iterator<CellItem<T>> buildCells(final long index, Iterator<? extends T> iterator) {
+        List<CellItem<T>> cells = new ArrayList<CellItem<T>>();
+        for (long i = index; iterator.hasNext(); i++) {
+            T object = iterator.next();
+            CellItem<T> cell = buildCellItem(newChildId(), i, object);
+            cells.add(cell);
+        }
+        return cells.iterator();
+    }
+
+    public int gridSize() {
+        int rows = size();
+        long grid = rows * columns;
+        return getRepeaterUtil().safeLongToInt(grid);
+    }
+
 
     /**
      * adds {@link CellItem} to row's repeater ,if the iterator iterates less than the columns then the left cells are
@@ -282,6 +345,7 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
         }
         return this;
     }
+
 
     /**
      * new rowItem
@@ -371,9 +435,15 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
         return (Iterator) this.iterator();
     }
 
+
     public Iterator<CellItem<T>> cells() {
         Iterator<MarkupContainer> rows = (Iterator) rows();
         return new GridView.ItemsIterator(rows);
+    }
+
+    @Override
+    public Iterator<Component> itemsIterator() {
+        return (Iterator) cells();
     }
 
     /**

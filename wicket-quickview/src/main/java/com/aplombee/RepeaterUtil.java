@@ -22,8 +22,13 @@ import org.apache.wicket.Page;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.util.lang.Args;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -169,6 +174,32 @@ public class RepeaterUtil implements  IRepeaterUtil{
         if (ReUse.PAGING == quickView.getReuse() || ReUse.CURRENTPAGE==quickView.getReuse()) {
             throw new ReuseStrategyNotSupportedException(ReUse.PAGING + " stategy is not supported for itemsnavigator ");
         }
+    }
+
+    @Override
+    public final Iterator<Item> reuseItemsIfModelsEqual(Iterator<Item> oldIterator, Iterator<Item> newIterator){
+        List<Item> list=new ArrayList<Item>();
+        while (newIterator.hasNext()){
+            Item newItem =newIterator.next();
+            Item  old=null;
+            if(oldIterator.hasNext())
+            {
+                old=(Item)oldIterator.next();
+            }
+            if(old==null){
+                list.add(newItem);
+            }
+            else
+            {
+                if(!old.getModel().equals(newItem.getModel()))
+                {
+                    list.add(newItem);
+                }else{
+                    list.add(old);
+                }
+            }
+        }
+        return list.iterator();
     }
 
 

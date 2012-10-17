@@ -24,24 +24,30 @@ package com.aplombee;
 public enum ReUse {
 
     /**
-     * all children are removed and children of last page visited are created ,used for paging say with {@link org.apache.wicket.markup.html.navigation.paging.PagingNavigator} or
-     * {@link org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigator}  ,this is the prefered strategy for paging navigation
+     * all children are removed and children of last page visited are created ,used for paging
+     * say with {@link org.apache.wicket.markup.html.navigation.paging.PagingNavigator} or
+     * {@link org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigator}  ,
+     * this is the preferred strategy for paging navigation
      *
-     *  earlier it was known as PAGING
+     *  earlier it was known as DEFAULT_PAGING
      */
  PAGING,
 
     /**
      * all children are removed and children of first page are created again ,
      * mostly used and preferred for {@link com.aplombee.navigator.AjaxItemsNavigator}
+     *  or
+     * {@link com.aplombee.navigator.AjaxScrollEventBehaviorBase}
      *
-     * earlier it was known as ITEMSNAVIGATION
+     * earlier it was known as DEFAULT_ITEMSNAVIGATION
      */
     ITEMSNAVIGATION,
 
 
     /**
-     * reuse the current page visited children ,all else are removed  ,used with pagingnavigator ,not supported in Items or rows navigation
+     * reuse the items whose models are equal ,to use this model should implement equals,
+     * used with {@link org.apache.wicket.markup.html.navigation.paging.PagingNavigator} ,
+     * not supported with @{@link com.aplombee.navigator.AjaxItemsNavigator} or {@link com.aplombee.navigator.AjaxScrollEventBehaviorBase}
      */
   CURRENTPAGE,
 
