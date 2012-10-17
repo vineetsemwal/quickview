@@ -72,14 +72,13 @@ public class QuickGridViewWithAjaxLink extends WebPage {
             public void onClick(AjaxRequestTarget target) {
                 int newObject=list.get(list.size()-1) +1;
                 list.add( newObject);
-                QuickGridView.RowItem<Integer> row=number.buildRowItem(); //new row created
-                QuickGridView.CellItem<Integer> cell1 = number.buildCellItem(newObject); // cell created
-
                 int newObject2=list.get(list.size()-1) +1;
                 list.add( newObject2);
-                QuickGridView.CellItem<Integer> cell2 = number.buildCellItem(newObject2); //another cell created
-                number.addCells(row,cell1,cell2);    //add cells to row
-                number.addRow(row);    //just enough to add row and render it
+                List<Integer>newOnes=new ArrayList<Integer>();
+                newOnes.add(newObject);
+                newOnes.add(newObject2);
+
+                number.addRows(newOnes.iterator());//just enough to add new rows and corresponding cells
 
             }
 
@@ -88,23 +87,19 @@ public class QuickGridViewWithAjaxLink extends WebPage {
         add(addLink);
 
 
-
-
         AjaxLink addAtStartLink = new AjaxLink("addAtStartLink") {
-
 
             @Override
             public void onClick(AjaxRequestTarget target) {
                 int newObject=list.get(0) -1;
                 list.add(0, newObject);
-                QuickGridView.RowItem<Integer> row=number.buildRowItem(); //new row created
-                QuickGridView.CellItem<Integer> cell1 = number.buildCellItem(newObject); // cell created
-
                 int newObject2=newObject -1;
                 list.add(0, newObject2);
-                QuickGridView.CellItem<Integer> cell2 = number.buildCellItem(newObject2); //another cell created
-                number.addCells(row,cell1,cell2);         //add cells to row
-                number.addRowAtStart(row);    //just enough to add row  and render it  at start
+                List<Integer>newOnes=new ArrayList<Integer>();
+                newOnes.add(newObject2);
+                newOnes.add(newObject);
+
+                 number.addRowsAtStart(newOnes.iterator());//just enough to add new rows  and corresponding cells
 
             }
 
