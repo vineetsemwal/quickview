@@ -17,31 +17,22 @@
 package com.aplombee;
 
 
-import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.link.AbstractLink;
-import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
-import org.apache.wicket.markup.html.panel.PanelMarkupSourcingStrategy;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.util.resource.IResourceStream;
-import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTester;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -506,51 +497,107 @@ public class RepeaterUtilTest {
         Assert.assertEquals(actual, expected);
     }
 
+    /**
+     * when all items same
+     */
     @Test(groups = {"utilTests"})
-    public void testScripts_1() {
-        List<String> markupIdToComponent = new ArrayList<String>();
-        markupIdToComponent.add("1");
-        markupIdToComponent.add("2");
-        List<String> prependJavaScripts = new ArrayList<String>();
-        prependJavaScripts.add("prep1");
-        prependJavaScripts.add("prep2");
-        List<String> appendJavaScripts = new ArrayList<String>();
-        appendJavaScripts.add("append1");
-        appendJavaScripts.add("append2");
-        final String input = constructAjaxRequestTargetInput(markupIdToComponent, prependJavaScripts, appendJavaScripts);
-        String actualPrependScripts = RepeaterUtil.get().prependedScripts(input);
-        Assert.assertEquals(actualPrependScripts, prependJavaScripts.toString());
-        String actualAppendScripts = RepeaterUtil.get().appendedScripts(input);
-        Assert.assertEquals(actualAppendScripts, appendJavaScripts.toString());
-    }
-
-    @Test(groups = {"utilTests"})
-    public void testScripts_2() {
-        List<String> markupIdToComponent = new ArrayList<String>();
-        markupIdToComponent.add("1");
-        markupIdToComponent.add("2");
-        markupIdToComponent.add("3");
-        List<String> prependJavaScripts = new ArrayList<String>();
-        prependJavaScripts.add("prep1");
-        prependJavaScripts.add("prep2");
-        prependJavaScripts.add("fun1('a','b')");
-        List<String> appendJavaScripts = new ArrayList<String>();
-        appendJavaScripts.add("append1");
-        appendJavaScripts.add("append2");
-        appendJavaScripts.add("fun2('c','d')");
-        final String input = constructAjaxRequestTargetInput(markupIdToComponent, prependJavaScripts, appendJavaScripts);
-        String actualPrependScripts = RepeaterUtil.get().prependedScripts(input);
-        Assert.assertEquals(actualPrependScripts, prependJavaScripts.toString());
-        String actualAppendScripts = RepeaterUtil.get().appendedScripts(input);
-        Assert.assertEquals(actualAppendScripts, appendJavaScripts.toString());
+    public void reuseIfModelsEqual_1() {
+        List<Item> list1 = new ArrayList<Item>();
+        Item<Integer> item1 = new Item<Integer>("1", 1, new Model<Integer>(1));
+        Item<Integer> item2 = new Item<Integer>("2", 2, new Model<Integer>(2));
+        list1.add(item1);
+        list1.add(item2);
+        Iterator<Item> iterator1 = list1.iterator();
+        List<Item> list2 = new ArrayList<Item>();
+        list2.add(item1);
+        list2.add(item2);
+        Iterator<Item> iterator2 = list2.iterator();
+        Iterator<Item> reused = RepeaterUtil.get().reuseItemsIfModelsEqual(iterator1, iterator2);
+        Item<Integer> expected1 = reused.next();
+        Item<Integer> expected2 = reused.next();
+        Assert.assertEquals(item1.getModelObject().intValue(), expected1.getModelObject().intValue());
+        Assert.assertEquals(item1.getIndex(), expected1.getIndex());
+        Assert.assertEquals(item2.getModelObject().intValue(), expected2.getModelObject().intValue());
+        Assert.assertEquals(item2.getIndex(), expected2.getIndex());
+        Assert.assertFalse(reused.hasNext());
     }
 
 
-    String constructAjaxRequestTargetInput(List<String> markupIdToComponent, List<String> prependJavaScripts, List<String> appendJavaScripts) {
-        final String input = "[AjaxRequestTarget@" + "xyz" + " markupIdToComponent [" + markupIdToComponent +
-                "], prependJavaScript [" + prependJavaScripts + "], appendJavaScript [" +
-                appendJavaScripts + "]";
-        return input;
+    /**
+     * when items different
+     */
+    @Test(groups = {"utilTests"})
+    public void reuseIfModelsEqual_2() {
+        List<Item> list1 = new ArrayList<Item>();
+        Item<Integer> item1 = new Item<Integer>("1", 1, new Model<Integer>(1));
+        Item<Integer> item2 = new Item<Integer>("2", 2, new Model<Integer>(2));
+        Item<Integer> item3 = new Item<Integer>("3", 3, new Model<Integer>(3));
+        list1.add(item1);
+        list1.add(item2);
+        Iterator<Item> oldIt = list1.iterator();
+        List<Item> list2 = new ArrayList<Item>();
+        list2.add(item1);
+        list2.add(item3);
+        Iterator<Item> newIt = list2.iterator();
+        Iterator<Item> reused =RepeaterUtil.get().reuseItemsIfModelsEqual(oldIt, newIt);
+        Item<Integer> expected1 = reused.next();
+        Item<Integer> expected2 = reused.next();
+        Assert.assertEquals(item1.getModelObject().intValue(), expected1.getModelObject().intValue());
+        Assert.assertEquals(item1.getIndex(), expected1.getIndex());
+        Assert.assertEquals(item3.getModelObject().intValue(), expected2.getModelObject().intValue());
+        Assert.assertEquals(item3.getIndex(), expected2.getIndex());
+        Assert.assertFalse(reused.hasNext());
+
+    }
+
+
+    /**
+     * when newiterator has less items
+     */
+    @Test(groups = {"utilTests"})
+    public void reuseIfModelsEqual_3() {
+        List<Item> list1 = new ArrayList<Item>();
+        Item<Integer> item1 = new Item<Integer>("1", 1, new Model<Integer>(1));
+        Item<Integer> item2 = new Item<Integer>("2", 2, new Model<Integer>(2));
+        list1.add(item1);
+        list1.add(item2);
+        Iterator<Item> oldIt = list1.iterator();
+        List<Item> list2 = new ArrayList<Item>();
+        list2.add(item1);
+
+        Iterator<Item> newIt = list2.iterator();
+
+        Iterator<Item> reused = RepeaterUtil.get().reuseItemsIfModelsEqual(oldIt, newIt);
+        Item<Integer> expected1 = reused.next();
+        Assert.assertEquals(item1.getModelObject().intValue(), expected1.getModelObject().intValue());
+        Assert.assertEquals(item1.getIndex(), expected1.getIndex());
+        Assert.assertFalse(reused.hasNext());
+
+    }
+
+    /**
+     * when newiterator has more items
+     */
+    @Test(groups = {"utilTests"})
+    public void reuseIfModelsEqual_4() {
+        List<Item> list1 = new ArrayList<Item>();
+        Item<Integer> item1 = new Item<Integer>("1", 1, new Model<Integer>(1));
+        Item<Integer> item2 = new Item<Integer>("2", 2, new Model<Integer>(2));
+        list1.add(item1);
+        Iterator<Item> oldIt = list1.iterator();
+        List<Item> list2 = new ArrayList<Item>();
+        list2.add(item1);
+        list2.add(item2);
+        Iterator<Item> newIt = list2.iterator();
+
+        Iterator<Item> reused = RepeaterUtil.get().reuseItemsIfModelsEqual(oldIt, newIt);
+        Item<Integer> expected1 = reused.next();
+        Item<Integer> expected2 = reused.next();
+        Assert.assertEquals(item1.getModelObject().intValue(), expected1.getModelObject().intValue());
+        Assert.assertEquals(item1.getIndex(), expected1.getIndex());
+        Assert.assertEquals(item2.getModelObject().intValue(), expected2.getModelObject().intValue());
+        Assert.assertEquals(item2.getIndex(), expected2.getIndex());
+        Assert.assertFalse(reused.hasNext());
     }
 
 

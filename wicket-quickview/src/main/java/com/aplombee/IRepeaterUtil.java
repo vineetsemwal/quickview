@@ -23,6 +23,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.repeater.Item;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -122,23 +123,6 @@ public interface IRepeaterUtil {
     void reuseNotInitialized(IQuickView repeater);
 
     /**
-     *
-     * @param input is {@link org.apache.wicket.ajax.AjaxRequestTarget#toString()}
-     *
-     * @return  prependedscripts string as displayed by List.toString() of prependedscripts
-     *
-     */
-    String prependedScripts(String input);
-
-    /**
-     *
-     * @param input is {@link org.apache.wicket.ajax.AjaxRequestTarget#toString()}
-     *
-     *  @return  appendedscripts string as displayed by List.toString() of appendedscripts
-     */
-    String appendedScripts(String input);
-
-    /**
      *  js call to scroll to top
      *
      * @param quickView
@@ -182,4 +166,14 @@ public interface IRepeaterUtil {
      * @return  js call string
      */
     public String isPageScrollBarAtBottom();
+
+
+    /**
+     * return iterator of those items whose models are equal ,if the model is not equal new item is returned
+     *
+     * @param oldIterator    old iterator
+     * @param newIterator    new iterator (iterator of the list of expected modelobjects)
+     * @return
+     */
+    Iterator<Item> reuseItemsIfModelsEqual(Iterator<Item> oldIterator, Iterator<Item> newIterator);
 }

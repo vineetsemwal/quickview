@@ -13,7 +13,7 @@
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.
-  */
+ */
 package com.aplombee;
 
 
@@ -21,12 +21,10 @@ import org.apache.log4j.Logger;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
@@ -154,7 +152,6 @@ public class QuickViewTest {
     }
 
 
-
     @Test(groups = {"wicketTests"})
     public void constructor_5() {
         final String id = "connn", repeaterId = "repeat";
@@ -172,16 +169,18 @@ public class QuickViewTest {
         Assert.assertEquals(repeater.getItemsPerRequest(), Integer.MAX_VALUE);
 
     }
-    @Test(groups = {"utilTests"},expectedExceptions = IllegalArgumentException.class)
-    public void constructor_6(){
-        IDataProvider data=Mockito.mock(IDataProvider.class);
-        QuickView quickView=new QuickView("id",data,null) {
+
+    @Test(groups = {"utilTests"}, expectedExceptions = IllegalArgumentException.class)
+    public void constructor_6() {
+        IDataProvider data = Mockito.mock(IDataProvider.class);
+        QuickView quickView = new QuickView("id", data, null) {
             @Override
             protected void populate(Item item) {
             }
-        } ;
+        };
 
     }
+
     /**
      * Reuse set to null
      */
@@ -257,9 +256,9 @@ public class QuickViewTest {
         IDataProvider dataProvider = Mockito.mock(IDataProvider.class);
         final IRepeaterUtil util = mockRepeaterUtil();
         final TestObj to = Mockito.mock(TestObj.class);
-       // final AjaxRequestTarget target = Mockito.mock(AjaxRequestTarget.class);
-        List<String> scripts=Mockito.mock(List.class);
-        final QuickViewBase.Synchronizer synchronizer=Mockito.mock(QuickViewBase.Synchronizer.class);
+        // final AjaxRequestTarget target = Mockito.mock(AjaxRequestTarget.class);
+        List<String> scripts = Mockito.mock(List.class);
+        final QuickViewBase.Synchronizer synchronizer = Mockito.mock(QuickViewBase.Synchronizer.class);
         Mockito.when(synchronizer.getPrependScripts()).thenReturn(scripts);
         final Item c = Mockito.mock(Item.class);
 
@@ -299,7 +298,7 @@ public class QuickViewTest {
 
         Mockito.verify(sparc, Mockito.times(1)).simpleAdd(c);
         Mockito.verify(synchronizer, Mockito.times(1)).add(c);
-        Mockito.verify(scripts,Mockito.times(1)).add(script);
+        Mockito.verify(scripts, Mockito.times(1)).add(script);
 
     }
 
@@ -309,14 +308,14 @@ public class QuickViewTest {
     @Test(groups = {"wicketTests"})
     public void add_2() {
         int oneBlock = 2;
-        List<String> scripts=Mockito.mock(List.class);
-        final QuickViewBase.Synchronizer synchronizer=Mockito.mock(QuickViewBase.Synchronizer.class);
+        List<String> scripts = Mockito.mock(List.class);
+        final QuickViewBase.Synchronizer synchronizer = Mockito.mock(QuickViewBase.Synchronizer.class);
         Mockito.when(synchronizer.getPrependScripts()).thenReturn(scripts);
         final WebMarkupContainer parent = Mockito.mock(WebMarkupContainer.class);
         IDataProvider dataProvider = Mockito.mock(IDataProvider.class);
         final IRepeaterUtil util = mockRepeaterUtil();
         final TestObj to = Mockito.mock(TestObj.class);
-       final Item c = Mockito.mock(Item.class);
+        final Item c = Mockito.mock(Item.class);
         final Item c2 = Mockito.mock(Item.class);
 
         QuickView<TestObj> arc = new QuickView<TestObj>("repeater", dataProvider, oneBlock) {
@@ -346,7 +345,7 @@ public class QuickViewTest {
             @Override
             public Synchronizer getSynchronizer() {
                 return synchronizer;
-        }
+            }
         };
         final String script = "script..", script2 = "script2!";
         Mockito.when(util.insertAfter(c, parent)).thenReturn(script);
@@ -355,8 +354,8 @@ public class QuickViewTest {
         sparc.add(c, c2);
         Mockito.verify(sparc, Mockito.times(1)).simpleAdd(c, c2);
         Mockito.verify(synchronizer, Mockito.times(1)).add(c, c2);
-        Mockito.verify(scripts,Mockito.times(1)).add(script);
-        Mockito.verify(scripts,Mockito.times(1)).add(script2);
+        Mockito.verify(scripts, Mockito.times(1)).add(script);
+        Mockito.verify(scripts, Mockito.times(1)).add(script2);
 
     }
 
@@ -387,10 +386,9 @@ public class QuickViewTest {
                 return this;
             }
 
-             public boolean isAjax() {
+            public boolean isAjax() {
                 return false;
             }
-
 
 
             @Override
@@ -411,138 +409,208 @@ public class QuickViewTest {
 
     }
 
-
-
+    /*
+      *start index=0
+     */
     @Test(groups = {"wicketTests"})
-    public void addItemsFromIndex_1() {
-        int itemsPerRequest = 2;
-        final WebMarkupContainer parent = Mockito.mock(WebMarkupContainer.class);
-        IDataProvider dataProvider = Mockito.mock(IDataProvider.class);
-        final TestObj to = Mockito.mock(TestObj.class);
-        final AjaxRequestTarget target = Mockito.mock(AjaxRequestTarget.class);
-        // final long page=2l;
-       // final String id="78";
-        Iterator it = mockIterator();
-        // long start=itemsPerRequest*page;
-        Mockito.when(dataProvider.iterator(4, itemsPerRequest)).thenReturn(it);
-        Mockito.when(it.hasNext()).thenReturn(true).thenReturn(true).thenReturn(false);
-        QuickView<TestObj> repeater = new QuickView<TestObj>("repeater", dataProvider, ReUse.ITEMSNAVIGATION, itemsPerRequest) {
-
-            public void populate(Item<TestObj> item) {
-            }
-
+    public void buildItems_1() {
+        List<Integer> data = data(10);
+        IDataProvider<Integer> dataProvider = new ListDataProvider<Integer>(data);
+        QuickView quickView = new QuickView("quickview", dataProvider, ReUse.ITEMSNAVIGATION) {
             @Override
-            public void simpleRemoveAllIfNotReuse() {
-            }
-
-            @Override
-            public MarkupContainer add(Component... c) {
-                return this;
+            protected void populate(Item item) {
             }
         };
-        QuickView spy = Mockito.spy(repeater);
-        List<Item<TestObj>> items = spy.addItemsFromIndex(4);
-        Mockito.verify(spy, Mockito.times(1)).simpleRemoveAllIfNotReuse();
-        Assert.assertEquals(items.size(), 2);
-        Mockito.verify(spy, Mockito.times(1)).add(items.get(0));
-        Mockito.verify(spy, Mockito.times(1)).add(items.get(1));
-        Assert.assertEquals(items.get(0).getIndex(), 4);
-        Assert.assertEquals(items.get(1).getIndex(), 5);
-        Assert.assertEquals(items.get(0).getMarkupId(),String.valueOf(1));
-        Assert.assertEquals(items.get(1).getMarkupId(),String.valueOf(2));
+        Iterator<? extends Integer> dataIterator = dataProvider.iterator(0, 2);
+        Iterator<Item<Integer>> itemsIterator = quickView.buildItems(0, dataIterator);
+        Item<Integer> item1 = itemsIterator.next();
+        Item<Integer> item2 = itemsIterator.next();
+        Assert.assertEquals(item1.getIndex(), 0);
+        Assert.assertEquals(item1.getModelObject().intValue(), 0);
+        Assert.assertEquals(item2.getIndex(), 1);
+        Assert.assertEquals(item2.getModelObject().intValue(), 1);
+        Assert.assertTrue(Long.parseLong(item2.getId()) > Long.parseLong(item1.getId()));
     }
 
-    /**
-     * add one component ,itemsPerRequest=2
-     */
-
+    /*
+     *start index=10
+    */
     @Test(groups = {"wicketTests"})
-    public void addItemsFromIndex_2() {
-        final int itemsPerRequest = 2;
-        final WebMarkupContainer parent = Mockito.mock(WebMarkupContainer.class);
-        IDataProvider dataProvider = Mockito.mock(IDataProvider.class);
-        final TestObj to = Mockito.mock(TestObj.class);
-        final AjaxRequestTarget target = Mockito.mock(AjaxRequestTarget.class);
-
-        Iterator it = mockIterator();
-        int index = 3;
-        Mockito.when(dataProvider.iterator(index, itemsPerRequest)).thenReturn(it);
-        Mockito.when(it.hasNext()).thenReturn(true).thenReturn(false);
-        QuickView<TestObj> repeater = new QuickView<TestObj>("repeater", dataProvider, itemsPerRequest) {
-
-            public void populate(Item<TestObj> item) {
-            }
-
-
+    public void buildItems_2() {
+        List<Integer> data = data(10);
+        IDataProvider<Integer> dataProvider = new ListDataProvider<Integer>(data);
+        QuickView<Integer> quickView = new QuickView<Integer>("quickview", dataProvider, ReUse.ITEMSNAVIGATION) {
             @Override
-            public void simpleRemoveAllIfNotReuse() {
-            }
-
-            @Override
-            public MarkupContainer add(Component... c) {
-                return this;
+            protected void populate(Item item) {
             }
         };
-        QuickView spy = Mockito.spy(repeater);
-        List<Item<TestObj>> items = spy.addItemsFromIndex(index);
-
-        Mockito.verify(spy, Mockito.times(1)).simpleRemoveAllIfNotReuse();
-        Assert.assertEquals(items.size(), 1);
-        Mockito.verify(spy, Mockito.times(1)).add(items.get(0));
-        Assert.assertEquals(items.get(0).getIndex(), 3);
-        Assert.assertEquals(items.get(0).getMarkupId(), String.valueOf(1));
+        Iterator<? extends Integer> dataIterator = dataProvider.iterator(5, 2);
+        Iterator<Item<Integer>> itemsIterator = quickView.buildItems(10, dataIterator);
+        Item<Integer> item1 = itemsIterator.next();
+        Item<Integer> item2 = itemsIterator.next();
+        Assert.assertEquals(item1.getIndex(), 10);
+        Assert.assertEquals(item1.getModelObject().intValue(), 5);
+        Assert.assertEquals(item2.getIndex(), 11);
+        Assert.assertEquals(item2.getModelObject().intValue(), 6);
+        Assert.assertTrue(Long.parseLong(item2.getId()) > Long.parseLong(item1.getId()));
     }
 
 
     /**
-     * itemsPerRequest=2    ,page=2
+     * create children with iterator
      */
 
     @Test(groups = {"wicketTests"})
-    public void addItemsForPage_1() {
-        int itemsPerRequest = 2;
-        final WebMarkupContainer parent = Mockito.mock(WebMarkupContainer.class);
-        IDataProvider dataProvider = Mockito.mock(IDataProvider.class);
-        final TestObj to = Mockito.mock(TestObj.class);
-        final AjaxRequestTarget target = Mockito.mock(AjaxRequestTarget.class);
-        final long page = 2l;
-        Iterator it = mockIterator();
-        long start = itemsPerRequest * page;
-        Mockito.when(dataProvider.iterator(start, itemsPerRequest)).thenReturn(it);
-        Mockito.when(it.hasNext()).thenReturn(true).thenReturn(true).thenReturn(false);
-        QuickView<TestObj> repeater = new QuickView<TestObj>("repeater", dataProvider, ReUse.ITEMSNAVIGATION, itemsPerRequest) {
-
-            public void populate(Item<TestObj> item) {
-            }
-
+    public void createChildren_1() {
+        List<Integer> data = data(10);
+        IDataProvider<Integer> dataProvider = new ListDataProvider<Integer>(data);
+        QuickView<Integer> quickView = new QuickView("quickview", dataProvider, ReUse.ITEMSNAVIGATION) {
             @Override
-            public Item buildItem(String id,long index, TestObj object) {
-                Item item = Mockito.mock(Item.class);
-                Mockito.when(item.getMarkupId()).thenReturn(id);
-                // Mockito.when(item.getChildId()).thenReturn(id);
-                return item;
-            }
-
-            @Override
-            public void simpleRemoveAllIfNotReuse() {
-            }
-
-            @Override
-            public MarkupContainer add(Component... c) {
-                return this;
-            }
-
-            @Override
-            public List<Item<TestObj>> addItemsFromIndex(long index) {
-                return null;
+            protected void populate(Item item) {
             }
         };
-        QuickView spy = Mockito.spy(repeater);
-        List<Item<TestObj>> items = spy.addItemsForPage(page);
-        Mockito.verify(spy).addItemsFromIndex(start);
+        Iterator<? extends Integer> dataIterator = dataProvider.iterator(0, 2);
+        Iterator<Item<Integer>> itemsIterator = quickView.buildItems(0, dataIterator);
+        quickView.createChildren(itemsIterator);
+        Assert.assertEquals(quickView.size(), 2);
+        Item<Integer> item1 = (Item) quickView.get(0);
+        Item<Integer> item2 = (Item) quickView.get(1);
+
+        Assert.assertEquals(item1.getIndex(), 0);
+        Assert.assertEquals(item1.getModelObject().intValue(), 0);
+        Assert.assertEquals(item2.getIndex(), 1);
+        Assert.assertEquals(item2.getModelObject().intValue(), 1);
+        Assert.assertTrue(Long.parseLong(item2.getId()) > Long.parseLong(item1.getId()));
 
     }
 
+    /*
+     *start index=10
+    */
+    @Test(groups = {"wicketTests"})
+    public void createChildren_2() {
+        List<Integer> data = data(10);
+        IDataProvider<Integer> dataProvider = new ListDataProvider<Integer>(data);
+        QuickView<Integer> quickView = new QuickView<Integer>("quickview", dataProvider, ReUse.ITEMSNAVIGATION) {
+            @Override
+            protected void populate(Item item) {
+            }
+        };
+        Iterator<? extends Integer> dataIterator = dataProvider.iterator(5, 2);
+        Iterator<Item<Integer>> itemsIterator = quickView.buildItems(10, dataIterator);
+        quickView.createChildren(itemsIterator);
+        Assert.assertEquals(quickView.size(), 2);
+        Item<Integer> item1 = (Item) quickView.get(0);
+        Item<Integer> item2 = (Item) quickView.get(1);
+
+        Assert.assertEquals(item1.getIndex(), 10);
+        Assert.assertEquals(item1.getModelObject().intValue(), 5);
+        Assert.assertEquals(item2.getIndex(), 11);
+        Assert.assertEquals(item2.getModelObject().intValue(), 6);
+        Assert.assertTrue(Long.parseLong(item2.getId()) > Long.parseLong(item1.getId()));
+    }
+
+
+    /**
+     * create children for page=0
+     */
+
+    @Test(groups = {"wicketTests"})
+    public void createChildren_3() {
+        List<Integer> data = data(10);
+        IDataProvider<Integer> dataProvider = new ListDataProvider<Integer>(data);
+        QuickView<Integer> quickView = new QuickView("quickview", dataProvider, ReUse.ITEMSNAVIGATION) {
+            @Override
+            protected void populate(Item item) {
+            }
+        };
+        quickView.setItemsPerRequest(2);
+        quickView.createChildren(0);
+        Assert.assertEquals(quickView.size(), 2);
+        Item<Integer> item1 = (Item) quickView.get(0);
+        Item<Integer> item2 = (Item) quickView.get(1);
+        Assert.assertEquals(item1.getIndex(), 0);
+        Assert.assertEquals(item1.getModelObject().intValue(), 0);
+        Assert.assertEquals(item2.getIndex(), 1);
+        Assert.assertEquals(item2.getModelObject().intValue(), 1);
+        Assert.assertTrue(Long.parseLong(item2.getId()) > Long.parseLong(item1.getId()));
+
+    }
+
+
+    /**
+     * create children for page=1
+     */
+
+    @Test(groups = {"wicketTests"})
+    public void createChildren_4() {
+        List<Integer> data = data(10);
+        IDataProvider<Integer> dataProvider = new ListDataProvider<Integer>(data);
+        QuickView<Integer> quickView = new QuickView("quickview", dataProvider, ReUse.ITEMSNAVIGATION) {
+            @Override
+            protected void populate(Item item) {
+            }
+        };
+        final long itemsPerRequest = 3, page = 1;
+        quickView.setItemsPerRequest(itemsPerRequest);
+        quickView.createChildren(page);
+        Assert.assertEquals(quickView.size(), itemsPerRequest);
+        Item<Integer> item1 = (Item) quickView.get(0);
+        Item<Integer> item2 = (Item) quickView.get(1);
+        Item<Integer> item3 = (Item) quickView.get(2);
+
+        Assert.assertEquals(item1.getIndex(), 0);
+        Assert.assertEquals(item1.getModelObject().intValue(), 3);
+        Assert.assertEquals(item2.getIndex(), 1);
+        Assert.assertEquals(item2.getModelObject().intValue(), 4);
+        Assert.assertEquals(item3.getIndex(), 2);
+        Assert.assertEquals(item3.getModelObject().intValue(), 5);
+        Assert.assertTrue(Long.parseLong(item2.getId()) > Long.parseLong(item1.getId()));
+        Assert.assertTrue(Long.parseLong(item3.getId()) > Long.parseLong(item2.getId()));
+
+    }
+
+    @Test(groups = {"wicketTests"})
+    public void reuseItemsForCurrentPage_1() {
+        IDataProvider<Integer> dataProvider = Mockito.mock(IDataProvider.class);
+        final long page = 1;
+        final Iterator iterator = Mockito.mock(Iterator.class);
+        final Iterator newIterator = Mockito.mock(Iterator.class);
+        final Iterator oldIterator = Mockito.mock(Iterator.class);
+        final IRepeaterUtil util=Mockito.mock(IRepeaterUtil.class);
+        Mockito.when(util.reuseItemsIfModelsEqual(oldIterator, newIterator)).thenReturn(iterator);
+        QuickView quickView = new QuickView("quickview", dataProvider, ReUse.ITEMSNAVIGATION) {
+            @Override
+            protected void populate(Item item) {
+            }
+
+            @Override
+            public Iterator<Component> itemsIterator() {
+                return oldIterator;
+            }
+
+            @Override
+            protected Iterator buildItems(long index, Iterator iterator) {
+                return newIterator;
+            }
+
+            @Override
+            protected IRepeaterUtil getRepeaterUtil() {
+                return util;
+            }
+        };
+
+        final long itemsPerRequest = 2;
+        quickView.setItemsPerRequest(itemsPerRequest);
+        QuickView<Integer> spy = Mockito.spy(quickView);
+        final long start = page * itemsPerRequest;
+        Iterator dataIterator = Mockito.mock(Iterator.class);
+        Mockito.when(dataProvider.iterator(start, itemsPerRequest)).thenReturn(dataIterator);
+        Mockito.when(spy.buildItems(0, dataIterator)).thenReturn(newIterator);
+        spy.reuseItemsForCurrentPage(page);
+        Mockito.verify(util, Mockito.times(1)).reuseItemsIfModelsEqual(oldIterator, newIterator);
+
+    }
 
     @Test(groups = {"wicketTests"})
     public void remove_1() {
@@ -554,8 +622,8 @@ public class QuickViewTest {
         final Item c = Mockito.mock(Item.class);
         final String itemId = "item";
         Mockito.when(c.getMarkupId()).thenReturn(itemId);
-        List<String> scripts=Mockito.mock(List.class);
-        final QuickViewBase.Synchronizer synchronizer=Mockito.mock(QuickViewBase.Synchronizer.class);
+        List<String> scripts = Mockito.mock(List.class);
+        final QuickViewBase.Synchronizer synchronizer = Mockito.mock(QuickViewBase.Synchronizer.class);
         Mockito.when(synchronizer.getPrependScripts()).thenReturn(scripts);
         QuickView<TestObj> arc = new QuickView<TestObj>("repeater", dataProvider, itemsPerRequest) {
 
@@ -593,7 +661,7 @@ public class QuickViewTest {
         spy.remove(c);
         Mockito.verify(spy, Mockito.times(1)).simpleRemove(c);
         Mockito.verify(synchronizer, Mockito.times(1)).add(c);
-        Mockito.verify(scripts,Mockito.times(1)).add(script);
+        Mockito.verify(scripts, Mockito.times(1)).add(script);
 
     }
 
@@ -607,8 +675,8 @@ public class QuickViewTest {
         IDataProvider dataProvider = Mockito.mock(IDataProvider.class);
         final IRepeaterUtil util = mockRepeaterUtil();
         final TestObj to = Mockito.mock(TestObj.class);
-         List<String> scripts=Mockito.mock(List.class);
-        final QuickViewBase.Synchronizer synchronizer=Mockito.mock(QuickViewBase.Synchronizer.class);
+        List<String> scripts = Mockito.mock(List.class);
+        final QuickViewBase.Synchronizer synchronizer = Mockito.mock(QuickViewBase.Synchronizer.class);
         Mockito.when(synchronizer.getPrependScripts()).thenReturn(scripts);
         final Item c = Mockito.mock(Item.class);
 
@@ -646,7 +714,7 @@ public class QuickViewTest {
         sparc.addAtStart(c);
         Mockito.verify(sparc, Mockito.times(1)).simpleAdd(c);
         Mockito.verify(synchronizer, Mockito.times(1)).add(c);
-        Mockito.verify(scripts,Mockito.times(1)).add(script);
+        Mockito.verify(scripts, Mockito.times(1)).add(script);
 
     }
 
@@ -656,8 +724,8 @@ public class QuickViewTest {
     @Test(groups = {"wicketTests"})
     public void addAtStart_2() {
         int oneBlock = 2;
-        List<String> scripts=Mockito.mock(List.class);
-        final QuickViewBase.Synchronizer synchronizer=Mockito.mock(QuickViewBase.Synchronizer.class);
+        List<String> scripts = Mockito.mock(List.class);
+        final QuickViewBase.Synchronizer synchronizer = Mockito.mock(QuickViewBase.Synchronizer.class);
         Mockito.when(synchronizer.getPrependScripts()).thenReturn(scripts);
         final WebMarkupContainer parent = Mockito.mock(WebMarkupContainer.class);
         IDataProvider dataProvider = Mockito.mock(IDataProvider.class);
@@ -701,198 +769,10 @@ public class QuickViewTest {
         sparc.addAtStart(c, c2);
         Mockito.verify(sparc, Mockito.times(1)).simpleAdd(c, c2);
         Mockito.verify(synchronizer, Mockito.times(1)).add(c, c2);
-        Mockito.verify(scripts,Mockito.times(1)).add(script);
-        Mockito.verify(scripts,Mockito.times(1)).add(script2);
+        Mockito.verify(scripts, Mockito.times(1)).add(script);
+        Mockito.verify(scripts, Mockito.times(1)).add(script2);
 
     }
-
-    /**
-     * one component added ,ajax=false
-     */
-    @Test(groups = {"wicketTests"})
-    public void addAtStart_3() {
-
-        int oneBlock = 2;
-        final WebMarkupContainer parent = Mockito.mock(WebMarkupContainer.class);
-        IDataProvider dataProvider = Mockito.mock(IDataProvider.class);
-        final IRepeaterUtil util = mockRepeaterUtil();
-        final TestObj to = Mockito.mock(TestObj.class);
-        final AjaxRequestTarget target = Mockito.mock(AjaxRequestTarget.class);
-        final Item c = Mockito.mock(Item.class);
-
-        QuickView<TestObj> arc = new QuickView<TestObj>("repeater", dataProvider, oneBlock) {
-
-            public void populate(Item<TestObj> item) {
-            }
-
-            public MarkupContainer _getParent() {
-                return parent;
-            }
-
-            public MarkupContainer simpleAdd(Component... c) {
-                return this;
-            }
-
-            public boolean isAjax() {
-                return false;
-            }
-
-            @Override
-            public AjaxRequestTarget getAjaxRequestTarget() {
-                return target;
-            }
-
-            @Override
-            public IRepeaterUtil getRepeaterUtil() {
-                return util;
-            }
-
-
-        };
-        final String script = "script..";
-        Mockito.when(util.insertBefore(c, parent)).thenReturn(script);
-        QuickView sparc = Mockito.spy(arc);
-        sparc.addAtStart(c);
-        Mockito.verify(sparc, Mockito.times(1)).simpleAdd(c);
-        Mockito.verify(target, Mockito.never()).add(c);
-        Mockito.verify(target, Mockito.never()).prependJavaScript(script);
-
-    }
-
-
-
-    @Test(groups = {"wicketTests"})
-    public void createChildren_1() {
-        int itemsPerRequest = 3;
-        IDataProvider provider = Mockito.mock(IDataProvider.class);
-        Iterator it = mockIterator();
-        Mockito.when(provider.iterator(0, itemsPerRequest)).thenReturn(it);
-        Mockito.when(it.hasNext()).thenReturn(true).thenReturn(true).thenReturn(true).thenReturn(false);
-        final List<Item> list = new ArrayList<Item>();
-
-        QuickView<TestObj> arc = new QuickView<TestObj>("repeater", provider, itemsPerRequest) {
-            @Override
-            protected void populate(Item<TestObj> item) {
-            }
-
-            @Override
-            public MarkupContainer simpleAdd(Component... c) {
-                return this;
-            }
-
-            @Override
-            public Item buildItem(String id,long index, TestObj object) {
-               Item i= super.buildItem(id,index,object);
-                list.add(i);
-                return i;
-            }
-        };
-
-        QuickView spy = Mockito.spy(arc);
-        spy.createChildren(0);
-
-        Mockito.verify(spy, Mockito.times(3)).simpleAdd(Mockito.any(Item.class));
-        Mockito.verify(spy, Mockito.times(1)).simpleAdd(list.get(0));
-        Assert.assertEquals(list.get(0).getMarkupId(), String.valueOf(1));
-        Assert.assertEquals(list.get(0).getIndex(), 0);
-        Mockito.verify(spy, Mockito.times(1)).simpleAdd(list.get(1));
-        Assert.assertEquals(list.get(1).getMarkupId(), String.valueOf(2));
-        Assert.assertEquals(list.get(1).getIndex(), 1);
-        Mockito.verify(spy, Mockito.times(1)).simpleAdd(list.get(2));
-        Assert.assertEquals(list.get(2).getIndex(), 2);
-        Assert.assertEquals(list.get(2).getMarkupId(), String.valueOf(3));
-    }
-
-
-    /*
-     * current page=2 ,iterator can iterate 2 times ,itemsperrequest=3
-     *
-     */
-
-    @Test(groups = {"wicketTests"})
-    public void createChildren_2() {
-        final int itemsPerRequest = 3;
-        IDataProvider provider = Mockito.mock(IDataProvider.class);
-        Iterator it = mockIterator();
-        Mockito.when(provider.iterator(2 * 3, itemsPerRequest)).thenReturn(it);
-        Mockito.when(it.hasNext()).thenReturn(true).thenReturn(true).thenReturn(false);
-        final List<Item> list = new ArrayList<Item>();
-
-        QuickView<TestObj> arc = new QuickView<TestObj>("repeater", provider, itemsPerRequest) {
-            @Override
-            protected void populate(Item<TestObj> item) {
-            }
-
-            @Override
-            public MarkupContainer simpleAdd(Component... c) {
-                return this;
-            }
-
-            @Override
-            public Item buildItem(String id,long index, TestObj object) {
-                Item i= super.buildItem(id, index, object);
-                list.add(i);
-                return i;
-            }
-        };
-
-
-        QuickView spy = Mockito.spy(arc);
-        spy.createChildren(2);
-
-        Mockito.verify(spy, Mockito.times(2)).simpleAdd(Mockito.any(Item.class));
-        Mockito.verify(spy, Mockito.times(1)).simpleAdd(list.get(0));
-        Assert.assertEquals(list.get(0).getMarkupId(), String.valueOf(1));
-        Assert.assertEquals(list.get(0).getIndex(), 6);
-        Mockito.verify(spy, Mockito.times(1)).simpleAdd(list.get(1));
-        Assert.assertEquals(list.get(1).getMarkupId(), String.valueOf(2));
-        Assert.assertEquals(list.get(1).getIndex(), 7);
-    }
-
-    /**
-     * items per request is not set ,iterator iterates 3 times
-     */
-    @Test(groups = {"wicketTests"})
-    public void createChildren_3() {
-        IDataProvider provider = Mockito.mock(IDataProvider.class);
-        Iterator it = mockIterator();
-        Mockito.when(provider.iterator(0,Integer.MAX_VALUE )).thenReturn(it);
-        Mockito.when(it.hasNext()).thenReturn(true).thenReturn(true).thenReturn(true).thenReturn(false);
-        final List<Item> list = new ArrayList<Item>();
-
-        QuickView<TestObj> arc = new QuickView<TestObj>("repeater", provider) {
-            @Override
-            protected void populate(Item<TestObj> item) {
-            }
-
-            @Override
-            public MarkupContainer simpleAdd(Component... c) {
-                return this;
-            }
-
-            @Override
-            public Item buildItem(String id,long index, TestObj object) {
-                Item i= super.buildItem(id, index, object);
-                list.add(i);
-                return i;
-            }
-        };
-
-        QuickView spy = Mockito.spy(arc);
-        spy.createChildren(0);
-
-        Mockito.verify(spy, Mockito.times(3)).simpleAdd(Mockito.any(Item.class));
-        Mockito.verify(spy, Mockito.times(1)).simpleAdd(list.get(0));
-        Assert.assertEquals(list.get(0).getMarkupId(), String.valueOf(1));
-        Assert.assertEquals(list.get(0).getIndex(), 0);
-        Mockito.verify(spy, Mockito.times(1)).simpleAdd(list.get(1));
-        Assert.assertEquals(list.get(1).getMarkupId(), String.valueOf(2));
-        Assert.assertEquals(list.get(1).getIndex(), 1);
-        Mockito.verify(spy, Mockito.times(1)).simpleAdd(list.get(2));
-        Assert.assertEquals(list.get(2).getMarkupId(), String.valueOf(3));
-        Assert.assertEquals(list.get(2).getIndex(), 2);
-    }
-
 
     /**
      * reuse={@link ReUse.DEFAULT_PAGING}  ,size=0   .current page=2
@@ -902,12 +782,12 @@ public class QuickViewTest {
     public void onPopulate_1() {
         IDataProvider provider = Mockito.mock(IDataProvider.class);
         final int size = 0;
-       final IRepeaterUtil util=Mockito.mock(IRepeaterUtil.class);
+        final IRepeaterUtil util = Mockito.mock(IRepeaterUtil.class);
         QuickView repeater = new QuickView("repeater", provider, 2) {
 
             @Override
             public IRepeaterUtil getRepeaterUtil() {
-                return  util;
+                return util;
             }
 
             @Override
@@ -941,8 +821,8 @@ public class QuickViewTest {
         repeater.setReuse(ReUse.PAGING);
         QuickView spy = Mockito.spy(repeater);
         spy.onPopulate();
-        Mockito.verify(util,Mockito.times(1)).reuseNotInitialized(spy);
-        Mockito.verify(util,Mockito.times(1)).parentNotSuitable(spy);
+        Mockito.verify(util, Mockito.times(1)).reuseNotInitialized(spy);
+        Mockito.verify(util, Mockito.times(1)).parentNotSuitable(spy);
         Mockito.verify(spy, Mockito.times(1)).simpleRemoveAllIfNotReuse();
         Mockito.verify(spy, Mockito.times(1)).createChildren(2);
 
@@ -957,15 +837,17 @@ public class QuickViewTest {
     public void onPopulate_2() {
         IDataProvider provider = Mockito.mock(IDataProvider.class);
         final int size = 0;
-        final IRepeaterUtil util=Mockito.mock(IRepeaterUtil.class);
+        final IRepeaterUtil util = Mockito.mock(IRepeaterUtil.class);
         QuickView repeater = new QuickView("repeater", provider, 3) {
             @Override
             protected void populate(Item item) {
             }
+
             @Override
             public IRepeaterUtil getRepeaterUtil() {
-                return  util;
+                return util;
             }
+
             @Override
             public MarkupContainer simpleAdd(Component... c) {
                 return this;
@@ -993,8 +875,8 @@ public class QuickViewTest {
         repeater.setReuse(ReUse.ITEMSNAVIGATION);
         QuickView spy = Mockito.spy(repeater);
         spy.onPopulate();
-        Mockito.verify(util,Mockito.times(1)).reuseNotInitialized(spy);
-        Mockito.verify(util,Mockito.times(1)).parentNotSuitable(spy);
+        Mockito.verify(util, Mockito.times(1)).reuseNotInitialized(spy);
+        Mockito.verify(util, Mockito.times(1)).parentNotSuitable(spy);
         Mockito.verify(spy, Mockito.times(1)).simpleRemoveAllIfNotReuse();
         Mockito.verify(spy, Mockito.times(1)).createChildren(0);
         Mockito.verify(spy, Mockito.times(1)).setCurrentPage(0);
@@ -1009,15 +891,17 @@ public class QuickViewTest {
     public void onPopulate_3() {
         IDataProvider provider = Mockito.mock(IDataProvider.class);
         final int size = 0;
-        final IRepeaterUtil util=Mockito.mock(IRepeaterUtil.class);
+        final IRepeaterUtil util = Mockito.mock(IRepeaterUtil.class);
         QuickView repeater = new QuickView("repeater", provider, 3) {
             @Override
             protected void populate(Item item) {
             }
+
             @Override
             public IRepeaterUtil getRepeaterUtil() {
-                return  util;
+                return util;
             }
+
             @Override
             public MarkupContainer simpleAdd(Component... c) {
                 return this;
@@ -1049,8 +933,8 @@ public class QuickViewTest {
         repeater.setReuse(ReUse.ALL);
         QuickView spy = Mockito.spy(repeater);
         spy.onPopulate();
-        Mockito.verify(util,Mockito.times(1)).reuseNotInitialized(spy);
-        Mockito.verify(util,Mockito.times(1)).parentNotSuitable(spy);
+        Mockito.verify(util, Mockito.times(1)).reuseNotInitialized(spy);
+        Mockito.verify(util, Mockito.times(1)).parentNotSuitable(spy);
         Mockito.verify(spy, Mockito.times(1)).simpleRemoveAllIfNotReuse();
         Mockito.verify(spy, Mockito.times(1)).createChildren(0);
 
@@ -1065,15 +949,17 @@ public class QuickViewTest {
     public void onPopulate_4() {
         IDataProvider provider = Mockito.mock(IDataProvider.class);
         final int size = 0;
-        final IRepeaterUtil util=Mockito.mock(IRepeaterUtil.class);
+        final IRepeaterUtil util = Mockito.mock(IRepeaterUtil.class);
         QuickView repeater = new QuickView("repeater", provider, 3) {
             @Override
             protected void populate(Item item) {
             }
+
             @Override
             public IRepeaterUtil getRepeaterUtil() {
-                return  util;
+                return util;
             }
+
             @Override
             public MarkupContainer simpleAdd(Component... c) {
                 return this;
@@ -1100,8 +986,8 @@ public class QuickViewTest {
         repeater.setReuse(ReUse.CURRENTPAGE);
         QuickView spy = Mockito.spy(repeater);
         spy.onPopulate();
-        Mockito.verify(util,Mockito.times(1)).reuseNotInitialized(spy);
-        Mockito.verify(util,Mockito.times(1)).parentNotSuitable(spy);
+        Mockito.verify(util, Mockito.times(1)).reuseNotInitialized(spy);
+        Mockito.verify(util, Mockito.times(1)).parentNotSuitable(spy);
         Mockito.verify(spy, Mockito.times(1)).simpleRemoveAllIfNotReuse();
         Mockito.verify(spy, Mockito.times(1)).createChildren(0);
 
@@ -1115,7 +1001,8 @@ public class QuickViewTest {
     public void onPopulate_5() {
         IDataProvider provider = Mockito.mock(IDataProvider.class);
         final int size = 5;
-        final IRepeaterUtil util=Mockito.mock(IRepeaterUtil.class);
+        final IRepeaterUtil util = Mockito.mock(IRepeaterUtil.class);
+        final Iterator reusedItems=Mockito.mock(Iterator.class);
         QuickView repeater = new QuickView("repeater", provider, 3) {
             @Override
             protected void populate(Item item) {
@@ -1129,10 +1016,12 @@ public class QuickViewTest {
             @Override
             protected void createChildren(long page) {
             }
+
             @Override
             public IRepeaterUtil getRepeaterUtil() {
-                return  util;
+                return util;
             }
+
             @Override
             public void simpleRemoveAllIfNotReuse() {
             }
@@ -1147,45 +1036,53 @@ public class QuickViewTest {
                 return 2;
             }
 
+
             @Override
-            public MarkupContainer removePages(long startPage, long stopPage) {
+            public Iterator reuseItemsForCurrentPage(long currentPage) {
+                return reusedItems;
+            }
+
+            @Override
+            public MarkupContainer simpleRemoveAll() {
                 return this;
             }
 
-
             @Override
             public long _getPageCount() {
-                return 6;    //To change body of overridden methods use File | Settings | File Templates.
+                return 6;
             }
         };
+        repeater.setCurrentPage(2);
         repeater.setReuse(ReUse.CURRENTPAGE);
         QuickView spy = Mockito.spy(repeater);
         spy.onPopulate();
-        Mockito.verify(util,Mockito.times(1)).reuseNotInitialized(spy);
-        Mockito.verify(util,Mockito.times(1)).parentNotSuitable(spy);
+        Mockito.verify(util, Mockito.times(1)).reuseNotInitialized(spy);
+        Mockito.verify(util, Mockito.times(1)).parentNotSuitable(spy);
         Mockito.verify(spy, Mockito.times(1)).simpleRemoveAllIfNotReuse();
-        Mockito.verify(spy, Mockito.times(1)).removePages(0, 1);
-        Mockito.verify(spy, Mockito.times(1)).removePages(3, 5);
+        Mockito.verify(spy,Mockito.times(1)) .reuseItemsForCurrentPage(2) ;
+        Mockito.verify(spy,Mockito.times(1)).simpleRemoveAll();
 
     }
 
     /**
-     * reuse ={@link ReUse.CURRENTPAGE}   ,size!=0    ,pagecount=6
+     * reuse ={@link ReUse.ALL}   ,size!=0    ,pagecount=6
      */
 
     @Test(groups = {"wicketTests"})
     public void onPopulate_6() {
         IDataProvider provider = Mockito.mock(IDataProvider.class);
         final int size = 5;
-        final IRepeaterUtil util=Mockito.mock(IRepeaterUtil.class);
+        final IRepeaterUtil util = Mockito.mock(IRepeaterUtil.class);
         QuickView repeater = new QuickView("repeater", provider, 3) {
             @Override
             protected void populate(Item item) {
             }
+
             @Override
             public IRepeaterUtil getRepeaterUtil() {
-                return  util;
+                return util;
             }
+
             @Override
             public MarkupContainer simpleAdd(Component... c) {
                 return this;
@@ -1209,25 +1106,18 @@ public class QuickViewTest {
                 return 2;
             }
 
-            @Override
-            public MarkupContainer removePages(long startPage, long stopPage) {
-                return this;
-            }
-
 
             @Override
             public long _getPageCount() {
-                return 6;    //To change body of overridden methods use File | Settings | File Templates.
+                return 6;
             }
         };
         repeater.setReuse(ReUse.ALL);
         QuickView spy = Mockito.spy(repeater);
         spy.onPopulate();
-        Mockito.verify(util,Mockito.times(1)).reuseNotInitialized(spy);
-        Mockito.verify(util,Mockito.times(1)).parentNotSuitable(spy);
+        Mockito.verify(util, Mockito.times(1)).reuseNotInitialized(spy);
+        Mockito.verify(util, Mockito.times(1)).parentNotSuitable(spy);
         Mockito.verify(spy, Mockito.times(1)).simpleRemoveAllIfNotReuse();
-        Mockito.verify(spy, Mockito.never()).removePages(0, 1);
-        Mockito.verify(spy, Mockito.never()).removePages(3, 5);
         Mockito.verify(spy, Mockito.never()).createChildren(Mockito.anyLong());
 
     }
@@ -1351,10 +1241,10 @@ public class QuickViewTest {
             }
 
         };
-       QuickView spy= Mockito.spy(repeater);
+        QuickView spy = Mockito.spy(repeater);
         spy.setItemsPerRequest(itemsPerRequest);
         Assert.assertEquals(spy.getItemsPerRequest(), 3);
-        Mockito.verify(spy,Mockito.times(1))._setCurrentPage(0);
+        Mockito.verify(spy, Mockito.times(1))._setCurrentPage(0);
     }
 
     /**
@@ -1407,11 +1297,11 @@ public class QuickViewTest {
 
         };
         repeater.setItemsPerRequest(oldItemsPerRequest);
-       QuickView spy= Mockito.spy(repeater);
-       spy.setItemsPerRequest(newItemsPerRequest);
-       Assert.assertEquals(spy.getItemsPerRequest(),newItemsPerRequest);
-        Mockito.verify(spy,Mockito.times(1)).setItemsPerRequest(newItemsPerRequest);
-        Mockito.verify(spy,Mockito.times(1))._setCurrentPage(0);
+        QuickView spy = Mockito.spy(repeater);
+        spy.setItemsPerRequest(newItemsPerRequest);
+        Assert.assertEquals(spy.getItemsPerRequest(), newItemsPerRequest);
+        Mockito.verify(spy, Mockito.times(1)).setItemsPerRequest(newItemsPerRequest);
+        Mockito.verify(spy, Mockito.times(1))._setCurrentPage(0);
     }
 
     /**
@@ -1434,44 +1324,10 @@ public class QuickViewTest {
 
         };
         repeater.setItemsPerRequest(itemsPerRequest);
-        QuickView spy= Mockito.spy(repeater);
-        spy.setItemsPerRequest(itemsPerRequest);
-        Assert.assertEquals(spy.getItemsPerRequest(),itemsPerRequest);
-        Mockito.verify(spy,Mockito.never())._setCurrentPage(0);
-    }
-
-    @Test(groups = {"wicketTests"})
-    public void removePages_1() {
-        IDataProvider provider = Mockito.mock(IDataProvider.class);
-        //final int size = 5;
-        final List<Item> items = new ArrayList<Item>();
-        QuickView repeater = new QuickView("repeater", provider, 2) {
-            @Override
-            protected void populate(Item item) {
-            }
-
-            @Override
-            public MarkupContainer simpleRemove(Component c) {
-                return this;
-            }
-
-            @Override
-            public Item getItem(long index) {
-                Item item = Mockito.mock(Item.class);
-                Mockito.when(item.getMarkupId()).thenReturn(String.valueOf(index));
-                items.add(item);
-                return item;
-            }
-        };
-
-        repeater.setReuse(ReUse.PAGING);
         QuickView spy = Mockito.spy(repeater);
-        spy.removePages(1, 2);
-        Mockito.verify(spy, Mockito.times(4)).simpleRemove(Mockito.any(Item.class));
-        Mockito.verify(spy, Mockito.times(1)).simpleRemove(items.get(0));
-        Mockito.verify(spy, Mockito.times(1)).simpleRemove(items.get(1));
-        Mockito.verify(spy, Mockito.times(1)).simpleRemove(items.get(2));
-        Mockito.verify(spy, Mockito.times(1)).simpleRemove(items.get(3));
+        spy.setItemsPerRequest(itemsPerRequest);
+        Assert.assertEquals(spy.getItemsPerRequest(), itemsPerRequest);
+        Mockito.verify(spy, Mockito.never())._setCurrentPage(0);
     }
 
     /**
@@ -1490,7 +1346,7 @@ public class QuickViewTest {
         cs.add(two);
         cs.add(three);
         final MarkupContainer parent = Mockito.mock(MarkupContainer.class);
-        QuickViewBase.Synchronizer synchronizer=new QuickViewBase.Synchronizer(parent){
+        QuickViewBase.Synchronizer synchronizer = new QuickViewBase.Synchronizer(parent) {
             @Override
             protected Boolean addNewChildVisitor(MarkupContainer parent, Component searchFor) {
                 return true;
@@ -1516,11 +1372,11 @@ public class QuickViewTest {
         Mockito.when(target.getComponents()).thenReturn(cs);
         final WebMarkupContainer one = Mockito.mock(WebMarkupContainer.class);
         WebMarkupContainer two = Mockito.mock(WebMarkupContainer.class);
-       // Label three = Mockito.mock(Label.class);
+        // Label three = Mockito.mock(Label.class);
         cs.add(one);
         cs.add(two);
-        WebMarkupContainer parent=Mockito.mock(WebMarkupContainer.class);
-        QuickViewBase.Synchronizer synchronizer=new QuickViewBase.Synchronizer(parent){
+        WebMarkupContainer parent = Mockito.mock(WebMarkupContainer.class);
+        QuickViewBase.Synchronizer synchronizer = new QuickViewBase.Synchronizer(parent) {
             @Override
             protected Boolean addNewChildVisitor(MarkupContainer parent, Component searchFor) {
                 return true;
@@ -1544,8 +1400,8 @@ public class QuickViewTest {
         final AjaxRequestTarget target = Mockito.mock(AjaxRequestTarget.class);
         List cs = new ArrayList();
         Mockito.when(target.getComponents()).thenReturn(cs);
-        WebMarkupContainer parent=Mockito.mock(WebMarkupContainer.class);
-        QuickViewBase.Synchronizer synchronizer=new QuickViewBase.Synchronizer(parent){
+        WebMarkupContainer parent = Mockito.mock(WebMarkupContainer.class);
+        QuickViewBase.Synchronizer synchronizer = new QuickViewBase.Synchronizer(parent) {
             @Override
             protected Boolean addNewChildVisitor(MarkupContainer parent, Component searchFor) {
                 return true;
@@ -1561,54 +1417,54 @@ public class QuickViewTest {
      * parent not added in ARjaxRequestTarget
      */
     @Test(groups = {"utilTests"})
-    public void Synchronizer_onBeforeRespond_1(){
-        final MarkupContainer parent=Mockito.mock(MarkupContainer.class);
-        QuickViewBase.Synchronizer synchronizer=new QuickViewBase.Synchronizer(parent){
+    public void Synchronizer_onBeforeRespond_1() {
+        final MarkupContainer parent = Mockito.mock(MarkupContainer.class);
+        QuickViewBase.Synchronizer synchronizer = new QuickViewBase.Synchronizer(parent) {
             @Override
             public boolean isParentAddedInAjaxRequestTarget(AjaxRequestTarget target) {
                 return false;
             }
         };
-        final Item item1=new Item("1",1,new Model(1));
-        final Item item2=new Item("2",2,new Model(2));
+        final Item item1 = new Item("1", 1, new Model(1));
+        final Item item2 = new Item("2", 2, new Model(2));
 
-        final String script1="script1",script2="script2..";
-          synchronizer.getPrependScripts().add(script1);
+        final String script1 = "script1", script2 = "script2..";
+        synchronizer.getPrependScripts().add(script1);
         synchronizer.getPrependScripts().add(script2);
-        synchronizer.add(item1,item2);
-        Map map=new HashMap();
-        AjaxRequestTarget target=Mockito.mock(AjaxRequestTarget.class);
-        synchronizer.onBeforeRespond(map,target);
-        Mockito.verify(target,Mockito.times(1)).add(item1,item2);
-        Mockito.verify(target,Mockito.times(1)).prependJavaScript(script1);
-        Mockito.verify(target,Mockito.times(1)).prependJavaScript(script2);
+        synchronizer.add(item1, item2);
+        Map map = new HashMap();
+        AjaxRequestTarget target = Mockito.mock(AjaxRequestTarget.class);
+        synchronizer.onBeforeRespond(map, target);
+        Mockito.verify(target, Mockito.times(1)).add(item1, item2);
+        Mockito.verify(target, Mockito.times(1)).prependJavaScript(script1);
+        Mockito.verify(target, Mockito.times(1)).prependJavaScript(script2);
     }
 
     /**
      * parent added in ARjaxRequestTarget
      */
     @Test(groups = {"utilTests"})
-    public void Synchronizer_onBeforeRespond_2(){
-        final MarkupContainer parent=Mockito.mock(MarkupContainer.class);
-        QuickViewBase.Synchronizer synchronizer=new QuickViewBase.Synchronizer(parent){
+    public void Synchronizer_onBeforeRespond_2() {
+        final MarkupContainer parent = Mockito.mock(MarkupContainer.class);
+        QuickViewBase.Synchronizer synchronizer = new QuickViewBase.Synchronizer(parent) {
             @Override
             public boolean isParentAddedInAjaxRequestTarget(AjaxRequestTarget target) {
                 return true;
             }
         };
-        final Item item1=new Item("1",1,new Model(1));
-        final Item item2=new Item("2",2,new Model(2));
+        final Item item1 = new Item("1", 1, new Model(1));
+        final Item item2 = new Item("2", 2, new Model(2));
 
-        final String script1="script1",script2="script2..";
+        final String script1 = "script1", script2 = "script2..";
         synchronizer.getPrependScripts().add(script1);
         synchronizer.getPrependScripts().add(script2);
-        synchronizer.add(item1,item2);
-        Map map=new HashMap();
-        AjaxRequestTarget target=Mockito.mock(AjaxRequestTarget.class);
-        synchronizer.onBeforeRespond(map,target);
-        Mockito.verify(target,Mockito.never()).add(item1,item2);
-        Mockito.verify(target,Mockito.never()).prependJavaScript(script1);
-        Mockito.verify(target,Mockito.never()).prependJavaScript(script2);
+        synchronizer.add(item1, item2);
+        Map map = new HashMap();
+        AjaxRequestTarget target = Mockito.mock(AjaxRequestTarget.class);
+        synchronizer.onBeforeRespond(map, target);
+        Mockito.verify(target, Mockito.never()).add(item1, item2);
+        Mockito.verify(target, Mockito.never()).prependJavaScript(script1);
+        Mockito.verify(target, Mockito.never()).prependJavaScript(script2);
     }
 
     @Test(groups = {"wicketTests"})
@@ -1625,58 +1481,57 @@ public class QuickViewTest {
     }
 
 
-
     @Test(groups = {"wicketTests"})
-    public void simpleRemove(){
-        IDataProvider data=Mockito.mock(IDataProvider.class);
-        QuickView quickView=new QuickView("id",data) {
+    public void simpleRemove() {
+        IDataProvider data = Mockito.mock(IDataProvider.class);
+        QuickView quickView = new QuickView("id", data) {
             @Override
             protected void populate(Item item) {
             }
-        } ;
-        Item one=quickView.buildItem( 67);
-        Item two=quickView.buildItem( 68);
-        quickView.simpleAdd(one,two);
+        };
+        Item one = quickView.buildItem(67);
+        Item two = quickView.buildItem(68);
+        quickView.simpleAdd(one, two);
         quickView.simpleRemove(one);
         Assert.assertEquals(quickView.getChildId(), 2l);
-        Assert.assertEquals(quickView.size(),1);
+        Assert.assertEquals(quickView.size(), 1);
     }
 
     /**
      * added two,removed all
      */
     @Test(groups = {"wicketTests"})
-    public void simpleRemoveAll(){
-        IDataProvider data=Mockito.mock(IDataProvider.class);
-        QuickView quickView=new QuickView("id",data) {
+    public void simpleRemoveAll() {
+        IDataProvider data = Mockito.mock(IDataProvider.class);
+        QuickView quickView = new QuickView("id", data) {
             @Override
             protected void populate(Item item) {
             }
-        } ;
-        Item one=quickView.buildItem( 67);
-        Item two=quickView.buildItem(68);
-        quickView.simpleAdd(one,two);
+        };
+        Item one = quickView.buildItem(67);
+        Item two = quickView.buildItem(68);
+        quickView.simpleAdd(one, two);
         quickView.simpleRemoveAll();
-         Assert.assertEquals(quickView.getChildId(),2l);
-        Assert.assertEquals(quickView.size(),0);
+        Assert.assertEquals(quickView.getChildId(), 2l);
+        Assert.assertEquals(quickView.size(), 0);
     }
 
     @Test(groups = {"wicketTests"})
-    public void simpleAdd(){
-        IDataProvider data=Mockito.mock(IDataProvider.class);
-        QuickView quickView=new QuickView("id",data) {
+    public void simpleAdd() {
+        IDataProvider data = Mockito.mock(IDataProvider.class);
+        QuickView quickView = new QuickView("id", data) {
             @Override
             protected void populate(Item item) {
             }
-        } ;
-        Item one=quickView.buildItem( 67);
+        };
+        Item one = quickView.buildItem(67);
         quickView.simpleAdd(one);
         Assert.assertEquals(quickView.getChildId(), 1);
         Assert.assertEquals(quickView.size(), 1);
-        Item two=quickView.buildItem( 68);
+        Item two = quickView.buildItem(68);
         quickView.simpleAdd(two);
-        Assert.assertEquals(quickView.getChildId(),2);
-        Assert.assertEquals(quickView.size(),2);
+        Assert.assertEquals(quickView.getChildId(), 2);
+        Assert.assertEquals(quickView.size(), 2);
 
     }
 
@@ -1684,22 +1539,22 @@ public class QuickViewTest {
      * model object is integer
      */
     @Test(groups = {"wicketTests"})
-    public void newItem_1(){
-        final  int object=89;
-        final Model<Integer>model=new Model<Integer>(object);
-        IDataProvider<Integer> data=Mockito.mock(IDataProvider.class);
+    public void newItem_1() {
+        final int object = 89;
+        final Model<Integer> model = new Model<Integer>(object);
+        IDataProvider<Integer> data = Mockito.mock(IDataProvider.class);
         Mockito.when(data.model(object)).thenReturn(model);
-        QuickView<Integer> quickView=new QuickView<Integer>("id",data,ReUse.ITEMSNAVIGATION) {
+        QuickView<Integer> quickView = new QuickView<Integer>("id", data, ReUse.ITEMSNAVIGATION) {
             @Override
             protected void populate(Item<Integer> item) {
             }
-        } ;
-        final long index=9l;
-        final String id="67";
-       Item <Integer>item= quickView.newItem(id,index,object);
+        };
+        final long index = 9l;
+        final String id = "67";
+        Item<Integer> item = quickView.newItem(id, index, object);
         Assert.assertEquals(item.getModelObject().intValue(), 89);
-        Assert.assertEquals(item.getMarkupId(),id);
-        Assert.assertEquals(item.getIndex(),index);
+        Assert.assertEquals(item.getMarkupId(), id);
+        Assert.assertEquals(item.getIndex(), index);
         Assert.assertTrue(item.getOutputMarkupId());
     }
 
@@ -1707,65 +1562,66 @@ public class QuickViewTest {
      * modelobject is string
      */
     @Test(groups = {"wicketTests"})
-    public void newItem_2(){
-        final  String object="theobject";
-        IDataProvider data=Mockito.mock(IDataProvider.class);
-        Model<String>model=new Model<String>(object);
+    public void newItem_2() {
+        final String object = "theobject";
+        IDataProvider data = Mockito.mock(IDataProvider.class);
+        Model<String> model = new Model<String>(object);
         Mockito.when(data.model(object)).thenReturn(model);
-        QuickView<String> quickView=new QuickView<String>("id",data,ReUse.ITEMSNAVIGATION) {
+        QuickView<String> quickView = new QuickView<String>("id", data, ReUse.ITEMSNAVIGATION) {
             @Override
             protected void populate(Item<String> item) {
             }
-        } ;
-        final long index=9l;
-        final String id="345";
-        Item <String>item= quickView.newItem(id,index,object);
-        Assert.assertEquals(item.getModelObject(),object);
-        Assert.assertEquals(item.getMarkupId(),id);
+        };
+        final long index = 9l;
+        final String id = "345";
+        Item<String> item = quickView.newItem(id, index, object);
+        Assert.assertEquals(item.getModelObject(), object);
+        Assert.assertEquals(item.getMarkupId(), id);
         Assert.assertTrue(item.getOutputMarkupId());
-        Assert.assertEquals(item.getIndex(),index);
+        Assert.assertEquals(item.getIndex(), index);
     }
 
     /**
-     * test for  {@link QuickViewBase#buildItem(id,index,object)}
+     * test for  {@link QuickViewBase#buildItem(id, index, object)}
      */
     @Test(groups = {"wicketTests"})
-    public void buildItem_1(){
-        IDataProvider data=Mockito.mock(IDataProvider.class);
-        final Item item=Mockito.mock(Item.class);
-        QuickView<TestObj> quickView=new QuickView<TestObj>("id",data,ReUse.ITEMSNAVIGATION) {
+    public void buildItem_1() {
+        IDataProvider data = Mockito.mock(IDataProvider.class);
+        final Item item = Mockito.mock(Item.class);
+        QuickView<TestObj> quickView = new QuickView<TestObj>("id", data, ReUse.ITEMSNAVIGATION) {
             @Override
             protected void populate(Item item) {
             }
 
             @Override
-            protected Item newItem(String id,long index, TestObj object) {
+            protected Item newItem(String id, long index, TestObj object) {
                 return item;
             }
-        } ;
-        final long index=9l;
-        final String id="87";
-       final TestObj object=Mockito.mock(TestObj.class);
-        QuickView<TestObj>spy=Mockito.spy(quickView);
-        Item <TestObj>actual= spy.buildItem(id,index,object);
-        Assert.assertEquals(actual,item);
-       InOrder order= Mockito.inOrder(spy, item);
-         order.verify(spy, Mockito.times(1)).newItem(id,index,object);
-         order.verify(spy, Mockito.times(1)).populate(item);
-     }
+        };
+        final long index = 9l;
+        final String id = "87";
+        final TestObj object = Mockito.mock(TestObj.class);
+        QuickView<TestObj> spy = Mockito.spy(quickView);
+        Item<TestObj> actual = spy.buildItem(id, index, object);
+        Assert.assertEquals(actual, item);
+        InOrder order = Mockito.inOrder(spy, item);
+        order.verify(spy, Mockito.times(1)).newItem(id, index, object);
+        order.verify(spy, Mockito.times(1)).populate(item);
+    }
 
 
     /**
      * test for  {@link QuickViewBase#buildItem(object)}
      */
     @Test(groups = {"wicketTests"})
-    public void buildItem_2(){
-        IDataProvider data=Mockito.mock(IDataProvider.class);
-        final Item item=Mockito.mock(Item.class);
-         final String childId="78";
-        QuickView<TestObj> quickView=new QuickView<TestObj>("id",data,ReUse.ITEMSNAVIGATION) {
+    public void buildItem_2() {
+        IDataProvider data = Mockito.mock(IDataProvider.class);
+        final Item item = Mockito.mock(Item.class);
+        final String childId = "78";
+        QuickView<TestObj> quickView = new QuickView<TestObj>("id", data, ReUse.ITEMSNAVIGATION) {
             @Override
-            protected void populate(Item<TestObj> item) {}
+            protected void populate(Item<TestObj> item) {
+            }
 
             @Override
             public Item<TestObj> buildItem(String id, long index, TestObj object) {
@@ -1781,22 +1637,23 @@ public class QuickViewTest {
             public long getChildId() {
                 return Long.parseLong(childId);
             }
-        } ;
-       QuickView<TestObj>spy= Mockito.spy(quickView);
-        TestObj obj=Mockito.mock(TestObj.class);
+        };
+        QuickView<TestObj> spy = Mockito.spy(quickView);
+        TestObj obj = Mockito.mock(TestObj.class);
         spy.buildItem(obj);
-        Mockito.verify(spy).buildItem(childId,78,obj);
+        Mockito.verify(spy).buildItem(childId, 78, obj);
 
     }
+
     @Test(groups = {"wicketTests"})
     public void addItemsForNextPage_1() {
         final long dataProviderSize = 12;
-        final long current=5,next=6 ,pages=7;
-        IDataProvider dataProvider=Mockito.mock(IDataProvider.class);
+        final long current = 5, next = 6, pages = 7;
+        IDataProvider dataProvider = Mockito.mock(IDataProvider.class);
         Mockito.when(dataProvider.size()).thenReturn(dataProviderSize);
-        final AjaxRequestTarget target=Mockito.mock(AjaxRequestTarget.class);
-        final List<Item> items=Mockito.mock(List.class);
-        QuickView quickview=new QuickView("quick",dataProvider,ReUse.ITEMSNAVIGATION) {
+        final AjaxRequestTarget target = Mockito.mock(AjaxRequestTarget.class);
+        final List<Item> items = Mockito.mock(List.class);
+        QuickView quickview = new QuickView("quick", dataProvider, ReUse.ITEMSNAVIGATION) {
             @Override
             protected void populate(Item item) {
             }
@@ -1813,36 +1670,35 @@ public class QuickViewTest {
 
             @Override
             public AjaxRequestTarget getAjaxRequestTarget() {
-                return  target;
+                return target;
             }
 
             @Override
             public List addItemsForPage(long page) {
-                        return items;
+                return items;
             }
         };
 
-        QuickView spy= Mockito.spy(quickview);
-        List<Item>actual= spy.addItemsForNextPage();
-        Mockito.verify(spy,Mockito.times(1))._setCurrentPage(next);
-        Mockito.verify(spy,Mockito.times(1)).addItemsForPage(next);
+        QuickView spy = Mockito.spy(quickview);
+        List<Item> actual = spy.addItemsForNextPage();
+        Mockito.verify(spy, Mockito.times(1))._setCurrentPage(next);
+        Mockito.verify(spy, Mockito.times(1)).addItemsForPage(next);
         Assert.assertEquals(actual, items);
     }
 
     /**
      * when current page= pages count
-     *
      */
-    @Test(groups = {"utilTests"})
+    @Test(groups = {"wicketTests"})
     public void addItemsForNextPage_2() {
 
         final long dataProviderSize = 12;
-        final long current=5,next=6 ,pages=6;
-        IDataProvider dataProvider=Mockito.mock(IDataProvider.class);
+        final long current = 5, next = 6, pages = 6;
+        IDataProvider dataProvider = Mockito.mock(IDataProvider.class);
         Mockito.when(dataProvider.size()).thenReturn(dataProviderSize);
-        final AjaxRequestTarget target=Mockito.mock(AjaxRequestTarget.class);
-        final List<Item> items=Mockito.mock(List.class);
-        QuickView quickview=new QuickView("quick",dataProvider,ReUse.ITEMSNAVIGATION) {
+        final AjaxRequestTarget target = Mockito.mock(AjaxRequestTarget.class);
+        final List<Item> items = Mockito.mock(List.class);
+        QuickView quickview = new QuickView("quick", dataProvider, ReUse.ITEMSNAVIGATION) {
             @Override
             protected void populate(Item item) {
             }
@@ -1856,9 +1712,10 @@ public class QuickViewTest {
             protected long _getCurrentPage() {
                 return current;
             }
+
             @Override
             public AjaxRequestTarget getAjaxRequestTarget() {
-                return  target;
+                return target;
             }
 
             @Override
@@ -1866,26 +1723,25 @@ public class QuickViewTest {
                 return items;
             }
         };
-        QuickView spy= Mockito.spy(quickview);
-        List<Item>actual= spy.addItemsForNextPage();
-        Mockito.verify(spy,Mockito.never())._setCurrentPage(next);
-        Mockito.verify(spy,Mockito.never()).addItemsForPage(next);
+        QuickView spy = Mockito.spy(quickview);
+        List<Item> actual = spy.addItemsForNextPage();
+        Mockito.verify(spy, Mockito.never())._setCurrentPage(next);
+        Mockito.verify(spy, Mockito.never()).addItemsForPage(next);
         Assert.assertTrue(actual.isEmpty());
     }
 
     /**
      * when current page> pages count
-     *
      */
-    @Test(groups = {"utilTests"})
+    @Test(groups = {"wicketTests"})
     public void addItemsForNextPage_3() {
         final long dataProviderSize = 12;
-        final long current=7,next=6 ,pages=6;
-        final AjaxRequestTarget target=Mockito.mock(AjaxRequestTarget.class);
-        final List<Item> items=Mockito.mock(List.class);
-        IDataProvider dataProvider=Mockito.mock(IDataProvider.class);
+        final long current = 7, next = 6, pages = 6;
+        final AjaxRequestTarget target = Mockito.mock(AjaxRequestTarget.class);
+        final List<Item> items = Mockito.mock(List.class);
+        IDataProvider dataProvider = Mockito.mock(IDataProvider.class);
         Mockito.when(dataProvider.size()).thenReturn(dataProviderSize);
-        QuickView quickview=new QuickView("quick",dataProvider,ReUse.ITEMSNAVIGATION) {
+        QuickView quickview = new QuickView("quick", dataProvider, ReUse.ITEMSNAVIGATION) {
             @Override
             protected void populate(Item item) {
             }
@@ -1902,7 +1758,7 @@ public class QuickViewTest {
 
             @Override
             public AjaxRequestTarget getAjaxRequestTarget() {
-                return  target;
+                return target;
             }
 
             @Override
@@ -1910,13 +1766,107 @@ public class QuickViewTest {
                 return items;
             }
         };
-        QuickView spy= Mockito.spy(quickview);
-        List<Item>actual= spy.addItemsForNextPage();
-        Mockito.verify(spy,Mockito.never())._setCurrentPage(next);
-        Mockito.verify(spy,Mockito.never()).addItemsForPage(next);
+        QuickView spy = Mockito.spy(quickview);
+        List<Item> actual = spy.addItemsForNextPage();
+        Mockito.verify(spy, Mockito.never())._setCurrentPage(next);
+        Mockito.verify(spy, Mockito.never()).addItemsForPage(next);
         Assert.assertTrue(actual.isEmpty());
     }
 
+    /**
+     * page=2 ,itemsperrequest=2 ,reuse=ReUse.ITEMSNAVIGATION
+     */
+
+    @Test(groups = {"wicketTests"})
+    public void addItemsForPage_1() {
+        int itemsPerRequest = 2;
+        IDataProvider dataProvider = Mockito.mock(IDataProvider.class);
+         Iterator data = mockIterator();
+        Mockito.when(dataProvider.iterator(4, itemsPerRequest)).thenReturn(data);
+        Mockito.when(data.hasNext()).thenReturn(true).thenReturn(true).thenReturn(false);
+
+        Item item1=new Item("1",1,new Model(1));
+        Item item2=new Item("2",2,new Model(2));
+         List<Item> list=new ArrayList();
+          list.add(item1);
+        list.add(item2);
+        final Iterator newIterator=list.iterator();
+        QuickView repeater = new QuickView("repeater", dataProvider, ReUse.ITEMSNAVIGATION, itemsPerRequest) {
+
+            public void populate(Item item) {
+            }
+
+            @Override
+            public void simpleRemoveAllIfNotReuse() {
+            }
+
+            @Override
+            public MarkupContainer add(Component... c) {
+                return this;
+            }
+
+            @Override
+            protected Iterator buildItems(long index, Iterator iterator) {
+                return newIterator;
+            }
+        };
+        QuickView spy = Mockito.spy(repeater);
+        List<Item<TestObj>> items = spy.addItemsForPage(2);
+        Assert.assertEquals(items.size(),list.size());
+        Mockito.verify(dataProvider).iterator(4,itemsPerRequest);
+        Mockito.verify(spy,Mockito.times(1)).buildItems(0,data);
+        Mockito.verify(spy, Mockito.times(1)).simpleRemoveAllIfNotReuse();
+        Mockito.verify(spy, Mockito.times(1)).add(items.get(0));
+        Mockito.verify(spy, Mockito.times(1)).add(items.get(1));
+
+    }
+
+    /**
+     * page=2 ,itemsperrequest=2 ,reuse=ReUse.ALL
+     */
+
+    @Test(groups = {"wicketTests"})
+    public void addItemsForPage_2() {
+        int itemsPerRequest = 2;
+        IDataProvider dataProvider = Mockito.mock(IDataProvider.class);
+        Iterator data = mockIterator();
+        Mockito.when(dataProvider.iterator(4, itemsPerRequest)).thenReturn(data);
+        Mockito.when(data.hasNext()).thenReturn(true).thenReturn(true).thenReturn(false);
+        Item item1=new Item("1",1,new Model(1));
+        Item item2=new Item("2",2,new Model(2));
+        List<Item> list=new ArrayList();
+        list.add(item1);
+        list.add(item2);
+        final Iterator newIterator=list.iterator();
+        QuickView repeater = new QuickView("repeater", dataProvider, ReUse.ALL, itemsPerRequest) {
+
+            public void populate(Item item) {
+            }
+
+            @Override
+            public void simpleRemoveAllIfNotReuse() {
+            }
+
+            @Override
+            public MarkupContainer add(Component... c) {
+                return this;
+            }
+
+            @Override
+            protected Iterator buildItems(long index, Iterator iterator) {
+                return newIterator;
+            }
+        };
+        QuickView spy = Mockito.spy(repeater);
+        List<Item<TestObj>> items = spy.addItemsForPage(2);
+        Assert.assertEquals(items.size(),list.size());
+        Mockito.verify(dataProvider).iterator(4,itemsPerRequest);
+        Mockito.verify(spy,Mockito.times(1)).buildItems(4,data);
+        Mockito.verify(spy, Mockito.times(1)).simpleRemoveAllIfNotReuse();
+        Mockito.verify(spy, Mockito.times(1)).add(items.get(0));
+        Mockito.verify(spy, Mockito.times(1)).add(items.get(1));
+
+    }
 
 
     public AjaxRequestTarget mockTarget() {
@@ -1928,13 +1878,15 @@ public class QuickViewTest {
         Iterator<TestObj> it = mock(Iterator.class);
         return it;
     }
-    List<Integer>data(int size){
-        List<Integer>list=new ArrayList<Integer>();
-        for(int i=0;i<size;i++){
-            list.add(i) ;
+
+    List<Integer> data(int size) {
+        List<Integer> list = new ArrayList<Integer>();
+        for (int i = 0; i < size; i++) {
+            list.add(i);
         }
         return list;
     }
+
     public IDataProvider<TestObj> mockProvider(long size) {
         IDataProvider<TestObj> dp = mock(IDataProvider.class);
         when(dp.size()).thenReturn(size);

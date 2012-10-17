@@ -192,26 +192,29 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
          return super.removeAll();
     }
 
+    public Iterator<Component>itemsIterator(){
+       return iterator();
+    }
 
     @Override
     protected void onPopulate() {
         super.onPopulate();
         clearCachedItemCount();
-       getRepeaterUtil().reuseNotInitialized(this);
-       getRepeaterUtil().parentNotSuitable(this);
+        getRepeaterUtil().reuseNotInitialized(this);
+        getRepeaterUtil().parentNotSuitable(this);
         simpleRemoveAllIfNotReuse();
         long current=_getCurrentPage();
         if (size() == 0) {
 
-             // all children might have got removed ,if true then create children of last page
-             //for first render currentpage will be 0
+            // all children might have got removed ,if true then create children of last page
+            //for first render currentpage will be 0
 
             if (ReUse.PAGING == reuse) {
                 createChildren(current);
             }
 
 
-             //   not first render but items were removed
+            //   not first render but items were removed
 
             if ((ReUse.ITEMSNAVIGATION == reuse) )  {
                 createChildren(0);
@@ -219,10 +222,10 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
             }
 
 
-             // first render,no children were added,so populated with first page
+            // first render,no children were added,so populated with first page
 
             if((ReUse.ALL == reuse) || (ReUse.CURRENTPAGE == reuse)){
-               createChildren(0);
+                createChildren(0);
             }
         }
         /**
@@ -233,42 +236,32 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
              * if reuse=CURRENTPAGE ,reuse the current page elements and remove all others
              */
             if (ReUse.CURRENTPAGE == reuse) {
-                /**
-                 * remove first page till the current page -1
-                 */
-                removePages(0, current - 1);
-                /**
-                 * remove the page after current page till the lastpage is found
-                 */
-                removePages(current + 1, _getPageCount() - 1);
+                Iterator<Item<T>>iterator= reuseItemsForCurrentPage(currentPage) ;
+                simpleRemoveAll();
+                createChildren(iterator);
+                
             }
-        }
 
+        }
+    }
+
+
+    /**
+     * reuse items if the models are equal
+     */
+    protected Iterator<Item<T>>reuseItemsForCurrentPage(long currentPage){
+        long start = currentPage * getItemsPerRequest();
+        Iterator<Component>oldIterator=itemsIterator();
+        Iterator<? extends T> objects = getDataProvider().iterator(start, getItemsPerRequest());
+        Iterator<Item<T>>newIterator=buildItems(0,objects);
+         return (Iterator)getRepeaterUtil().reuseItemsIfModelsEqual((Iterator) oldIterator, (Iterator) newIterator);
     }
 
     public Item<T> getItem(long index) {
         return (Item) get(getRepeaterUtil().safeLongToInt(index));
     }
 
-    /**
-     * remove pages from startpage till stop page, including stopPage
-     *
-     * @param startPage
-     * @param stopPage
-     */
-    public MarkupContainer removePages(long startPage, long stopPage) {
-        for (long i = startPage; i <= stopPage; i++) {
-            long startIndex = i * itemsPerRequest;
-            long endIndex = startIndex + itemsPerRequest;
-            for (long itemIndex = startIndex; itemIndex < endIndex; itemIndex++) {
-                Item item = getItem(itemIndex);
-                if (item != null) {
-                    simpleRemove(item);
-                }
-            }
-        }
-        return this;
-    }
+
 
     /**
      * creates children for the page provided
@@ -278,11 +271,33 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     protected void createChildren(long page) {
         long items = page * getItemsPerRequest();
         Iterator<? extends T> iterator = getDataProvider().iterator(items, getItemsPerRequest());
-        for (long i = items; iterator.hasNext(); i++) {
-            T obj = iterator.next();
-            Component item = buildItem(newChildId(), i,obj);
-            simpleAdd(item);
+        Iterator<Item<T>>itemsIterator=buildItems(0, iterator);
+       createChildren(itemsIterator);
+    }
+
+    protected void createChildren(Iterator<Item<T>>iterator) {
+       while (iterator.hasNext()){
+           Item<T>item=iterator.next();
+           simpleAdd(item);
+       }
+    }
+
+    protected Iterator<Item<T>>buildItems(final long index, Iterator<? extends T> iterator ){
+        List<Item<T>> items=new ArrayList<Item<T>>();
+        for(long i=index; iterator.hasNext();i++){
+            T object=iterator.next();
+            Item<T>item=buildItem(newChildId(), i,object);
+            items.add(item);
         }
+           return items.iterator();
+    }
+
+    /*
+     * build items from index=size
+     */
+    protected Iterator<Item<T>>buildItems(Iterator<? extends T> iterator ){
+        long index=size();
+       return buildItems(index,iterator);
     }
 
     @Override
@@ -404,8 +419,6 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     protected abstract void populate(Item<T> item);
 
 
-
-
     public static class ChildVisitor implements IVisitor<Component, Boolean> {
 
         private Component searchFor;
@@ -472,30 +485,20 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      */
     @Override
     public List<Item<T>> addItemsForPage(final long page) {
-        long newIndex=page* getItemsPerRequest();
-        return addItemsFromIndex(newIndex);
-    }
-
-    /**
-     * create and draw children from the provided childId ,number of
-     * children created are smaller than equal to getItemsPerRequest()
-     *
-     * @return list of components created
-     */
-
-    public List<Item<T>> addItemsFromIndex(final long index) {
-        clearCachedItemCount();
+        final long start=page* getItemsPerRequest();
+       clearCachedItemCount();
         simpleRemoveAllIfNotReuse();
-        long newIndex=index;
-        Iterator<? extends T> iterator = getDataProvider().iterator(newIndex, getItemsPerRequest());
+          long itemIndex=0;
+        if(ReUse.ALL==reuse){
+         itemIndex=start;
+        }
+        Iterator<? extends T> objects = getDataProvider().iterator(start, getItemsPerRequest());
         List<Item<T>> components = new ArrayList<Item<T>>();
-        // long i = newIndex;
-        while (iterator.hasNext()) {
-            T t = iterator.next();
-            Item<T> c = buildItem(newChildId(),newIndex, t);
-            components.add(c);
-            add(c);
-            newIndex++;
+        Iterator<Item<T>>items = buildItems(itemIndex,objects);
+        while (items.hasNext()) {
+            Item<T>item=items.next();
+            components.add(item);
+            add(item);
         }
 
         return components;
