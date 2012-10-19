@@ -26,6 +26,7 @@ import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Generics;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -238,7 +239,7 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
         Iterator<? extends T> objects = getDataProvider().iterator(getRepeaterUtil().safeLongToInt(items), getItemsPerRequest());
         Iterator<RowItem<T>> newRowsIterator = (Iterator) buildItems(0, objects);
         Iterator oldCells = cells();
-        Iterator newCells = new GridView.ItemsIterator((Iterator) newRowsIterator);
+        Iterator newCells = new ItemsIterator((Iterator) newRowsIterator);
         Iterator reuseItems = getRepeaterUtil().reuseItemsIfModelsEqual(oldCells, newCells);
         return (Iterator) buildRows(0, reuseItems);
     }
@@ -438,7 +439,7 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
 
     public Iterator<CellItem<T>> cells() {
         Iterator<MarkupContainer> rows = (Iterator) rows();
-        return new GridView.ItemsIterator(rows);
+        return new ItemsIterator(rows);
     }
 
     @Override
@@ -536,6 +537,87 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
 
     }
 
+
+    /**
+     * Iterator that iterates over all items in the cells
+     * (borrowed  from wicket since in 1.5.8 it's not public,it will be removed for 1.5.9 release since there it's public)
+     *
+     * @author igor
+     * @param <T>
+     */
+    private static class ItemsIterator<T> implements Iterator<Item<T>>
+    {
+        private final Iterator<MarkupContainer> rows;
+        private Iterator<Item<T>> cells;
+
+        private Item<T> next;
+
+        /**
+         * @param rows
+         *            iterator over child row views
+         */
+        public ItemsIterator(Iterator<MarkupContainer> rows)
+        {
+            this.rows = Args.notNull(rows, "rows");
+            findNext();
+        }
+
+        /**
+         * @see java.util.Iterator#remove()
+         */
+        @Override
+        public void remove()
+        {
+            throw new UnsupportedOperationException();
+        }
+
+        /**
+         * @see java.util.Iterator#hasNext()
+         */
+        @Override
+        public boolean hasNext()
+        {
+            return next != null;
+        }
+
+        /**
+         * @see java.util.Iterator#next()
+         */
+        @Override
+        public Item<T> next()
+        {
+            Item<T> item = next;
+            findNext();
+            return item;
+        }
+
+        private void findNext()
+        {
+            next = null;
+
+            if (cells != null && cells.hasNext())
+            {
+                next = cells.next();
+            }
+            else
+            {
+                while (rows.hasNext())
+                {
+                    MarkupContainer row = rows.next();
+
+                    final Iterator<? extends Component> rawCells;
+                    rawCells = ((MarkupContainer)row.iterator().next()).iterator();
+                    cells = Generics.iterator(rawCells);
+                    if (cells.hasNext())
+                    {
+                        next = cells.next();
+                        break;
+                    }
+                }
+            }
+        }
+
+    }
 
 
 }
