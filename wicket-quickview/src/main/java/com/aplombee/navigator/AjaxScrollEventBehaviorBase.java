@@ -1,8 +1,10 @@
 package com.aplombee.navigator;
 
 import com.aplombee.IQuickView;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.repeater.Item;
 
 import java.util.List;
@@ -22,6 +24,7 @@ public abstract class AjaxScrollEventBehaviorBase extends AjaxEventBehavior{
     protected final void onEvent(AjaxRequestTarget target) {
         onScroll(target);
     }
+
 
     /**
      * Listener method for the ajax scroll event

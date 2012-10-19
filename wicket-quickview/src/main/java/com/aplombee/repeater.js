@@ -52,3 +52,26 @@ function insertBefore(tag,theId,parentContainerId){
 }
 
 
+function isComponentScrollBarAtBottom(id){
+       var el=document.getElementById(id);
+    if (el.offsetHeight + el.scrollTop >= el.scrollHeight) {
+       return true;
+    }
+    else{
+    return false;
+    }
+}
+
+ function isPageScrollBarAtBottom(){
+    var docHeight=getDocumentHeight();
+   if ((window.innerHeight + pageYOffset) >=docHeight )  {
+      return true;
+       }
+     else{
+      return false;
+      }
+}
+
+
+
+
