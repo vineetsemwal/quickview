@@ -15,7 +15,6 @@
  limitations under the License.
  */
 package com.aplombee.navigator;
-
 import com.aplombee.RepeaterUtil;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.IHeaderResponse;
@@ -31,13 +30,18 @@ import org.apache.wicket.markup.html.IHeaderResponse;
  */
 public abstract class AjaxPageScrollEventBehavior extends AjaxScrollEventBehaviorBase{
 
-
-    protected String newScrollScript(){
-       String call="wicketAjaxGet(\"" +getCallbackUrl() +"\",function() { },"
-           + "function() {} ,function() {"+getPreconditionScript() +" } )";
-        String script="document.body.setAttribute(\"onscroll\",   ' "+ call +" '  ) ; ";
-
+      protected String newScrollScript(){
+        String call="wicketAjaxGet(\"" +getCallbackUrl() +"\",function() { },"
+                + "function() {} ,function() {"+getPreconditionScript() +" } )";
+        String script="Wicket.Event.add(window,\"scroll\", function(event){ return "+call + "; } ) ; ";
         return script;
+    }
+
+
+    @Override
+    public void renderHead(Component component, IHeaderResponse response) {
+        super.renderHead(component, response);
+        response.renderOnDomReadyJavaScript(newScrollScript());
     }
 
     @Override
@@ -47,10 +51,5 @@ public abstract class AjaxPageScrollEventBehavior extends AjaxScrollEventBehavio
     }
 
 
-    @Override
-    public void renderHead(Component component, IHeaderResponse response) {
-        super.renderHead(component, response);
-        response.renderOnDomReadyJavaScript(newScrollScript());
-    }
 
 }

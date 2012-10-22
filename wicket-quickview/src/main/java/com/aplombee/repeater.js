@@ -62,16 +62,33 @@ function isComponentScrollBarAtBottom(id){
     }
 }
 
- function isPageScrollBarAtBottom(){
+function getInnerHeight(){
+    if(window.innerHeight!= undefined){
+        return  window.innerHeight;
+    }
+    else{
+     return Math.max(document.documentElement.clientHeight, document.body.clientHeight); //for IE
+    }
+}
+
+function getScrollTop(){
+if(window.pageYOffset!=undefined){
+return window.pageYOffset;
+}else{
+return document.body.scrollTop;    //for IE
+}
+}
+
+function isPageScrollBarAtBottom(){
     var docHeight=getDocumentHeight();
-   if ((window.innerHeight + pageYOffset) >=docHeight )  {
+    var iHeight=getInnerHeight();
+    var sTop=getScrollTop();
+   if ((iHeight + sTop) >=docHeight )  {
       return true;
        }
      else{
       return false;
       }
+
 }
-
-
-
 
