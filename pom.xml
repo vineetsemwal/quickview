@@ -22,7 +22,7 @@ Copyright 2012 Vineet Semwal
 	<groupId>com.aplombee</groupId>
 	<artifactId>wicket-quickview-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>6.0-SNAPSHOT</version>
+	<version>6.2.0</version>
 	<name>quickview parent</name>
 	<description>with quickview you can quickly add/remove new rows using ajax component without the need to re render the whole of it,it also works well with pagingnavigator/ajaxpagingnavigator</description>
         <modules>
@@ -38,7 +38,7 @@ Copyright 2012 Vineet Semwal
 		</license>
 	</licenses>
 	<properties>
-		<wicket.version>6.0-SNAPSHOT</wicket.version>
+		<wicket.version>6.2.0</wicket.version>
 		<jetty.version>7.6.3.v20120416</jetty.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
