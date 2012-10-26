@@ -17,6 +17,7 @@
 package com.aplombee;
 import java.util.*;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.MetaDataKey;
@@ -25,6 +26,7 @@ import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
@@ -137,6 +139,14 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
          this.dataProvider = dataProvider;
     }
 
+
+    protected ResourceReference jqueryReference(){
+     if(getApplication().usesDeploymentConfig()){
+         return JqueryCompressedReference.get();
+     }else{
+         return JqueryResourceReference.get();
+     }
+    }
 
     /**
      * @param object model object
@@ -320,8 +330,10 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     @Override
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
+        response.renderJavaScriptReference(jqueryReference());
         response.renderJavaScriptReference(RepeaterUtilReference.get());
          }
+
 
     public final int getItemsCount(){
         if(itemsCount>=0){

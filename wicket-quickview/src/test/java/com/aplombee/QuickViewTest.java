@@ -25,8 +25,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.IHeaderResponse;
@@ -36,7 +38,10 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
+import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.tester.WicketTester;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
@@ -306,7 +311,7 @@ public class QuickViewTest {
 
         //asserting first item
         Assert.assertTrue(target.getComponents().contains(actualItem1));
-       Assert.assertEquals(actualItem1.getModelObject().intValue(),1);
+       Assert.assertEquals(actualItem1.getModelObject().intValue(), 1);
 
     }
 
@@ -693,7 +698,7 @@ public class QuickViewTest {
         Assert.assertEquals(quickView.size(),2);
         Item<Integer> actualItem1=items.get(0);
         //asserting first item
-       Assert.assertEquals(actualItem1.getModelObject().intValue(),1);
+       Assert.assertEquals(actualItem1.getModelObject().intValue(), 1);
     }
 
     /**
@@ -1536,7 +1541,7 @@ public class QuickViewTest {
         repeater.setItemsPerRequest(oldItemsPerRequest);
        QuickView spy= Mockito.spy(repeater);
        spy.setItemsPerRequest(newItemsPerRequest);
-       Assert.assertEquals(spy.getItemsPerRequest(),newItemsPerRequest);
+       Assert.assertEquals(spy.getItemsPerRequest(), newItemsPerRequest);
         Mockito.verify(spy,Mockito.times(1)).setItemsPerRequest(newItemsPerRequest);
         Mockito.verify(spy,Mockito.times(1))._setCurrentPage(0);
     }
@@ -1563,7 +1568,7 @@ public class QuickViewTest {
         repeater.setItemsPerRequest(itemsPerRequest);
         QuickView spy= Mockito.spy(repeater);
         spy.setItemsPerRequest(itemsPerRequest);
-        Assert.assertEquals(spy.getItemsPerRequest(),itemsPerRequest);
+        Assert.assertEquals(spy.getItemsPerRequest(), itemsPerRequest);
         Mockito.verify(spy,Mockito.never())._setCurrentPage(0);
     }
 
@@ -1579,6 +1584,7 @@ public class QuickViewTest {
         IHeaderResponse response = Mockito.mock(IHeaderResponse.class);
         quick.renderHead(response);
         Mockito.verify(response, Mockito.times(1)).renderJavaScriptReference(RepeaterUtilReference.get());
+        Mockito.verify(response,Mockito.times(1)).renderJavaScriptReference(JqueryResourceReference.get());
     }
 
 
@@ -1596,9 +1602,9 @@ public class QuickViewTest {
         } ;
         Item one=quickView.buildItem( 67);
         Item two=quickView.buildItem(68);
-        quickView.simpleAdd(one,two);
+        quickView.simpleAdd(one, two);
         quickView.simpleRemove(one);
-        Assert.assertEquals(quickView.size(),1);
+        Assert.assertEquals(quickView.size(), 1);
     }
 
     /**
@@ -1612,11 +1618,11 @@ public class QuickViewTest {
             protected void populate(Item item) {
             }
         } ;
-        Item one=quickView.buildItem( 67);
+        Item one=quickView.buildItem(67);
         Item two=quickView.buildItem(68);
         quickView.simpleAdd(one,two);
         quickView.simpleRemoveAll();
-        Assert.assertEquals(quickView.size(),0);
+        Assert.assertEquals(quickView.size(), 0);
     }
 
     @Test(groups = {"wicketTests"})
@@ -1630,7 +1636,7 @@ public class QuickViewTest {
         Item one=quickView.buildItem( 67);
         quickView.simpleAdd(one);
 
-        Assert.assertEquals(quickView.size(),1);
+        Assert.assertEquals(quickView.size(), 1);
         Item two=quickView.buildItem(68);
         quickView.simpleAdd(two);
         Assert.assertEquals(quickView.size(),2);
@@ -1653,9 +1659,9 @@ public class QuickViewTest {
         } ;
         final int index=9;
         final String id="67";
-       Item <Integer>item= quickView.newItem(id,index,object);
+       Item <Integer>item= quickView.newItem(id, index, object);
         Assert.assertEquals(item.getModelObject().intValue(), 89);
-        Assert.assertEquals(item.getMarkupId(),id);
+        Assert.assertEquals(item.getMarkupId(), id);
         Assert.assertEquals(item.getIndex(),index);
         Assert.assertTrue(item.getOutputMarkupId());
     }
@@ -1681,6 +1687,7 @@ public class QuickViewTest {
         Assert.assertEquals(item.getMarkupId(),id);
         Assert.assertTrue(item.getOutputMarkupId());
         Assert.assertEquals(item.getIndex(),index);
+
     }
 
     /**
@@ -1706,7 +1713,7 @@ public class QuickViewTest {
         Item <TestObj>actual= spy.buildItem(object);
         Assert.assertEquals(actual,item);
        InOrder order= Mockito.inOrder(spy, item);
-         order.verify(spy, Mockito.times(1)).newItem("1",1,object);
+         order.verify(spy, Mockito.times(1)).newItem("1", 1, object);
          order.verify(spy, Mockito.times(1)).populate(item);
      }
 
@@ -1968,6 +1975,63 @@ public class QuickViewTest {
 
     }
 
+    /**
+     * development
+     */
+    @Test(groups = {"wicketTests"})
+    public void jqueryResourceReference_1(){
+        WebApplication app=new MockApplication(){
+            @Override
+            public RuntimeConfigurationType getConfigurationType() {
+                return RuntimeConfigurationType.DEVELOPMENT;
+            }
+        };
+
+        WicketTester tester=new WicketTester(app) ;
+        List<Integer>data=data(1);
+        WebMarkupContainer parent=new WebMarkupContainer("parent");
+        parent.setOutputMarkupId(true);
+        IDataProvider dataProvider = new ListDataProvider(data);
+        QuickView repeater = new QuickView("repeater", dataProvider, ReUse.ALL, 1) {
+            @Override
+            protected void populate(Item item) {
+            }
+        };
+        parent.add(repeater);
+        parent.internalInitialize();
+        parent.beforeRender();
+       ResourceReference actual= repeater.jqueryReference();
+        Assert.assertEquals(actual,JqueryResourceReference.get());
+    }
+
+    /**
+     * deployment
+     */
+    @Test(groups = {"wicketTests"})
+    public void jqueryResourceReference_2(){
+        WebApplication app=new MockApplication(){
+            @Override
+            public RuntimeConfigurationType getConfigurationType() {
+                return RuntimeConfigurationType.DEPLOYMENT;
+            }
+        };
+
+        WicketTester tester=new WicketTester(app) ;
+        List<Integer>data=data(1);
+        WebMarkupContainer parent=new WebMarkupContainer("parent");
+        parent.setOutputMarkupId(true);
+        IDataProvider dataProvider = new ListDataProvider(data);
+        QuickView repeater = new QuickView("repeater", dataProvider, ReUse.ALL, 1) {
+            @Override
+            protected void populate(Item item) {
+            }
+        };
+        parent.add(repeater);
+        parent.internalInitialize();
+        parent.beforeRender();
+        ResourceReference actual= repeater.jqueryReference();
+        Assert.assertEquals(actual,JqueryCompressedReference.get());
+    }
 
     public AjaxRequestTarget mockTarget() {
         AjaxRequestTarget target = mock(AjaxRequestTarget.class);
