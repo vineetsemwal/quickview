@@ -139,6 +139,14 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
          this.dataProvider = dataProvider;
     }
 
+    /**
+     *  override if you want to provide other version of jquery .by default 1.7.2 version is used
+     *
+     *  for deployment mode compressed version of jquery is used
+     *  for development mode uncompressed version of jquery is used
+     *
+     * @return jquery reference
+     */
 
     protected ResourceReference jqueryReference(){
      if(getApplication().usesDeploymentConfig()){
