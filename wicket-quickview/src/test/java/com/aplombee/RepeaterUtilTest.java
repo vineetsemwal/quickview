@@ -41,6 +41,15 @@ import java.util.List;
 public class RepeaterUtilTest {
 
     @Test(groups = {"utilTests"})
+    public void get_1() {
+     WicketTester tester=new WicketTester(createMockApplication());
+       RepeaterUtil util = RepeaterUtil.get();
+        RepeaterUtil util2 = RepeaterUtil.get();
+       Assert.assertNotNull(util);
+        Assert.assertTrue(util==util2);
+    }
+
+    @Test(groups = {"utilTests"})
     public void insertBefore_1() {
         final String child = "child", parent = "parent", tag = "div";
         String actual = RepeaterUtil.get().insertBefore(tag, child, parent);
@@ -278,7 +287,7 @@ public class RepeaterUtilTest {
     }
 
     private static WebApplication createMockApplication() {
-        WebApplication app = new MockApplication();
+        WebApplication app = new QuickMockApplication();
         return app;
     }
 
@@ -599,6 +608,7 @@ public class RepeaterUtilTest {
         Assert.assertEquals(item2.getIndex(), expected2.getIndex());
         Assert.assertFalse(reused.hasNext());
     }
+
 
 
 }

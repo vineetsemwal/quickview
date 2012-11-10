@@ -16,16 +16,13 @@
  */
 package com.aplombee;
 
-import org.apache.wicket.Component;
-import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.Page;
+import org.apache.wicket.*;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.util.lang.Args;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -36,12 +33,25 @@ import java.util.regex.Pattern;
  * @author Vineet Semwal
  */
 public class RepeaterUtil implements IRepeaterUtil {
-    private static RepeaterUtil instance = new RepeaterUtil();
+    private static final MetaDataKey<RepeaterUtil> REPEATER_UTIL_KEY = new MetaDataKey<RepeaterUtil>() {
+    };
 
-    public static RepeaterUtil get(){
-         return instance;
+    public static RepeaterUtil get() {
+        Application app = Application.get();
+        RepeaterUtil util = app.getMetaData(REPEATER_UTIL_KEY);
+        if (util != null) {
+            return util;
+        }
+        util = new RepeaterUtil(app); //this registers too
+        return util;
     }
-    private RepeaterUtil(){}
+
+    private Application application;
+
+    public RepeaterUtil(Application application) {
+        this.application = application;
+        application.setMetaData(REPEATER_UTIL_KEY, this);
+    }
 
     /**
      * {@inheritDoc}
@@ -125,7 +135,7 @@ public class RepeaterUtil implements IRepeaterUtil {
      */
     @Override
     public final void parentNotSuitable(IQuickView quickView) {
-        Args.notNull(quickView,"quickview") ;
+        Args.notNull(quickView, "quickview");
         if (quickView.getReuse() == ReUse.PAGING || quickView.getReuse() == ReUse.CURRENTPAGE) {
             return;
         }
@@ -146,7 +156,7 @@ public class RepeaterUtil implements IRepeaterUtil {
      */
     @Override
     public final void outPutMarkupIdNotTrue(IQuickView quickView) {
-        Args.notNull(quickView,"quickview") ;
+        Args.notNull(quickView, "quickview");
         MarkupContainer container = quickView.getParent();
         if (container.getOutputMarkupId() == false && container.getOutputMarkupPlaceholderTag() == false) {
             throw new OutputMarkupIdNotTrueException("parent doesn't have setOutputMarkupId to true");
@@ -157,7 +167,7 @@ public class RepeaterUtil implements IRepeaterUtil {
      * {@inheritDoc}
      */
     public final void reuseNotInitialized(IQuickView quickView) {
-        Args.notNull(quickView,"quickview") ;
+        Args.notNull(quickView, "quickview");
         if (ReUse.NOT_INITIALIZED == quickView.getReuse()) {
             throw new ReuseNotInitializedException("reuse strategy is not set or you have set  ReUse.NOT_INITIALIZED ");
         }
@@ -168,32 +178,28 @@ public class RepeaterUtil implements IRepeaterUtil {
      */
     @Override
     public final void reuseStategyNotSupportedForItemsNavigation(IQuickView quickView) {
-        Args.notNull(quickView,"quickview") ;
+        Args.notNull(quickView, "quickview");
         reuseNotInitialized(quickView);
-        if (ReUse.PAGING == quickView.getReuse() || ReUse.CURRENTPAGE==quickView.getReuse()) {
+        if (ReUse.PAGING == quickView.getReuse() || ReUse.CURRENTPAGE == quickView.getReuse()) {
             throw new ReuseStrategyNotSupportedException(ReUse.PAGING + " stategy is not supported for itemsnavigator ");
         }
     }
 
     @Override
-    public final Iterator<Item> reuseItemsIfModelsEqual(Iterator<Item> oldIterator, Iterator<Item> newIterator){
-        List<Item> list=new ArrayList<Item>();
-        while (newIterator.hasNext()){
-            Item newItem =newIterator.next();
-            Item  old=null;
-            if(oldIterator.hasNext())
-            {
-                old=(Item)oldIterator.next();
+    public final Iterator<Item> reuseItemsIfModelsEqual(Iterator<Item> oldIterator, Iterator<Item> newIterator) {
+        List<Item> list = new ArrayList<Item>();
+        while (newIterator.hasNext()) {
+            Item newItem = newIterator.next();
+            Item old = null;
+            if (oldIterator.hasNext()) {
+                old = (Item) oldIterator.next();
             }
-            if(old==null){
+            if (old == null) {
                 list.add(newItem);
-            }
-            else
-            {
-                if(!old.getModel().equals(newItem.getModel()))
-                {
+            } else {
+                if (!old.getModel().equals(newItem.getModel())) {
                     list.add(newItem);
-                }else{
+                } else {
                     list.add(old);
                 }
             }
@@ -202,67 +208,67 @@ public class RepeaterUtil implements IRepeaterUtil {
     }
 
 
-    protected String scripts(String regex,String input){
-        int regexEnd=end(regex,input);
-        String afterPrepend=input.substring(regexEnd);
-        final String openBracket="\\[",closeBracket="]";
-        int openBracketEnd=end(openBracket, afterPrepend);
-        String afterOpen=afterPrepend.substring(openBracketEnd);
-        int closeBracketEnd=end(closeBracket,afterOpen);
-        String scriptsString=afterOpen.substring(0,closeBracketEnd);
+    protected String scripts(String regex, String input) {
+        int regexEnd = end(regex, input);
+        String afterPrepend = input.substring(regexEnd);
+        final String openBracket = "\\[", closeBracket = "]";
+        int openBracketEnd = end(openBracket, afterPrepend);
+        String afterOpen = afterPrepend.substring(openBracketEnd);
+        int closeBracketEnd = end(closeBracket, afterOpen);
+        String scriptsString = afterOpen.substring(0, closeBracketEnd);
         return scriptsString;
     }
 
     /**
      * {@inheritDoc}
      */
-    public String prependedScripts(String input){
-        final String regex="prependJavaScript";
-        return scripts(regex,input);
+    public String prependedScripts(String input) {
+        final String regex = "prependJavaScript";
+        return scripts(regex, input);
     }
 
     /**
      * {@inheritDoc}
      */
-    public String appendedScripts(String input){
-        final String regex="appendJavaScript";
-        return scripts(regex,input);
+    public String appendedScripts(String input) {
+        final String regex = "appendJavaScript";
+        return scripts(regex, input);
     }
 
-    public int end(final String regex,final String input){
-        Pattern pattern=Pattern.compile(regex);
-        Matcher matcher=pattern.matcher(input);
-        int end=0;
-        if( matcher.find()){
-            end=matcher.end();
+    public int end(final String regex, final String input) {
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(input);
+        int end = 0;
+        if (matcher.find()) {
+            end = matcher.end();
         }
         return end;
     }
 
     @Override
-    public String scrollToBottom(String markupId){
-      return String.format("scrollToBottom('%s');",markupId);
+    public String scrollToBottom(String markupId) {
+        return String.format("scrollToBottom('%s');", markupId);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String scrollToBottom(IQuickView quickView){
-      return scrollToBottom(quickView.getParent().getMarkupId());
+    public String scrollToBottom(IQuickView quickView) {
+        return scrollToBottom(quickView.getParent().getMarkupId());
     }
 
     @Override
-    public String scrollToTop(String markupId){
-        return String.format("scrollToTop('%s');",markupId);
+    public String scrollToTop(String markupId) {
+        return String.format("scrollToTop('%s');", markupId);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String scrollToTop(IQuickView quickView){
-        return  scrollToTop(quickView.getParent().getMarkupId());
+    public String scrollToTop(IQuickView quickView) {
+        return scrollToTop(quickView.getParent().getMarkupId());
     }
 
 
@@ -270,27 +276,29 @@ public class RepeaterUtil implements IRepeaterUtil {
      * {@inheritDoc}
      */
     @Override
-    public String scrollTo(IQuickView quickView,int height){
-            return scrollTo(quickView.getParent().getMarkupId(),height);
+    public String scrollTo(IQuickView quickView, int height) {
+        return scrollTo(quickView.getParent().getMarkupId(), height);
     }
 
     @Override
-    public String scrollTo(String markupId,int height){
-        return String.format("scrollTo('%s',%d);",markupId,height);
+    public String scrollTo(String markupId, int height) {
+        return String.format("scrollTo('%s',%d);", markupId, height);
     }
+
     /**
      * {@inheritDoc}
      */
     @Override
     public String isComponentScrollBarAtBottom(MarkupContainer component) {
-        return String.format("isComponentScrollBarAtBottom('%s');",component.getMarkupId());
+        return String.format("isComponentScrollBarAtBottom('%s');", component.getMarkupId());
     }
+
     /**
      * {@inheritDoc}
      */
     @Override
-    public String isPageScrollBarAtBottom(){
-       return "isPageScrollBarAtBottom();";
+    public String isPageScrollBarAtBottom() {
+        return "isPageScrollBarAtBottom();";
     }
 
 

@@ -49,9 +49,10 @@ public class QuickGridViewTest {
     }
 
     private static WebApplication createMockApplication() {
-        WebApplication app = new MockApplication();
+        WebApplication app = new QuickMockApplication();
         return app;
     }
+
     @Test(groups = {"wicketTests"})
     public void constructor_1() {
         IDataProvider provider = Mockito.mock(IDataProvider.class);

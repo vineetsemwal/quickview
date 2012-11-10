@@ -28,17 +28,20 @@ public enum ReUse {
      * say with {@link org.apache.wicket.markup.html.navigation.paging.PagingNavigator} or
      * {@link org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigator}  ,
      * this is the preferred strategy for paging navigation
-     *
-     *  earlier it was known as DEFAULT_PAGING
+     * <p/>
+     * earlier it was known as DEFAULT_PAGING
      */
- PAGING,
+    PAGING,
 
     /**
-     * all children are removed and children of first page are created again ,
      * mostly used and preferred for {@link com.aplombee.navigator.AjaxItemsNavigator}
-     *  or
+     * <p/>
+     * 1)all children are removed and children of first page are created again on re-render ,
+     * 2) new children for next page is created in  {@link com.aplombee.QuickViewBase#addItemsForNextPage()}
+     * <p/>
+     * or
      * {@link com.aplombee.navigator.AjaxScrollEventBehaviorBase}
-     *
+     * <p/>
      * earlier it was known as DEFAULT_ITEMSNAVIGATION
      */
     ITEMSNAVIGATION,
@@ -47,17 +50,25 @@ public enum ReUse {
     /**
      * reuse the items whose models are equal ,to use this model should implement equals,
      * used with {@link org.apache.wicket.markup.html.navigation.paging.PagingNavigator} ,
-     * not supported with @{@link com.aplombee.navigator.AjaxItemsNavigator} or {@link com.aplombee.navigator.AjaxScrollEventBehaviorBase}
+     * not supported with @{@link com.aplombee.navigator.AjaxItemsNavigator} or
+     * {@link com.aplombee.navigator.AjaxScrollEventBehaviorBase}
      */
-  CURRENTPAGE,
+    CURRENTPAGE,
 
 
     /**
-     *     all children are reused,no child gets removed  or recreated,this should only be used with {@link com.aplombee.navigator.AjaxItemsNavigator},
-     *     the usecase for this can be a user has  itemsperequest 3 times after the initial render ,on page reload you want to show
-     *     him all the rows he created so that he doesn't have to start again
+     *  used with {@link com.aplombee.navigator.AjaxItemsNavigator}
+     *  or
+     * {@link com.aplombee.navigator.AjaxScrollEventBehaviorBase}
+     *
+     * 1) no child is removed or recreated on re-render
+     * 2) new children for next page is created in  {@link com.aplombee.QuickViewBase#addItemsForNextPage()}
+     * <p/>
+     * all children are reused,no child gets removed  or recreated on re re-render ,
+     * the usecase for this can be a user has  itemsperequest 3 times after the initial render ,
+     * on page reload you want to show him all the rows he created so that he doesn't have to start again
      */
-    ALL     ,
+    ALL,
 
 
     /**

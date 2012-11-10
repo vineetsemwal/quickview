@@ -28,6 +28,7 @@ public class QuickMockApplication extends MockApplication {
     @Override
     protected void init() {
         super.init();
+        new RepeaterUtil(this);
         AjaxRequestTarget.IListener listener=new AjaxRequestTarget.IListener(){
             @Override
             public void onBeforeRespond(Map<String, Component> map, AjaxRequestTarget target) {

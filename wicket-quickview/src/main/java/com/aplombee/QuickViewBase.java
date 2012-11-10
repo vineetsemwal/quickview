@@ -25,6 +25,7 @@ import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.visit.IVisit;
@@ -487,12 +488,8 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     public List<Item<T>> addItemsForPage(final long page) {
         final long start=page* getItemsPerRequest();
        clearCachedItemCount();
-        simpleRemoveAllIfNotReuse();
-          long itemIndex=0;
-        if(ReUse.ALL==reuse){
-         itemIndex=start;
-        }
-        Iterator<? extends T> objects = getDataProvider().iterator(start, getItemsPerRequest());
+       long itemIndex=start;
+       Iterator<? extends T> objects = getDataProvider().iterator(start, getItemsPerRequest());
         List<Item<T>> components = new ArrayList<Item<T>>();
         Iterator<Item<T>>items = buildItems(itemIndex,objects);
         while (items.hasNext()) {
@@ -546,13 +543,15 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     }
 
     /**
-     * removes all children if reuse is not true
+     * removes all children if reuse is   ReUse.PAGING or reuse == ReUse.ITEMSNAVIGATION
+     *
      */
     public void simpleRemoveAllIfNotReuse() {
-        if (reuse == ReUse.PAGING || reuse == ReUse.ITEMSNAVIGATION) {
+        if (reuse == ReUse.PAGING || reuse == ReUse.ITEMSNAVIGATION ) {
             simpleRemoveAll();
         }
     }
+
 
     /**
      * when called on ajax event ,this method moves navigation-bar to bottom,
