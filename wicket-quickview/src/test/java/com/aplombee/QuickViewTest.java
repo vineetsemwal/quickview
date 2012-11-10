@@ -1921,8 +1921,7 @@ public class QuickViewTest {
         List<Item<TestObj>> items = spy.addItemsForPage(2);
         Assert.assertEquals(items.size(),list.size());
         Mockito.verify(dataProvider).iterator(4,itemsPerRequest);
-        Mockito.verify(spy,Mockito.times(1)).buildItems(0,data);
-        Mockito.verify(spy, Mockito.times(1)).simpleRemoveAllIfNotReuse();
+        Mockito.verify(spy,Mockito.times(1)).buildItems(4,data);
         Mockito.verify(spy, Mockito.times(1)).add(items.get(0));
         Mockito.verify(spy, Mockito.times(1)).add(items.get(1));
 
@@ -1969,7 +1968,6 @@ public class QuickViewTest {
         Assert.assertEquals(items.size(),list.size());
         Mockito.verify(dataProvider).iterator(4,itemsPerRequest);
         Mockito.verify(spy,Mockito.times(1)).buildItems(4,data);
-        Mockito.verify(spy, Mockito.times(1)).simpleRemoveAllIfNotReuse();
         Mockito.verify(spy, Mockito.times(1)).add(items.get(0));
         Mockito.verify(spy, Mockito.times(1)).add(items.get(1));
 

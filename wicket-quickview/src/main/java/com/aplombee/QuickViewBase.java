@@ -519,16 +519,12 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      */
     @Override
    public List<Item<T>> addItemsForPage(final int page) {
-        final long start=page* getItemsPerRequest();
+        final int start=page* getItemsPerRequest();
        clearCachedItemCount();
-        simpleRemoveAllIfNotReuse();
-          long itemIndex=0;
-        if(ReUse.ALL==reuse){
-         itemIndex=start;
-        }
-        Iterator<? extends T> objects = getDataProvider().iterator(getRepeaterUtil().safeLongToInt(start), getItemsPerRequest());
+       int itemIndex=start;
+       Iterator<? extends T> objects = getDataProvider().iterator(start, getItemsPerRequest());
         List<Item<T>> components = new ArrayList<Item<T>>();
-        Iterator<Item<T>>items = buildItems(getRepeaterUtil().safeLongToInt(itemIndex),objects);
+        Iterator<Item<T>>items = buildItems(itemIndex,objects);
         while (items.hasNext()) {
             Item<T>item=items.next();
             components.add(item);

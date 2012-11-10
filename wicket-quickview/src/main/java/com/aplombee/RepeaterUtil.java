@@ -35,12 +35,25 @@ import java.util.regex.Pattern;
  *
  */
 public class RepeaterUtil implements  IRepeaterUtil{
-     private static RepeaterUtil instance=new RepeaterUtil();
+    private static final MetaDataKey<RepeaterUtil> REPEATER_UTIL_KEY = new MetaDataKey<RepeaterUtil>() {
+    };
 
-    public static RepeaterUtil get(){
-         return instance;
+    public static RepeaterUtil get() {
+        Application app = Application.get();
+        RepeaterUtil util = app.getMetaData(REPEATER_UTIL_KEY);
+        if (util != null) {
+            return util;
+        }
+        util = new RepeaterUtil(app); //this registers too
+        return util;
     }
-    private RepeaterUtil(){}
+
+    private Application application;
+
+    public RepeaterUtil(Application application) {
+        this.application = application;
+        application.setMetaData(REPEATER_UTIL_KEY, this);
+    }
 
     /**
      * {@inheritDoc}
