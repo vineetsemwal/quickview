@@ -35,13 +35,12 @@ public enum ReUse {
 
     /**
      * mostly used and preferred for {@link com.aplombee.navigator.AjaxItemsNavigator}
+     *  or {@link com.aplombee.navigator.AjaxScrollEventBehaviorBase}
      * <p/>
-     * 1)all children are removed and children of first page are created again on re-render ,
+     * 1)all children are removed and children of first page are created again on re-render <br/>
      * 2) new children for next page is created in  {@link com.aplombee.QuickViewBase#addItemsForNextPage()}
      * <p/>
-     * or
-     * {@link com.aplombee.navigator.AjaxScrollEventBehaviorBase}
-     * <p/>
+     *
      * earlier it was known as DEFAULT_ITEMSNAVIGATION
      */
     ITEMSNAVIGATION,
@@ -60,8 +59,8 @@ public enum ReUse {
      *  used with {@link com.aplombee.navigator.AjaxItemsNavigator}
      *  or
      * {@link com.aplombee.navigator.AjaxScrollEventBehaviorBase}
-     *
-     * 1) no child is removed or recreated on re-render
+     * <br/>
+     * 1) no child is removed or recreated on re-render <br/>
      * 2) new children for next page is created in  {@link com.aplombee.QuickViewBase#addItemsForNextPage()}
      * <p/>
      * all children are reused,no child gets removed  or recreated on re re-render ,
