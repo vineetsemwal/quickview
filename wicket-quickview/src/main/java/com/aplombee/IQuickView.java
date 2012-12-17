@@ -32,7 +32,7 @@ import java.util.List;
  */
 
 public interface IQuickView<T> extends IPageable{
-    ReUse getReuse();
+    IQuickReuseStrategy getReuseStrategy();
     MarkupContainer getParent();
     /**
      *

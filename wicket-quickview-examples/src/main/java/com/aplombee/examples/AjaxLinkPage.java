@@ -16,8 +16,8 @@
  */
 package com.aplombee.examples;
 
+import com.aplombee.ItemsNavigationStrategy;
 import com.aplombee.QuickView;
-import com.aplombee.ReUse;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -25,6 +25,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.data.GridView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
 import java.util.ArrayList;
@@ -50,7 +51,7 @@ public class AjaxLinkPage extends WebPage {
         IDataProvider<Integer> data = new ListDataProvider<Integer>(list);
         WebMarkupContainer numbers = new WebMarkupContainer("numbers");   //parent for quickview
         numbers.setOutputMarkupId(true);  //needed for ajax
-        final QuickView<Integer> number = new QuickView<Integer>("number", data, ReUse.ITEMSNAVIGATION) {
+        final QuickView<Integer> number = new QuickView<Integer>("number", data, new ItemsNavigationStrategy()) {
             @Override
             protected void populate(Item<Integer> item) {
                 item.add(new Label("display", item.getModel()));
@@ -83,7 +84,6 @@ public class AjaxLinkPage extends WebPage {
                 list.add(0,newObject);
                 Item<Integer> item = number.buildItem( newObject);
                 number.addAtStart(item);  //just enough to create a new row at start
-                Component display = item.get("display");
 
             }
 

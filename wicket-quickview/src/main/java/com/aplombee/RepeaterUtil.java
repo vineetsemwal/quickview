@@ -21,6 +21,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Args;
 
 import java.util.ArrayList;
@@ -136,7 +137,7 @@ public class RepeaterUtil implements IRepeaterUtil {
     @Override
     public final void parentNotSuitable(IQuickView quickView) {
         Args.notNull(quickView, "quickview");
-        if (quickView.getReuse() == ReUse.PAGING || quickView.getReuse() == ReUse.CURRENTPAGE) {
+        if (quickView.getReuseStrategy() .isPaging()) {
             return;
         }
         MarkupContainer parent = quickView.getParent();
@@ -151,6 +152,7 @@ public class RepeaterUtil implements IRepeaterUtil {
         }
     }
 
+
     /**
      * {@inheritDoc}
      */
@@ -163,25 +165,12 @@ public class RepeaterUtil implements IRepeaterUtil {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void reuseNotInitialized(IQuickView quickView) {
-        Args.notNull(quickView, "quickview");
-        if (ReUse.NOT_INITIALIZED == quickView.getReuse()) {
-            throw new ReuseNotInitializedException("reuse strategy is not set or you have set  ReUse.NOT_INITIALIZED ");
-        }
-    }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public final void reuseStategyNotSupportedForItemsNavigation(IQuickView quickView) {
         Args.notNull(quickView, "quickview");
-        reuseNotInitialized(quickView);
-        if (ReUse.PAGING == quickView.getReuse() || ReUse.CURRENTPAGE == quickView.getReuse()) {
-            throw new ReuseStrategyNotSupportedException(ReUse.PAGING + " stategy is not supported for itemsnavigator ");
+        if ( quickView.getReuseStrategy().isPaging()) {
+            throw new ReuseStrategyNotSupportedException(" stategy is not supported for itemsnavigator ");
         }
     }
 
@@ -206,6 +195,7 @@ public class RepeaterUtil implements IRepeaterUtil {
         }
         return list.iterator();
     }
+
 
 
     protected String scripts(String regex, String input) {
@@ -284,6 +274,8 @@ public class RepeaterUtil implements IRepeaterUtil {
     public String scrollTo(String markupId, int height) {
         return String.format("scrollTo('%s',%d);", markupId, height);
     }
+
+
 
     /**
      * {@inheritDoc}

@@ -16,8 +16,9 @@
  */
 package com.aplombee.examples;
 
+import com.aplombee.ItemsNavigationStrategy;
 import com.aplombee.QuickView;
-import com.aplombee.ReUse;
+import com.aplombee.ReuseAllStrategy;
 import com.aplombee.navigator.AjaxItemsNavigator;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
@@ -47,14 +48,16 @@ public class RowsNavigatorPage extends WebPage {
         super.onInitialize();
         IDataProvider<Integer>data=new ListDataProvider<Integer>(list);
         final int itemsPerRequest=4;//rows created per request
-        final ReUse reuse= ReUse.ITEMSNAVIGATION;//default reuse strategy that should be used with rowsnavigator
+       // final ReUse reuse= ReUse.ITEMSNAVIGATION;//default reuse strategy that should be used with rowsnavigator
 
-        QuickView<Integer> quickView=new QuickView<Integer>("number",data,reuse,itemsPerRequest) {
+        QuickView<Integer> quickView=new QuickView<Integer>("number",data,new ItemsNavigationStrategy(),itemsPerRequest) {
             @Override
             protected void populate(Item<Integer> item) {
                 item.add(new Label("display",item.getModel()));
             }
         } ;
+      // quickView.setReuseStrategy(new ItemsNavigationStrategy());
+      //  quickView.setReuseStrategy(new ReuseAllStrategy());
         WebMarkupContainer numbers=new WebMarkupContainer("numbers");   //don't forget adding quickview to parent with any ajax navigator
           numbers.add(quickView);
            numbers.setOutputMarkupId(true); //don't forget required when using ajaxrownavigator

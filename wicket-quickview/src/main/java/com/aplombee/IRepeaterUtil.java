@@ -116,11 +116,6 @@ public interface IRepeaterUtil {
      */
     void outPutMarkupIdNotTrue(IQuickView repeater);
 
-    /**
-     * ruse nt initialized or initialized with {@link ReUse.NOT_INITIALIZED}
-     * @param repeater
-     */
-    void reuseNotInitialized(IQuickView repeater);
 
     /**
      *  js call to scroll to top
@@ -176,8 +171,6 @@ public interface IRepeaterUtil {
      * @return
      */
     Iterator<Item> reuseItemsIfModelsEqual(Iterator<Item> oldIterator, Iterator<Item> newIterator);
-
-
 
     /**
      *  throw this exception if quickview's parent is not found

@@ -43,8 +43,8 @@ public abstract class QuickView<T> extends QuickViewBase<T> {
      * @param dataProvider
      *  @param itemsPerRequest items to be constructed per Page or request
      */
-    public QuickView(String id, IDataProvider<T> dataProvider, ReUse reUse, int itemsPerRequest) {
-        super(id, dataProvider, reUse);
+    public QuickView(String id, IDataProvider<T> dataProvider, IQuickReuseStrategy reuseStrategy, int itemsPerRequest) {
+        super(id, dataProvider, reuseStrategy);
         setItemsPerRequest(itemsPerRequest);
 
     }
@@ -55,8 +55,8 @@ public abstract class QuickView<T> extends QuickViewBase<T> {
      * @param dataProvider
      *
      */
-    public QuickView(String id, IDataProvider<T> dataProvider, ReUse reUse) {
-        super(id, dataProvider, reUse);
+    public QuickView(String id, IDataProvider<T> dataProvider,IQuickReuseStrategy reuseStrategy) {
+        super(id, dataProvider, reuseStrategy);
      }
 
     /**
@@ -66,11 +66,11 @@ public abstract class QuickView<T> extends QuickViewBase<T> {
      *
      */
     public QuickView(String id, IDataProvider<T> dataProvider) {
-        super(id, dataProvider, ReUse.NOT_INITIALIZED);
+        super(id, dataProvider,new DefaultQuickReuseStrategy());
     }
 
     public QuickView(String id, IDataProvider<T> dataProvider, int itemsPerRequest) {
-        super(id, dataProvider, ReUse.NOT_INITIALIZED);
+        super(id, dataProvider, new DefaultQuickReuseStrategy());
         setItemsPerRequest(itemsPerRequest);
     }
 }

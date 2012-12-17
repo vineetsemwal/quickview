@@ -16,8 +16,8 @@
  */
 package com.aplombee.examples;
 
+import com.aplombee.ItemsNavigationStrategy;
 import com.aplombee.QuickGridView;
-import com.aplombee.ReUse;
 import com.aplombee.navigator.AjaxPageScrollEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -47,9 +47,9 @@ public class QuickGridViewWithPageScrollBehavior extends WebPage {
         super.onInitialize();
         IDataProvider<Integer> data=new ListDataProvider<Integer>(list);
 
-        final ReUse reuse= ReUse.ITEMSNAVIGATION;//default reuse strategy that should be used with rowsnavigator
+       // final ReUse reuse= ReUse.ITEMSNAVIGATION;//default reuse strategy that should be used with rowsnavigator
 
-        gridView=new QuickGridView<Integer>("gv",data,reuse) {
+        gridView=new QuickGridView<Integer>("gv",data,new ItemsNavigationStrategy()) {
             @Override
             protected void populateEmptyItem(final CellItem<Integer> item) {
                 item.add(new Label("label"));

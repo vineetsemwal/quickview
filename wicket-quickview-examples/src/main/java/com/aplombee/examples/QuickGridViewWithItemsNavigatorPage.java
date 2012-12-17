@@ -16,8 +16,9 @@
  */
 package com.aplombee.examples;
 
-import com.aplombee.ReUse;
+import com.aplombee.ItemsNavigationStrategy;
 import com.aplombee.QuickGridView;
+import com.aplombee.ReuseAllStrategy;
 import com.aplombee.navigator.AjaxItemsNavigator;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
@@ -47,9 +48,9 @@ public class QuickGridViewWithItemsNavigatorPage extends WebPage{
         super.onInitialize();
         IDataProvider<Integer> data=new ListDataProvider<Integer>(list);
 
-        final ReUse reuse= ReUse.ITEMSNAVIGATION;//default reuse strategy that should be used with rowsnavigator
+       // final ReUse reuse= ReUse.ITEMSNAVIGATION;//default reuse strategy that should be used with rowsnavigator
 
-        gridView=new QuickGridView<Integer>("gv",data,reuse) {
+        gridView=new QuickGridView<Integer>("gv",data,new ItemsNavigationStrategy()) {
             @Override
             protected void populateEmptyItem(final CellItem<Integer> item) {
               item.add(new Label("label"));
@@ -63,6 +64,7 @@ public class QuickGridViewWithItemsNavigatorPage extends WebPage{
         };
         gridView.setColumns(10);
         gridView.setRows(5);
+       // gridView.setReuseStrategy(new ReuseAllStrategy());
         WebMarkupContainer parent=new WebMarkupContainer("parent");
         parent.add(gridView);
         parent.setOutputMarkupPlaceholderTag(true);
