@@ -22,15 +22,18 @@ import org.apache.wicket.markup.repeater.data.IDataProvider;
 
 /**
  *
- * adds,deletes elements without the need to repaint the parent in ajax case( adding parent to AjaxRequestTarget causes re-rendering of the whole repeater)
+ * adds,deletes elements without the need to re-render the View
  *
- * the type of reuse constant to use  must be set ,for {@link org.apache.wicket.markup.html.navigation.paging.PagingNavigator}
- * or {@link org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigator} {@link ReUse.DEFAULT_PAGING} is preferred
+ * QuickView's default behavior is of paging ie. items are added to view on re-render . it uses
+ * {@link DefaultQuickReuseStrategy}  by default so It works fine with
+ * {@link org.apache.wicket.markup.html.navigation.paging.PagingNavigator}
+ * or {@link org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigator}  by default
  *
- * for {@link com.aplombee.navigator.AjaxItemsNavigator} {@link ReUse.DEFAULT_ROWSNAVIGATOR} is preferred
+ *  however on setting strategy like {@link ItemsNavigationStrategy} or {@link ReuseAllStrategy} QuickView get capability
+ *  to add  new items without the need to re-render the view
  *
- * add quickview to a Markupcontainer to use with {@link com.aplombee.navigator.AjaxItemsNavigator}  or if you want to add new rows
- * using an ajax acomponent ,the markupcontainer should have only one child and that should be quickview for items/rows navigation
+ * limitation of QuickView is the parent of QuickView should have only one child and that should be QuickView .this
+ * limitation is only for case where item(s) has to be added dynamically without re-rendering the View.
  *
  *
  */
