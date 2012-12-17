@@ -60,4 +60,8 @@ public class ReuseAllStrategy extends AbstractItemsNavigationStrategy{
         return copy.iterator();
     }
 
+    @Override
+    public boolean isAlwaysZeroPageCreatedOnReRender() {
+        return false;
+    }
 }

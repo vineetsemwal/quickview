@@ -21,4 +21,8 @@ public class AbstractPagingNavigationStrategyTest {
         int startIndex=345;
         strategy.addItems(startIndex,factory,newModels);
     }
+
+    public void assertZeroPageCreatedOnReRender(IQuickReuseStrategy strategy){
+        Assert.assertFalse(strategy.isAlwaysZeroPageCreatedOnReRender());
+    }
 }

@@ -43,4 +43,6 @@ public abstract class AbstractItemsNavigationStrategy implements IQuickReuseStra
     public boolean isAddItemsSupported() {
         return true;
     }
+
+
 }

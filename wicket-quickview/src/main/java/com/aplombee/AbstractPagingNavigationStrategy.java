@@ -26,4 +26,9 @@ public abstract class AbstractPagingNavigationStrategy implements IQuickReuseStr
     public boolean isAddItemsSupported(){
         return false;
     }
+
+    @Override
+    public boolean isAlwaysZeroPageCreatedOnReRender() {
+        return  false;
+    }
 }

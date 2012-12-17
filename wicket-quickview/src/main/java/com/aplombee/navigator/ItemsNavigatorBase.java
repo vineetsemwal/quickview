@@ -86,7 +86,7 @@ public abstract class ItemsNavigatorBase extends Panel {
         Args.notNull(repeater, "repeater");
         setOutputMarkupPlaceholderTag(true);
         this.repeater = repeater;
-    }
+        }
 
 
     @Override

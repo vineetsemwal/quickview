@@ -60,8 +60,7 @@ public class MoreLabel extends Label {
     protected void onConfigure() {
         super.onConfigure();
          // no need to render for the last page hence check if current page smaller than (pages count -1)
-
-         setVisible(navigator.getRepeater().getCurrentPage() < navigator.getRepeater().getPageCount()-1) ;
+        setVisible(navigator.getRepeater().getCurrentPage() < navigator.getRepeater().getPageCount()-1) ;
     }
 
 

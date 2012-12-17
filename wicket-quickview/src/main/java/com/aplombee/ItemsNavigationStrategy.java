@@ -50,4 +50,8 @@ public class ItemsNavigationStrategy extends AbstractItemsNavigationStrategy {
        return DefaultItemReuseStrategy.getInstance().getItems(factory, models, existingItems);
     }
 
+    @Override
+    public boolean isAlwaysZeroPageCreatedOnReRender() {
+        return true;
+    }
 }

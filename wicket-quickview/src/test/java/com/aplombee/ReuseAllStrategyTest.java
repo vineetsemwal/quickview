@@ -28,6 +28,11 @@ public class ReuseAllStrategyTest extends AbstractItemsNavigationStrategyTest{
         super.assertIsAddItemsSupported(new ReuseAllStrategy());
     }
 
+    @Test(groups = {"wicketTests"})
+    public void isZeroPageCreatedOnReRender_1(){
+        Assert.assertFalse(new ReuseAllStrategy().isAlwaysZeroPageCreatedOnReRender());
+    }
+
     /**
      * existing items empty
      */

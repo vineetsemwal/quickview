@@ -28,6 +28,10 @@ public class ItemsNavigationStrategyTest extends AbstractItemsNavigationStrategy
        super.assertIsAddItemsSupported(new ItemsNavigationStrategy());
     }
 
+    @Test(groups = {"wicketTests"})
+    public void isZeroPageCreatedOnReRender_1(){
+       Assert.assertTrue(new ItemsNavigationStrategy().isAlwaysZeroPageCreatedOnReRender());
+    }
 
     @Test(groups = {"wicketTests"} )
     public void getItems_1(){

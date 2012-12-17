@@ -29,6 +29,10 @@ public class DefaultQuickReuseStrategyTest extends AbstractPagingNavigationStrat
      super.assertIsAddItemsSupported(new DefaultQuickReuseStrategy());
     }
 
+    @Test(groups = {"wicketTests"})
+    public void isFirstPageCreatedOnReRender_1(){
+        super.assertZeroPageCreatedOnReRender(new DefaultQuickReuseStrategy());
+    }
     /**
      * existing items empty
      */

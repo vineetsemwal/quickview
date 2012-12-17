@@ -77,4 +77,11 @@ public interface IQuickReuseStrategy extends Serializable {
      */
     boolean isAddItemsSupported();
 
+    /**
+     * if the strategy creates items for zero page every time view is re-rendered then returns true else false
+     *
+     * @return  true if zero page has to be created everytime view is re-rendered else false
+     */
+    boolean isAlwaysZeroPageCreatedOnReRender();
+
 }
