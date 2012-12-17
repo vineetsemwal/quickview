@@ -223,7 +223,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     public List<Item<T>> addItemsForPage(final long page) {
         long offset=page*getItemsPerRequest();
         Iterator<IModel<T>>newModels=newModels(offset, itemsPerRequest);
-        Iterator<Item<T>>newIterator=  reuseStrategy.addItems((int)offset, factory(), newModels);
+       Iterator<Item<T>>newIterator=  reuseStrategy.addItems(getRepeaterUtil().safeLongToInt(offset), factory(), newModels);
         List<Item<T>>components=new ArrayList<Item<T>>();
         while (newIterator.hasNext()){
             Item<T>temp=newIterator.next();
@@ -320,7 +320,6 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
             T object=iterator.next();
             Item<T>item=buildItem(newChildId(), i,object);
             items.add(item);
-            add(item);
         }
            return items.iterator();
     }
