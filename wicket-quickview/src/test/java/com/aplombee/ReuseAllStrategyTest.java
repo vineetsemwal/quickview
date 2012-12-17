@@ -25,7 +25,7 @@ public class ReuseAllStrategyTest extends AbstractItemsNavigationStrategyTest{
 
     @Test(groups = {"wicketTests"})
     public void isPaging_1(){
-        super.assertIsPaging(new ReuseAllStrategy());
+        super.assertIsAddItemsSupported(new ReuseAllStrategy());
     }
 
     /**

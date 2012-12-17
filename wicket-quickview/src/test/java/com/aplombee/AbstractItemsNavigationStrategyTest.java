@@ -5,7 +5,6 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.mockito.Mockito;
 import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import java.util.Iterator;
 
@@ -37,8 +36,8 @@ public class AbstractItemsNavigationStrategyTest {
 
     }
 
-       public void assertIsPaging(IQuickReuseStrategy strategy){
-        Assert.assertFalse(strategy.isPaging());
+       public void assertIsAddItemsSupported(IQuickReuseStrategy strategy){
+        Assert.assertTrue(strategy.isAddItemsSupported());
     }
 
 

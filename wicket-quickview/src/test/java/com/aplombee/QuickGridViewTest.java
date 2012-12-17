@@ -652,9 +652,6 @@ public class QuickGridViewTest {
     }
 
 
-
-
-
     /*
      *start index=10
     */

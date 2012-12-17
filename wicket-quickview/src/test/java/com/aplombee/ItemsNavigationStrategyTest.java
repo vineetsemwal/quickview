@@ -25,7 +25,7 @@ public class ItemsNavigationStrategyTest extends AbstractItemsNavigationStrategy
 
     @Test(groups = {"wicketTests"})
     public void isPaging_1(){
-       super.assertIsPaging(new ItemsNavigationStrategy());
+       super.assertIsAddItemsSupported(new ItemsNavigationStrategy());
     }
 
 

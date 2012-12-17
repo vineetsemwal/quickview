@@ -164,15 +164,6 @@ public interface IRepeaterUtil {
 
 
     /**
-     * return iterator of those items whose models are equal ,if the model is not equal new item is returned
-     *
-     * @param oldIterator    old iterator
-     * @param newIterator    new iterator (iterator of the list of expected modelobjects)
-     * @return
-     */
-    Iterator<Item> reuseItemsIfModelsEqual(Iterator<Item> oldIterator, Iterator<Item> newIterator);
-
-    /**
      *  throw this exception if quickview's parent is not found
      *
      * @author Vineet Semwal

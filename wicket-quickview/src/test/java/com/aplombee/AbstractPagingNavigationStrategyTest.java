@@ -3,7 +3,6 @@ package com.aplombee;
 import org.apache.wicket.markup.repeater.IItemFactory;
 import org.mockito.Mockito;
 import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import java.util.Iterator;
 
@@ -12,8 +11,8 @@ import java.util.Iterator;
  */
 public class AbstractPagingNavigationStrategyTest {
 
-    public void assertIsPaging(IQuickReuseStrategy strategy){
-       Assert.assertTrue(strategy.isPaging());
+    public void assertIsAddItemsSupported(IQuickReuseStrategy strategy){
+       Assert.assertFalse(strategy.isAddItemsSupported());
     }
 
    public void assertAddItems(IQuickReuseStrategy strategy){

@@ -73,8 +73,8 @@ public interface IQuickReuseStrategy extends Serializable {
     /**
      *  tells whether reuse strategy support addition of items to view without re-rendering QuickView
      *
-     * @return   true if the reuse strategy doesn't support {@link this#addItems(int, org.apache.wicket.markup.repeater.IItemFactory, java.util.Iterator)}  else false
+     * @return   boolean
      */
-    boolean isPaging();
+    boolean isAddItemsSupported();
 
 }

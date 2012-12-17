@@ -40,7 +40,7 @@ public abstract class AbstractItemsNavigationStrategy implements IQuickReuseStra
      *
      */
     @Override
-    public boolean isPaging() {
-        return false;
+    public boolean isAddItemsSupported() {
+        return true;
     }
 }

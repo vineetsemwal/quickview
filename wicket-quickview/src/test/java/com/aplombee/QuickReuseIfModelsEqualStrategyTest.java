@@ -10,10 +10,10 @@ public class QuickReuseIfModelsEqualStrategyTest extends AbstractPagingNavigatio
 
     @Test(groups = {"wicketTests"})
     public void isPaging_1(){
-        super.assertIsPaging(new QuickReuseIfModelsEqualStrategy());
+        super.assertIsAddItemsSupported(new QuickReuseIfModelsEqualStrategy());
     }
 
-    @Test(groups = {"wicketTests"} ,expectedExceptions = UnsupportedOperationException.class)
+    @Test(groups = {"wicketTests"} ,expectedExceptions = IRepeaterUtil.ReuseStrategyNotSupportedException.class)
     public void addItems_1(){
        super.assertAddItems(new QuickReuseIfModelsEqualStrategy());
     }

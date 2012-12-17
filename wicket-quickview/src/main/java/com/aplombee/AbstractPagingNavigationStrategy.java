@@ -19,10 +19,11 @@ public abstract class AbstractPagingNavigationStrategy implements IQuickReuseStr
 
     @Override
     public <T> Iterator<Item<T>> addItems(int startIndex, IItemFactory<T> factory, Iterator<IModel<T>> newModels) {
-        throw  new UnsupportedOperationException("adding items dynamically for partial updates is not supported by this strategy");
+        throw  new IRepeaterUtil.ReuseStrategyNotSupportedException("adding items dynamically for partial updates is not supported by this strategy");
     }
 
-    public boolean isPaging(){
-        return true;
+    @Override
+    public boolean isAddItemsSupported(){
+        return false;
     }
 }

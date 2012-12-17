@@ -23,8 +23,6 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
-import org.apache.wicket.mock.MockApplication;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.WicketTester;
 import org.mockito.Mockito;
@@ -32,7 +30,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -295,7 +292,7 @@ public class RepeaterUtilTest {
     public void reuseStategyNotSupportedForItemsNavigation_1() {
         IQuickView quickView = Mockito.mock(IQuickView.class);
         IQuickReuseStrategy strategy=Mockito.mock(IQuickReuseStrategy.class);
-        Mockito.when(strategy.isPaging()).thenReturn(true);
+        Mockito.when(strategy.isAddItemsSupported()).thenReturn(false);
         Mockito.when(quickView.getReuseStrategy()).thenReturn(strategy);
         RepeaterUtil.get().reuseStategyNotSupportedForItemsNavigation(quickView);
     }
@@ -305,7 +302,7 @@ public class RepeaterUtilTest {
     public void reuseStategyNotSupportedForItemsNavigation_5() {
         IQuickView quickView = Mockito.mock(IQuickView.class);
         IQuickReuseStrategy strategy=Mockito.mock(IQuickReuseStrategy.class);
-        Mockito.when(strategy.isPaging()).thenReturn(false);
+        Mockito.when(strategy.isAddItemsSupported()).thenReturn(true);
        Mockito.when(quickView.getReuseStrategy()).thenReturn(strategy);
 
         RepeaterUtil.get().reuseStategyNotSupportedForItemsNavigation(quickView);
@@ -316,7 +313,7 @@ public class RepeaterUtilTest {
     public void outPutMarkupIdNotTrue_1() {
         IDataProvider data = Mockito.mock(IDataProvider.class);
         IQuickReuseStrategy strategy=Mockito.mock(IQuickReuseStrategy.class);
-        Mockito.when(strategy.isPaging()).thenReturn(false);
+        Mockito.when(strategy.isAddItemsSupported()).thenReturn(true);
         QuickView quickView = new QuickView("id", data, strategy) {
             @Override
             protected void populate(Item item) {
@@ -331,7 +328,7 @@ public class RepeaterUtilTest {
     public void outPutMarkupIdNotTrue_2() {
         IDataProvider data = Mockito.mock(IDataProvider.class);
         IQuickReuseStrategy strategy=Mockito.mock(IQuickReuseStrategy.class);
-        Mockito.when(strategy.isPaging()).thenReturn(false);
+        Mockito.when(strategy.isAddItemsSupported()).thenReturn(true);
         QuickView quickView = new QuickView("id", data,strategy) {
             @Override
             protected void populate(Item item) {
@@ -347,7 +344,7 @@ public class RepeaterUtilTest {
     public void outPutMarkupIdNotTrue_3() {
         IDataProvider data = Mockito.mock(IDataProvider.class);
        IQuickReuseStrategy strategy=Mockito.mock(IQuickReuseStrategy.class);
-       Mockito.when(strategy.isPaging()).thenReturn(false);
+       Mockito.when(strategy.isAddItemsSupported()).thenReturn(true);
         QuickView quickView = new QuickView("id", data,strategy) {
             @Override
             protected void populate(Item item) {
@@ -367,7 +364,7 @@ public class RepeaterUtilTest {
     public void parentNotSuitable_1() {
         IQuickView quickView = Mockito.mock(IQuickView.class);
         IQuickReuseStrategy strategy=Mockito.mock(IQuickReuseStrategy.class);
-        Mockito.when(strategy.isPaging()).thenReturn(true);
+        Mockito.when(strategy.isAddItemsSupported()).thenReturn(false);
         Mockito.when(quickView.getReuseStrategy()).thenReturn(strategy);
         RepeaterUtil.get().parentNotSuitable(quickView);
     }
@@ -380,7 +377,7 @@ public class RepeaterUtilTest {
     public void parentNotSuitable_2() {
         IQuickView quickView = Mockito.mock(IQuickView.class);
         IQuickReuseStrategy strategy=Mockito.mock(IQuickReuseStrategy.class);
-        Mockito.when(strategy.isPaging()).thenReturn(false);
+        Mockito.when(strategy.isAddItemsSupported()).thenReturn(true);
         Mockito.when(quickView.getReuseStrategy()).thenReturn(strategy);
         RepeaterUtil.get().parentNotSuitable(quickView);
     }
@@ -391,7 +388,7 @@ public class RepeaterUtilTest {
   @Test(groups = {"utilTests"}, expectedExceptions = RepeaterUtil.QuickViewNotAddedToParentException.class)
     public void parentNotSuitable_3() {
       IQuickReuseStrategy strategy=Mockito.mock(IQuickReuseStrategy.class);
-      Mockito.when(strategy.isPaging()).thenReturn(false);
+      Mockito.when(strategy.isAddItemsSupported()).thenReturn(true);
         WebPage parent = Mockito.mock(WebPage.class);
         IQuickView quickView = Mockito.mock(IQuickView.class);
         Mockito.when(quickView.getParent()).thenReturn(parent);
@@ -405,7 +402,7 @@ public class RepeaterUtilTest {
     @Test(groups = {"utilTests"}, expectedExceptions = RepeaterUtil.ParentNotUnaryException.class)
     public void parentNotSuitable_5() {
         IQuickReuseStrategy strategy=Mockito.mock(IQuickReuseStrategy.class);
-        Mockito.when(strategy.isPaging()).thenReturn(false);
+        Mockito.when(strategy.isAddItemsSupported()).thenReturn(true);
         WebMarkupContainer parent = Mockito.mock(WebMarkupContainer.class);
         Mockito.when(parent.size()).thenReturn(2);
         IQuickView quickView = Mockito.mock(IQuickView.class);
@@ -420,7 +417,7 @@ public class RepeaterUtilTest {
    @Test(groups = {"utilTests"})
     public void parentNotSuitable_6() {
        IQuickReuseStrategy strategy=Mockito.mock(IQuickReuseStrategy.class);
-       Mockito.when(strategy.isPaging()).thenReturn(false);
+       Mockito.when(strategy.isAddItemsSupported()).thenReturn(true);
         WebMarkupContainer parent = Mockito.mock(WebMarkupContainer.class);
         Mockito.when(parent.size()).thenReturn(1);
         IQuickView quickView = Mockito.mock(IQuickView.class);
@@ -448,108 +445,6 @@ public class RepeaterUtilTest {
         Assert.assertEquals(actual, expected);
     }
 
-    /**
-     * when all items same
-     */
-    @Test(groups = {"utilTests"})
-    public void reuseIfModelsEqual_1() {
-        List<Item> list1 = new ArrayList<Item>();
-        Item<Integer> item1 = new Item<Integer>("1", 1, new Model<Integer>(1));
-        Item<Integer> item2 = new Item<Integer>("2", 2, new Model<Integer>(2));
-        list1.add(item1);
-        list1.add(item2);
-        Iterator<Item> iterator1 = list1.iterator();
-        List<Item> list2 = new ArrayList<Item>();
-        list2.add(item1);
-        list2.add(item2);
-        Iterator<Item> iterator2 = list2.iterator();
-        Iterator<Item> reused = RepeaterUtil.get().reuseItemsIfModelsEqual(iterator1, iterator2);
-        Item<Integer> expected1 = reused.next();
-        Item<Integer> expected2 = reused.next();
-        Assert.assertEquals(item1.getModelObject().intValue(), expected1.getModelObject().intValue());
-        Assert.assertEquals(item1.getIndex(), expected1.getIndex());
-        Assert.assertEquals(item2.getModelObject().intValue(), expected2.getModelObject().intValue());
-        Assert.assertEquals(item2.getIndex(), expected2.getIndex());
-        Assert.assertFalse(reused.hasNext());
-    }
-
-
-    /**
-     * when items different
-     */
-    @Test(groups = {"utilTests"})
-    public void reuseIfModelsEqual_2() {
-        List<Item> list1 = new ArrayList<Item>();
-        Item<Integer> item1 = new Item<Integer>("1", 1, new Model<Integer>(1));
-        Item<Integer> item2 = new Item<Integer>("2", 2, new Model<Integer>(2));
-        Item<Integer> item3 = new Item<Integer>("3", 3, new Model<Integer>(3));
-        list1.add(item1);
-        list1.add(item2);
-        Iterator<Item> oldIt = list1.iterator();
-        List<Item> list2 = new ArrayList<Item>();
-        list2.add(item1);
-        list2.add(item3);
-        Iterator<Item> newIt = list2.iterator();
-        Iterator<Item> reused =RepeaterUtil.get().reuseItemsIfModelsEqual(oldIt, newIt);
-        Item<Integer> expected1 = reused.next();
-        Item<Integer> expected2 = reused.next();
-        Assert.assertEquals(item1.getModelObject().intValue(), expected1.getModelObject().intValue());
-        Assert.assertEquals(item1.getIndex(), expected1.getIndex());
-        Assert.assertEquals(item3.getModelObject().intValue(), expected2.getModelObject().intValue());
-        Assert.assertEquals(item3.getIndex(), expected2.getIndex());
-        Assert.assertFalse(reused.hasNext());
-
-    }
-
-
-    /**
-     * when newiterator has less items
-     */
-    @Test(groups = {"utilTests"})
-    public void reuseIfModelsEqual_3() {
-        List<Item> list1 = new ArrayList<Item>();
-        Item<Integer> item1 = new Item<Integer>("1", 1, new Model<Integer>(1));
-        Item<Integer> item2 = new Item<Integer>("2", 2, new Model<Integer>(2));
-        list1.add(item1);
-        list1.add(item2);
-        Iterator<Item> oldIt = list1.iterator();
-        List<Item> list2 = new ArrayList<Item>();
-        list2.add(item1);
-
-        Iterator<Item> newIt = list2.iterator();
-
-        Iterator<Item> reused = RepeaterUtil.get().reuseItemsIfModelsEqual(oldIt, newIt);
-        Item<Integer> expected1 = reused.next();
-        Assert.assertEquals(item1.getModelObject().intValue(), expected1.getModelObject().intValue());
-        Assert.assertEquals(item1.getIndex(), expected1.getIndex());
-        Assert.assertFalse(reused.hasNext());
-
-    }
-
-    /**
-     * when newiterator has more items
-     */
-    @Test(groups = {"utilTests"})
-    public void reuseIfModelsEqual_4() {
-        List<Item> list1 = new ArrayList<Item>();
-        Item<Integer> item1 = new Item<Integer>("1", 1, new Model<Integer>(1));
-        Item<Integer> item2 = new Item<Integer>("2", 2, new Model<Integer>(2));
-        list1.add(item1);
-        Iterator<Item> oldIt = list1.iterator();
-        List<Item> list2 = new ArrayList<Item>();
-        list2.add(item1);
-        list2.add(item2);
-        Iterator<Item> newIt = list2.iterator();
-
-        Iterator<Item> reused = RepeaterUtil.get().reuseItemsIfModelsEqual(oldIt, newIt);
-        Item<Integer> expected1 = reused.next();
-        Item<Integer> expected2 = reused.next();
-        Assert.assertEquals(item1.getModelObject().intValue(), expected1.getModelObject().intValue());
-        Assert.assertEquals(item1.getIndex(), expected1.getIndex());
-        Assert.assertEquals(item2.getModelObject().intValue(), expected2.getModelObject().intValue());
-        Assert.assertEquals(item2.getIndex(), expected2.getIndex());
-        Assert.assertFalse(reused.hasNext());
-    }
 
 
 

@@ -19,14 +19,14 @@ import java.util.List;
  */
 public class DefaultQuickReuseStrategyTest extends AbstractPagingNavigationStrategyTest {
 
-    @Test(groups = {"wicketTests"} ,expectedExceptions = UnsupportedOperationException.class)
+    @Test(groups = {"wicketTests"} ,expectedExceptions = IRepeaterUtil.ReuseStrategyNotSupportedException.class)
     public void addItems_1(){
        super.assertAddItems(new DefaultQuickReuseStrategy());
     }
 
     @Test(groups = {"wicketTests"})
     public void isPaging_1(){
-     super.assertIsPaging(new DefaultQuickReuseStrategy());
+     super.assertIsAddItemsSupported(new DefaultQuickReuseStrategy());
     }
 
     /**
