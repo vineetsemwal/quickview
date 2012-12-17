@@ -46,10 +46,9 @@ public class QuickGridViewWithPageScrollBehavior extends WebPage {
     protected void onInitialize() {
         super.onInitialize();
         IDataProvider<Integer> data=new ListDataProvider<Integer>(list);
-
-       // final ReUse reuse= ReUse.ITEMSNAVIGATION;//default reuse strategy that should be used with rowsnavigator
-
-        gridView=new QuickGridView<Integer>("gv",data,new ItemsNavigationStrategy()) {
+        //read more about {@see ItemsNavigationStrategy} ,it is one of provided strategy that can be used in
+        //cases where new items has to be added without re-rendering QuickView
+         gridView=new QuickGridView<Integer>("gv",data,new ItemsNavigationStrategy()) {
             @Override
             protected void populateEmptyItem(final CellItem<Integer> item) {
                 item.add(new Label("label"));

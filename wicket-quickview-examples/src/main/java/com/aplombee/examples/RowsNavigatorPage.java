@@ -48,17 +48,15 @@ public class RowsNavigatorPage extends WebPage {
         super.onInitialize();
         IDataProvider<Integer>data=new ListDataProvider<Integer>(list);
         final int itemsPerRequest=4;//rows created per request
-       // final ReUse reuse= ReUse.ITEMSNAVIGATION;//default reuse strategy that should be used with rowsnavigator
-
+        //read more about {@see ItemsNavigationStrategy} ,it is one of provided strategy that can be used in
+        //cases where new items has to be added without re-rendering QuickView
         QuickView<Integer> quickView=new QuickView<Integer>("number",data,new ItemsNavigationStrategy(),itemsPerRequest) {
             @Override
             protected void populate(Item<Integer> item) {
                 item.add(new Label("display",item.getModel()));
             }
         } ;
-      // quickView.setReuseStrategy(new ItemsNavigationStrategy());
-      //  quickView.setReuseStrategy(new ReuseAllStrategy());
-        WebMarkupContainer numbers=new WebMarkupContainer("numbers");   //don't forget adding quickview to parent with any ajax navigator
+       WebMarkupContainer numbers=new WebMarkupContainer("numbers");   //don't forget adding quickview to parent with any ajax navigator
           numbers.add(quickView);
            numbers.setOutputMarkupId(true); //don't forget required when using ajaxrownavigator
           add(numbers);

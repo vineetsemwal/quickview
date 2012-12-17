@@ -46,8 +46,7 @@ public class AjaxPagingNavigatorPage extends WebPage {
         super.onInitialize();
         IDataProvider<Integer> data=new ListDataProvider<Integer>(list);
         final int itemsPerRequest=4;//rows created per request
-        //final ReUse reuse= ReUse.PAGING;//default reuse strategy that should be used with pagingnavigator
-
+        //quickview by default has DefaultReuseStrategy which works fine in case of paging
         QuickView<Integer> quickView=new QuickView<Integer>("number",data,itemsPerRequest) {
             @Override
             protected void populate(Item<Integer> item) {

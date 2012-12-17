@@ -45,6 +45,7 @@ public class QuickGridViewWithAjaxPagingNavigator extends WebPage {
     protected void onInitialize() {
         super.onInitialize();
         IDataProvider<Integer> data=new ListDataProvider<Integer>(list);
+        //quickview by default has DefaultReuseStrategy which works fine in case of paging
 
         gridView=new QuickGridView<Integer>("gv",data) {
             @Override
