@@ -43,6 +43,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
    private IQuickReuseStrategy reuseStrategy;
 
     public void setReuseStrategy(IQuickReuseStrategy reuseStrategy){
+        Args.notNull(reuseStrategy,"reuseStrategy");
         this.reuseStrategy = reuseStrategy;
     }
 
