@@ -623,6 +623,7 @@ public class QuickGridViewTest {
         IDataProvider dataProvider =Mockito.mock(IDataProvider.class);
         final Iterator<QuickGridView.CellItem>cells=Mockito.mock(Iterator.class);
         final Iterator rows=Mockito.mock(Iterator.class);
+        final int gridSize=24;
         QuickGridView gridView = new QuickGridView("quickview", dataProvider) {
             @Override
             protected void populate(CellItem item) {
@@ -641,13 +642,18 @@ public class QuickGridViewTest {
             protected Iterator buildItems(long index, Iterator iterator) {
                 return  rows;
             }
+
+            @Override
+            public long gridSize() {
+                return gridSize;
+            }
         };
         gridView.setItemsPerRequest(10);
         gridView.setColumns(2);
         Iterator dataIterator =Mockito.mock(Iterator.class);
         QuickGridView spy=Mockito.spy(gridView);
         spy.buildRows(dataIterator);
-        Mockito.verify(spy,Mockito.times(1)).buildItems(0,dataIterator);
+        Mockito.verify(spy,Mockito.times(1)).buildItems(gridSize,dataIterator);
 
     }
 

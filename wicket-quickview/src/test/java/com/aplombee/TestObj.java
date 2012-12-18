@@ -16,10 +16,12 @@
  */
 package com.aplombee;
 
+import java.io.Serializable;
+
 /**
  *
  *@author Vineet Semwal
  *
  */
-public interface TestObj {
+public interface TestObj extends Serializable {
 }

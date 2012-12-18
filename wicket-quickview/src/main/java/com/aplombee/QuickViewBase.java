@@ -130,13 +130,21 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
 
 
 
-    protected Item<T> newItem(int index, IModel<T>model) {
-        Item<T> item = new Item<T>(newChildId(),index, model);
+    protected Item<T> newItem(long index, IModel<T>model) {
+        Item<T> item = new Item<T>(newChildId(),getRepeaterUtil().safeLongToInt(index), model);
         item.setMarkupId(item.getId());
         item.setOutputMarkupId(true);
         return item;
     }
 
+    /**
+     *  use in stateless environment as there is no state ,it's user's responsiblity to give unique id and index
+     *
+     * @param id
+     * @param index
+     * @param object
+     * @return
+     */
     public Item<T> buildItem(String id,long index, T object) {
         Item<T> item = newItem(id,index, object);
         populate(item);
@@ -151,11 +159,11 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      * @param object model object
      * @return    item
      */
-    public Item buildItem(T object) {
-       return buildItem(newChildId(), getChildId(), object);
+    public Item buildItem(long index,T object) {
+      return buildItem(newChildId(), index, object);
     }
 
-    public Item buildItem(int index,IModel<T> model) {
+    protected Item buildItem(long index,IModel<T> model) {
        Item<T>item=newItem(index,model);
         populate(item);
         return item;
@@ -322,7 +330,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         List<Item<T>> items=new ArrayList<Item<T>>();
         for(long i=index; iterator.hasNext();i++){
             T object=iterator.next();
-            Item<T>item=buildItem(newChildId(), i,object);
+            Item<T>item=buildItem(i,object);
             items.add(item);
         }
            return items.iterator();
@@ -495,6 +503,76 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
           }
         getSynchronizer().add(components);
 
+        return this;
+    }
+
+    /**
+     *
+     *
+     *  this does 2 steps
+     *
+     *  1)creates children ,children will get the model object after iterating over data
+     *  2)adds children to View
+     * @param data  iterator of model objects for children
+     * @return this
+     */
+
+    public MarkupContainer createAndAdd(Iterator<? extends T> data){
+      Args.notNull(data,"data");
+      Iterator<Item<T>>items= buildItems(data);
+       while (items.hasNext()){
+           add(items.next())  ;
+       }
+        return this;
+    }
+
+    /**
+     * this does 2 steps
+     *
+     *  1)create child item and assigns it model object data passed as argument
+     *  2) adds child to view
+     * @param data  modelobject for child
+     *
+     * @return  this
+     */
+    public MarkupContainer createAndAdd(T data){
+        List<T>datas=new ArrayList<T>();
+        datas.add(data);
+        createAndAdd(datas.iterator());
+        return this;
+    }
+
+    /**
+     *  this does 2 steps
+     *
+     *  1)creates children ,children will get the model object after iterating over data
+     *  2)adds children to View
+     * @param data  iterator of model objects for children
+     * @return this
+     */
+
+    public MarkupContainer createAndAddAtStart(Iterator<? extends T> data){
+        Args.notNull(data,"data");
+        Iterator<Item<T>>items= buildItems(data);
+        while (items.hasNext()){
+            addAtStart(items.next())  ;
+        }
+        return this;
+    }
+
+    /**
+     * this does 2 steps
+     *
+     *  1)create child item and assigns it model object data passed as argument
+     *  2) adds child to view
+     * @param data  modelobject for child
+     *
+     * @return  this
+     */
+    public MarkupContainer createAndAddAtStart(T data){
+        List<T>datas=new ArrayList<T>();
+        datas.add(data);
+        createAndAddAtStart(datas.iterator());
         return this;
     }
 

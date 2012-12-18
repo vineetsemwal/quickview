@@ -247,7 +247,7 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
      * @return iterator of RowItem which are created with their corresponding cells attached to them
      */
     public Iterator<RowItem<T>> buildRows(Iterator<? extends T> iterator) {
-        long cellindex = 0;
+        long cellindex = gridSize();
         return (Iterator) buildItems(cellindex, iterator);
     }
 

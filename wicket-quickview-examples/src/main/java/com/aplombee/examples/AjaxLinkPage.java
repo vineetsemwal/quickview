@@ -18,14 +18,12 @@ package com.aplombee.examples;
 
 import com.aplombee.ItemsNavigationStrategy;
 import com.aplombee.QuickView;
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.repeater.data.GridView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
 import java.util.ArrayList;
@@ -66,8 +64,7 @@ public class AjaxLinkPage extends WebPage {
             public void onClick(AjaxRequestTarget target) {
                 int newObject=list.get(list.size()-1) +1;
                 list.add( newObject);
-                Item<Integer> item = number.buildItem( newObject);
-                number.add(item);  //just enough to create a new row at last
+                number.createAndAdd(newObject);  //just enough to create a new row at last
                  }
 
         };
@@ -82,9 +79,7 @@ public class AjaxLinkPage extends WebPage {
             public void onClick(AjaxRequestTarget target) {
                 int newObject=list.get(0)-1;
                 list.add(0,newObject);
-                Item<Integer> item = number.buildItem( newObject);
-                number.addAtStart(item);  //just enough to create a new row at start
-
+                number.createAndAddAtStart(newObject);  //just enough to create a new row at start
             }
 
         };
