@@ -341,8 +341,10 @@ public class QuickViewTest {
 
     }
 
+
+
     /**
-     * createAndAdd(Iterator<? extends T>)
+     * createAndAdd(object1,object2)
      */
     @Test(groups = {"wicketTests"})
     public void createAndAdd_1() {
@@ -350,67 +352,17 @@ public class QuickViewTest {
         final WebMarkupContainer parent = Mockito.mock(WebMarkupContainer.class);
         IDataProvider dataProvider = Mockito.mock(IDataProvider.class);
         final IRepeaterUtil util = mockRepeaterUtil();
-        final Iterator<? extends TestObj> newObjects = Mockito.mock(Iterator.class);
         TestObj obj1 = Mockito.mock(TestObj.class);
         TestObj obj2 = Mockito.mock(TestObj.class);
         final Iterator<Item<TestObj>> newItems = Mockito.mock(Iterator.class);
-        Item<TestObj> item1 = new Item<TestObj>("123", 34, new Model<TestObj>(obj1));
-        Item<TestObj> item2 = new Item<TestObj>("124", 35, new Model<TestObj>(obj2));
+        final int size=12;
+        final int index1=size;
+        final int index2=size+1;
+        final Item<TestObj> item1 = new Item<TestObj>("123", index1, new Model<TestObj>(obj1));
+        final Item<TestObj> item2 = new Item<TestObj>("124", index2, new Model<TestObj>(obj2));
         Mockito.when(newItems.next()).thenReturn(item1).thenReturn(item2);
         Mockito.when(newItems.hasNext()).thenReturn(true).thenReturn(true).thenReturn(false);
-        QuickView<TestObj> arc = new QuickView<TestObj>("repeater", dataProvider, oneBlock) {
 
-            public void populate(Item<TestObj> item) {
-            }
-
-            public MarkupContainer _getParent() {
-                return parent;
-            }
-
-            public MarkupContainer simpleAdd(Component... c) {
-                return this;
-            }
-
-
-            @Override
-            public IRepeaterUtil getRepeaterUtil() {
-                return util;
-            }
-
-            @Override
-            protected Iterator<Item<TestObj>> buildItems(Iterator<? extends TestObj> iterator) {
-                return newItems;
-            }
-
-            @Override
-            public MarkupContainer add(Component... components) {
-                return this;
-            }
-        };
-
-        QuickView<TestObj> sparc = Mockito.spy(arc);
-        sparc.createAndAdd(newObjects);
-        Mockito.verify(sparc, Mockito.times(1)).buildItems(newObjects);
-        Mockito.verify(sparc, Mockito.times(1)).add(item1);
-        Mockito.verify(sparc, Mockito.times(1)).add(item2);
-    }
-
-    /**
-     * createAndAdd(object)
-     */
-    @Test(groups = {"wicketTests"})
-    public void createAndAdd_2() {
-        int oneBlock = 2;
-        final WebMarkupContainer parent = Mockito.mock(WebMarkupContainer.class);
-        IDataProvider dataProvider = Mockito.mock(IDataProvider.class);
-        final IRepeaterUtil util = mockRepeaterUtil();
-        // final Iterator<? extends TestObj> newObjects = Mockito.mock(Iterator.class);
-        TestObj obj1 = Mockito.mock(TestObj.class);
-        final Iterator<Item<TestObj>> newItems = Mockito.mock(Iterator.class);
-        final Item<TestObj> item1 = new Item<TestObj>("123", 34, new Model<TestObj>(obj1));
-        Mockito.when(newItems.next()).thenReturn(item1);
-        Mockito.when(newItems.hasNext()).thenReturn(true).thenReturn(false);
-        final int size=12;
         QuickView<TestObj> arc = new QuickView<TestObj>("repeater", dataProvider, oneBlock) {
 
             public void populate(Item<TestObj> item) {
@@ -433,7 +385,7 @@ public class QuickViewTest {
 
             @Override
             public Item buildItem(long index, TestObj object) {
-                return item1;
+                return null;
             }
 
             @Override
@@ -448,15 +400,19 @@ public class QuickViewTest {
         };
 
         QuickView<TestObj> sparc = Mockito.spy(arc);
-        sparc.createAndAdd(obj1);
-        Mockito.verify(sparc,Mockito.times(1)).buildItem(size, obj1);
+        Mockito.when(sparc.buildItem(index1,obj1)).thenReturn(item1) ;
+        Mockito.when(sparc.buildItem(index2,obj2)).thenReturn(item2);
+        sparc.createAndAdd(obj1,obj2);
+        Mockito.verify(sparc,Mockito.times(1)).buildItem(index1, obj1);
+        Mockito.verify(sparc,Mockito.times(1)).buildItem(index2, obj2);
         Mockito.verify(sparc, Mockito.times(1)).add(item1);
+        Mockito.verify(sparc, Mockito.times(1)).add(item2);
 
     }
 
 
     /**
-     * createAndAddAtStart(Iterator<? extends T>)
+     * createAndAddAtStart(T ... object)
      */
     @Test(groups = {"wicketTests"})
     public void createAndAddAtStart_1() {
@@ -464,68 +420,17 @@ public class QuickViewTest {
         final WebMarkupContainer parent = Mockito.mock(WebMarkupContainer.class);
         IDataProvider dataProvider = Mockito.mock(IDataProvider.class);
         final IRepeaterUtil util = mockRepeaterUtil();
-        final Iterator<? extends TestObj> newObjects = Mockito.mock(Iterator.class);
         TestObj obj1 = Mockito.mock(TestObj.class);
         TestObj obj2 = Mockito.mock(TestObj.class);
         final Iterator<Item<TestObj>> newItems = Mockito.mock(Iterator.class);
-        Item<TestObj> item1 = new Item<TestObj>("123", 34, new Model<TestObj>(obj1));
-        Item<TestObj> item2 = new Item<TestObj>("124", 35, new Model<TestObj>(obj2));
+        final int size=12;
+        final int index1=size;
+        final int index2=size+1;
+        final Item<TestObj> item1 = new Item<TestObj>("123", index1, new Model<TestObj>(obj1));
+        final Item<TestObj> item2 = new Item<TestObj>("124", index2, new Model<TestObj>(obj2));
         Mockito.when(newItems.next()).thenReturn(item1).thenReturn(item2);
         Mockito.when(newItems.hasNext()).thenReturn(true).thenReturn(true).thenReturn(false);
-        QuickView<TestObj> arc = new QuickView<TestObj>("repeater", dataProvider, oneBlock) {
 
-            public void populate(Item<TestObj> item) {
-            }
-
-            public MarkupContainer _getParent() {
-                return parent;
-            }
-
-            public MarkupContainer simpleAdd(Component... c) {
-                return this;
-            }
-
-
-            @Override
-            public IRepeaterUtil getRepeaterUtil() {
-                return util;
-            }
-
-            @Override
-            protected Iterator<Item<TestObj>> buildItems(Iterator<? extends TestObj> iterator) {
-                return newItems;
-            }
-
-            @Override
-            public MarkupContainer add(Component... components) {
-                return this;
-            }
-        };
-
-        QuickView<TestObj> sparc = Mockito.spy(arc);
-        sparc.createAndAddAtStart(newObjects);
-        Mockito.verify(sparc, Mockito.times(1)).buildItems(newObjects);
-        Mockito.verify(sparc, Mockito.times(1)).addAtStart(item1);
-        Mockito.verify(sparc, Mockito.times(1)).addAtStart(item2);
-    }
-
-
-    /**
-     * createAndAddAtStart(object)
-     */
-    @Test(groups = {"wicketTests"})
-    public void createAndAddAtStart_2() {
-        int oneBlock = 2;
-        final WebMarkupContainer parent = Mockito.mock(WebMarkupContainer.class);
-        IDataProvider dataProvider = Mockito.mock(IDataProvider.class);
-        final IRepeaterUtil util = mockRepeaterUtil();
-        // final Iterator<? extends TestObj> newObjects = Mockito.mock(Iterator.class);
-        TestObj obj1 = Mockito.mock(TestObj.class);
-        final Iterator<Item<TestObj>> newItems = Mockito.mock(Iterator.class);
-        final Item<TestObj> item1 = new Item<TestObj>("123", 34, new Model<TestObj>(obj1));
-        Mockito.when(newItems.next()).thenReturn(item1);
-        Mockito.when(newItems.hasNext()).thenReturn(true).thenReturn(false);
-        final int size=12;
         QuickView<TestObj> arc = new QuickView<TestObj>("repeater", dataProvider, oneBlock) {
 
             public void populate(Item<TestObj> item) {
@@ -548,7 +453,7 @@ public class QuickViewTest {
 
             @Override
             public Item buildItem(long index, TestObj object) {
-                return item1;
+                return null;
             }
 
             @Override
@@ -563,9 +468,13 @@ public class QuickViewTest {
         };
 
         QuickView<TestObj> sparc = Mockito.spy(arc);
-        sparc.createAndAddAtStart(obj1);
-        Mockito.verify(sparc,Mockito.times(1)).buildItem(size, obj1);
+        Mockito.when(sparc.buildItem(index1,obj1)).thenReturn(item1) ;
+        Mockito.when(sparc.buildItem(index2,obj2)).thenReturn(item2);
+        sparc.createAndAddAtStart(obj1,obj2);
+        Mockito.verify(sparc,Mockito.times(1)).buildItem(index1, obj1);
+        Mockito.verify(sparc,Mockito.times(1)).buildItem(index2, obj2);
         Mockito.verify(sparc, Mockito.times(1)).addAtStart(item1);
+        Mockito.verify(sparc, Mockito.times(1)).addAtStart(item2);
 
     }
 

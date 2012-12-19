@@ -512,70 +512,48 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      *
      *  this does 2 steps
      *
-     *  1)creates children ,children will get the model object after iterating over data
-     *  2)adds children to View
-     * @param data  iterator of model objects for children
+     *  1)creates children ,children will get the model object after iterating over objects passed as argument
+     *  2)adds children to View using {@link this#add(org.apache.wicket.Component...)}
+     * @param objects  iterator of model objects for children
      * @return this
      */
 
-    public MarkupContainer createAndAdd(Iterator<? extends T> data){
-      Args.notNull(data,"data");
-      Iterator<Item<T>>items= buildItems(data);
-       while (items.hasNext()){
-           add(items.next())  ;
-       }
+
+    public MarkupContainer createAndAdd(T ... objects){
+        List<T>list=new ArrayList<T>();
+        for(T obj:objects){
+          list.add(obj);
+        }
+        Iterator<Item<T>>items= buildItems(list.iterator());
+        while (items.hasNext()){
+            add(items.next())  ;
+        }
         return this;
     }
 
-    /**
-     * this does 2 steps
-     *
-     *  1)create child item and assigns it model object data passed as argument
-     *  2) adds child to view
-     * @param data  modelobject for child
-     *
-     * @return  this
-     */
-    public MarkupContainer createAndAdd(T data){
-        List<T>datas=new ArrayList<T>();
-        datas.add(data);
-        createAndAdd(datas.iterator());
-        return this;
-    }
+
 
     /**
      *  this does 2 steps
      *
-     *  1)creates children ,children will get the model object after iterating over data
-     *  2)adds children to View
-     * @param data  iterator of model objects for children
+     *  1)creates children ,children will get the model object after iterating over objects as argument
+     *  2)adds children to View using {@link this#addAtStart(org.apache.wicket.Component...)}
+     * @param objects  iterator of model objects for children
      * @return this
      */
 
-    public MarkupContainer createAndAddAtStart(Iterator<? extends T> data){
-        Args.notNull(data,"data");
-        Iterator<Item<T>>items= buildItems(data);
+    public MarkupContainer createAndAddAtStart(T ... objects){
+        List<T>list=new ArrayList<T>();
+        for(T obj:objects){
+            list.add(obj);
+        }
+        Iterator<Item<T>>items= buildItems(list.iterator());
         while (items.hasNext()){
             addAtStart(items.next())  ;
         }
         return this;
     }
 
-    /**
-     * this does 2 steps
-     *
-     *  1)create child item and assigns it model object data passed as argument
-     *  2) adds child to view
-     * @param data  modelobject for child
-     *
-     * @return  this
-     */
-    public MarkupContainer createAndAddAtStart(T data){
-        List<T>datas=new ArrayList<T>();
-        datas.add(data);
-        createAndAddAtStart(datas.iterator());
-        return this;
-    }
 
 
     /**
