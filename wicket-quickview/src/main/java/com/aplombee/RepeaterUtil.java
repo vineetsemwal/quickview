@@ -169,44 +169,6 @@ public class RepeaterUtil implements IRepeaterUtil {
         }
     }
 
-
-    protected String scripts(String regex, String input) {
-        int regexEnd = end(regex, input);
-        String afterPrepend = input.substring(regexEnd);
-        final String openBracket = "\\[", closeBracket = "]";
-        int openBracketEnd = end(openBracket, afterPrepend);
-        String afterOpen = afterPrepend.substring(openBracketEnd);
-        int closeBracketEnd = end(closeBracket, afterOpen);
-        String scriptsString = afterOpen.substring(0, closeBracketEnd);
-        return scriptsString;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String prependedScripts(String input) {
-        final String regex = "prependJavaScript";
-        return scripts(regex, input);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String appendedScripts(String input) {
-        final String regex = "appendJavaScript";
-        return scripts(regex, input);
-    }
-
-    public int end(final String regex, final String input) {
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(input);
-        int end = 0;
-        if (matcher.find()) {
-            end = matcher.end();
-        }
-        return end;
-    }
-
     @Override
     public String scrollToBottom(String markupId) {
         return String.format("scrollToBottom('%s');", markupId);
