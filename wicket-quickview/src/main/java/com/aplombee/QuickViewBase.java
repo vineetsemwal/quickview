@@ -536,7 +536,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     /**
      *  this does 2 steps
      *
-     *  1)creates children ,children will get the model object after iterating over objects as argument
+     *  1)creates children ,children will get the model object after iterating over objects passed as argument
      *  2)adds children to View using {@link this#addAtStart(org.apache.wicket.Component...)}
      * @param objects  iterator of model objects for children
      * @return this
@@ -592,7 +592,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     }
 
     /**
-     * draws a new element at start but the actually element is added at last in repeater,
+     * draws a new element at start but actually the element is added at last in repeater,
      * this should not pose problem when whole repeater is rendered and if data is sorted
      *
      * @param components
