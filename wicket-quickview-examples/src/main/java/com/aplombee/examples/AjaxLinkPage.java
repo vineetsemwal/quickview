@@ -16,10 +16,8 @@
  */
 package com.aplombee.examples;
 
+import com.aplombee.ItemsNavigationStrategy;
 import com.aplombee.QuickView;
-import com.aplombee.ReUse;
-import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -51,7 +49,7 @@ public class AjaxLinkPage extends WebPage {
         IDataProvider<Integer> data = new ListDataProvider<Integer>(list);
         WebMarkupContainer numbers = new WebMarkupContainer("numbers");   //parent for quickview
         numbers.setOutputMarkupId(true);  //needed for ajax
-        final QuickView<Integer> number = new QuickView<Integer>("number", data, ReUse.ITEMSNAVIGATION) {
+        final QuickView<Integer> number = new QuickView<Integer>("number", data, new ItemsNavigationStrategy()) {
             @Override
             protected void populate(Item<Integer> item) {
                 item.add(new Label("display", item.getModel()));
@@ -66,9 +64,7 @@ public class AjaxLinkPage extends WebPage {
             public void onClick(AjaxRequestTarget target) {
                 int newObject=list.get(list.size()-1) +1;
                 list.add( newObject);
-                Item<Integer> item = number.buildItem( newObject);
-                item.setOutputMarkupId(true);
-                number.add(item);  //just enough to create a new row at last
+                number.addNewItems(newObject);  //just enough to create a new row at last
                  }
 
         };
@@ -76,7 +72,6 @@ public class AjaxLinkPage extends WebPage {
         add(addLink);
 
 
-        final AttributeModifier start = new AttributeModifier("class", "start");
         AjaxLink addAtStartLink = new AjaxLink("addAtStartLink") {
 
 
@@ -84,12 +79,7 @@ public class AjaxLinkPage extends WebPage {
             public void onClick(AjaxRequestTarget target) {
                 int newObject=list.get(0)-1;
                 list.add(0,newObject);
-                Item<Integer> item = number.buildItem( newObject);
-                number.addAtStart(item);  //just enough to create a new row at start
-                Component display = item.get("display");
-                item.setOutputMarkupId(true);
-                display.add(start);
-
+                number.addNewItemsAtStart(newObject);  //just enough to create a new row at start
             }
 
         };

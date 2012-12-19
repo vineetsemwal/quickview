@@ -17,8 +17,8 @@
 
 package com.aplombee.examples;
 
+import com.aplombee.ItemsNavigationStrategy;
 import com.aplombee.QuickGridView;
-import com.aplombee.ReUse;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -51,7 +51,7 @@ public class QuickGridViewWithAjaxLink extends WebPage {
         IDataProvider<Integer> data = new ListDataProvider<Integer>(list);
         WebMarkupContainer numbers = new WebMarkupContainer("numbers");   //parent for quickview
         numbers.setOutputMarkupId(true);  //needed for ajax
-        final QuickGridView<Integer> number = new QuickGridView<Integer>("number", data, ReUse.ITEMSNAVIGATION) {
+        final QuickGridView<Integer> number = new QuickGridView<Integer>("number", data,new ItemsNavigationStrategy()) {
             @Override
             protected void populate(CellItem<Integer> item) {
                 item.add(new Label("display", item.getModel()));

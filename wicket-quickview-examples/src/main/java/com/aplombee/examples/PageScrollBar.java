@@ -16,8 +16,8 @@
  */
 package com.aplombee.examples;
 
+import com.aplombee.ItemsNavigationStrategy;
 import com.aplombee.QuickView;
-import com.aplombee.ReUse;
 import com.aplombee.navigator.AjaxPageScrollEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -52,9 +52,9 @@ public class PageScrollBar extends WebPage{
 
         IDataProvider<Integer> data=new ListDataProvider<Integer>(list);
         final int itemsPerRequest=14;//rows created per request
-        final ReUse reuse= ReUse.ITEMSNAVIGATION;//default reuse strategy that should be used with rowsnavigator
-
-        quickView=new QuickView<Integer>("number",data,reuse,itemsPerRequest) {
+         //read more about {@see ItemsNavigationStrategy} ,it is one of provided strategy that can be used in
+        //cases where new items has to be added without re-rendering QuickView
+        quickView=new QuickView<Integer>("number",data,new ItemsNavigationStrategy(),itemsPerRequest) {
             @Override
             protected void populate(Item<Integer> item) {
                 item.add(new Label("display",item.getModel()));

@@ -1,7 +1,6 @@
 package com.aplombee.examples;
 
 import com.aplombee.QuickView;
-import com.aplombee.ReUse;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -33,7 +32,7 @@ public class RemoveItemsPage extends WebPage {
         ListDataProvider<Integer>data=new ListDataProvider<Integer>(list);
         WebMarkupContainer numbers = new WebMarkupContainer("numbers");   //parent for quickview
         numbers.setOutputMarkupId(true);  //needed for ajax
-         quickView=new QuickView<Integer>("number",data, ReUse.ITEMSNAVIGATION) {
+         quickView=new QuickView<Integer>("number",data) {
            @Override
                 protected void populate(final Item<Integer> item) {
                  item.add(new Label("display", item.getModel()));
