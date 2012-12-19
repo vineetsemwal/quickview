@@ -61,13 +61,11 @@ public interface IRepeaterUtil {
      * finds {@link ComponentTag} of the component passed
      *
      * @param c component whose componenttag has to be found
-     *
      * @return {@link ComponentTag}
      */
     ComponentTag getComponentTag(Component c);
 
     /**
-     *
      * @param c      repeater
      * @param parent parent
      * @return insertAfter js call
@@ -118,28 +116,7 @@ public interface IRepeaterUtil {
      */
     void outPutMarkupIdNotTrue(IQuickView repeater);
 
-    /**
-     * ruse nt initialized or initialized with {@link ReUse.NOT_INITIALIZED}
-     * @param repeater
-     */
-    void reuseNotInitialized(IQuickView repeater);
 
-    /**
-     *
-     * @param input is {@link org.apache.wicket.ajax.AjaxRequestTarget#toString()}
-     *
-     * @return  prependedscripts string as displayed by List.toString() of prependedscripts
-     *
-     */
-    String prependedScripts(String input);
-
-    /**
-     *
-     * @param input is {@link org.apache.wicket.ajax.AjaxRequestTarget#toString()}
-     *
-     *  @return  appendedscripts string as displayed by List.toString() of appendedscripts
-     */
-    String appendedScripts(String input);
 
     /**
      *  js call to scroll to top
@@ -188,17 +165,6 @@ public interface IRepeaterUtil {
 
 
     /**
-     * return iterator of those items whose models are equal ,if the model is not equal new item is returned
-     *
-     * @param oldIterator    old iterator
-     * @param newIterator    new iterator (iterator of the list of expected modelobjects)
-     * @return
-     */
-    Iterator<Item> reuseItemsIfModelsEqual(Iterator<Item> oldIterator, Iterator<Item> newIterator);
-
-
-
-    /**
      *  throw this exception if quickview's parent is not found
      *
      * @author Vineet Semwal
@@ -240,13 +206,4 @@ public interface IRepeaterUtil {
     }
 
 
-    /**
-     *  throw this exception if quickview is not initialized with reuse constant
-     * @author Vineet Semwal
-     */
-    public static class ReuseNotInitializedException extends RuntimeException {
-        public ReuseNotInitializedException(String message) {
-            super(message);
-        }
-    }
 }

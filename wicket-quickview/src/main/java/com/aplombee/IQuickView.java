@@ -27,9 +27,8 @@ import java.util.List;
  */
 
 public interface IQuickView<T> extends IPageable {
-	ReUse getReuse();
-
-	MarkupContainer getParent();
+    IQuickReuseStrategy getReuseStrategy();
+    MarkupContainer getParent();
     /**
      *
      * create and draw children for the provided page ,number of

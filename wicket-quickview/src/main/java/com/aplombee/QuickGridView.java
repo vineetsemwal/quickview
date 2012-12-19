@@ -18,7 +18,7 @@ package com.aplombee;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.repeater.IItemFactory;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.markup.repeater.data.GridView;
@@ -43,8 +43,8 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
      * @param id           component id
      * @param dataProvider data provider
      */
-    public QuickGridView(String id, IDataProvider<T> dataProvider, ReUse reUse) {
-        super(id, dataProvider, reUse);
+    public QuickGridView(String id, IDataProvider<T> dataProvider, IQuickReuseStrategy reuseStrategy) {
+        super(id, dataProvider, reuseStrategy);
     }
 
     /**
@@ -52,7 +52,7 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
      * @param dataProvider data provider
      */
     public QuickGridView(String id, IDataProvider<T> dataProvider) {
-        super(id, dataProvider, ReUse.NOT_INITIALIZED);
+        super(id, dataProvider, new DefaultQuickReuseStrategy());
     }
 
 
@@ -86,21 +86,10 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
     }
 
     protected void updateItemsPerPage() {
-        int items = Integer.MAX_VALUE;
-
-        long result = (long)rows * (long)columns;
-
-        // overflow check
-        int desiredHiBits = -((int)(result >>> 31) & 1);
-        int actualHiBits = (int)(result >>> 32);
-
-        if (desiredHiBits == actualHiBits)
-        {
-            items = (int)result;
-        }
-        setItemsPerRequest(items);
+        long items = (long) rows * (long) columns;
+       int prevent= (items > Integer.MAX_VALUE) ? Integer.MAX_VALUE : (int)items;
+        setItemsPerRequest(prevent);
     }
-
 
 
     private int rows = Integer.MAX_VALUE;
@@ -131,6 +120,16 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
         return this;
     }
 
+    @Override
+    public IItemFactory<T> factory() {
+        return new IItemFactory<T>() {
+            @Override
+            public Item<T> newItem(int index, IModel<T> model) {
+                return buildCellItem(index, model);
+            }
+        } ;
+    }
+
     protected final void populate(Item<T> item) {
         populate((CellItem) item);
     }
@@ -153,7 +152,7 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
         return this;
     }
 
-    public QuickGridView addRow(RowItem<T> rowItem) {
+    public QuickGridView<T> addRow(RowItem<T> rowItem) {
         Args.notNull(rowItem, "rowItem can't be null");
         simpleAdd(rowItem);
         if (!isAjax()) {
@@ -231,23 +230,11 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
 
 
     /**
-     * reuse items if the models are equal ,iterator of RowItems is returned
-     */
-    protected Iterator<Item<T>> reuseItemsForCurrentPage(final int currentPage) {
-        final long items = currentPage * getItemsPerRequest();
-        Iterator<? extends T> objects = getDataProvider().iterator(getRepeaterUtil().safeLongToInt(items), getItemsPerRequest());
-        Iterator<RowItem<T>> newRowsIterator = (Iterator) buildItems(0, objects);
-        Iterator oldCells = cells();
-        Iterator newCells = new GridView.ItemsIterator((Iterator) newRowsIterator);
-        Iterator reuseItems = getRepeaterUtil().reuseItemsIfModelsEqual(oldCells, newCells);
-        return (Iterator) buildRows(0, reuseItems);
-    }
-
-    /**
      * @param index    cellindex from where new cell items should be added
      * @param iterator data
      * @return iterator of RowItem which are created with their corresponding cells attached to them
      */
+
     @Override
     protected Iterator<Item<T>> buildItems(final int index, Iterator<? extends T> iterator) {
         Iterator<CellItem<T>> cells = buildCells(index, iterator);
@@ -260,13 +247,17 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
      * @return iterator of RowItem which are created with their corresponding cells attached to them
      */
     public Iterator<RowItem<T>> buildRows(Iterator<? extends T> iterator) {
-        int cellindex = 0;
-        if (ReUse.ALL == getReuse()) {
-            cellindex = gridSize();
-        }
+        int cellindex = gridSize();
         return (Iterator) buildItems(cellindex, iterator);
     }
 
+    @Override
+    public void createChildren(Iterator<Item<T>>itemIterator){
+           Iterator<RowItem<T>>rows= buildRows(0,(Iterator)itemIterator);
+            while (rows.hasNext()){
+                simpleAdd(rows.next()) ;
+            }
+    }
 
     protected Iterator<RowItem<T>> buildRows(final long rowIndex, Iterator<CellItem<T>> iterator) {
         List<RowItem<T>> rowItems = new ArrayList<RowItem<T>>();
@@ -298,53 +289,31 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
         return cells.iterator();
     }
 
+
+
+    @Override
+    public List<Item<T>> addItemsForPage(int page) {
+        int startIndex=page*getItemsPerRequest();
+        Iterator<IModel<T>>newModels=newModels(startIndex, getItemsPerRequest());
+        Iterator<CellItem<T>> newIterator= (Iterator)getReuseStrategy().addItems((int)startIndex, factory(), newModels);
+        Iterator<RowItem<T>>rows= buildRows(startIndex/getRows(),newIterator);
+         List<Item<T>>items=new ArrayList<Item<T>>();
+
+        while (rows.hasNext()){
+            RowItem<T>rowItem=rows.next();
+            addRow(rowItem);
+            items.add(rowItem);
+        }
+
+        return items;
+    }
+
     public int gridSize() {
         int rows = size();
-        long grid = rows * columns;
-        return getRepeaterUtil().safeLongToInt(grid);
+        int grid = rows * columns;
+        return grid;
     }
 
-
-    /**
-     * adds {@link CellItem} to row's repeater ,if the iterator iterates less than the columns then the left cells are
-     * filled as empty cells
-     */
-    public List<Item<T>> addCells(RowItem<T> rowItem, Iterator<? extends T> iterator) {
-        List<Item<T>> cells = new ArrayList<Item<T>>();
-        for (int i = 0; i < columns; i++) {
-            if (iterator.hasNext()) {
-                T next = iterator.next();
-                CellItem<T> item = buildCellItem(next);
-                rowItem.getRepeater().add(item);
-                cells.add(item);
-            } else {
-                CellItem<T> item = buildEmptyCellItem();
-                rowItem.getRepeater().add(item);
-                cells.add(item);
-            }
-        }
-        return cells;
-    }
-
-    /**
-     * adds {@link CellItem} to row's repeater ,if the cells passed are less than columns then
-     * the left cells int the row are filled as empty cells
-     *
-     * @param rowItem rowItem
-     * @param cell
-     * @return this
-     */
-    public QuickGridView addCells(RowItem<T> rowItem, CellItem<T>... cell) {
-        for (int i = 0; i < columns; i++) {
-            if (i < cell.length) {
-                rowItem.getRepeater().add(cell[i]);
-            } else {
-                CellItem<T> item = buildEmptyCellItem();
-                rowItem.getRepeater().add(item);
-            }
-        }
-        return this;
-    }
 
 
     /**
@@ -456,7 +425,20 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
         return new CellItem<T>(id, getRepeaterUtil().safeLongToInt(index), getDataProvider().model(object));
     }
 
-    public CellItem<T> newEmptyCellItem(String id, long index) {
+    public CellItem<T> newCellItem(int index,IModel<T>model) {
+        return new CellItem<T>(newChildId(), getRepeaterUtil().safeLongToInt(index),model);
+    }
+
+
+    public CellItem<T> buildCellItem(int index,IModel<T>model) {
+        CellItem<T>cell= newCellItem(index,model);
+        populate(cell);
+        return cell;
+    }
+
+
+
+    public CellItem<T> newEmptyCellItem(String id, int index) {
         return new CellItem<T>(id, getRepeaterUtil().safeLongToInt(index), new Model(), true);
     }
 
@@ -535,7 +517,5 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
         }
 
     }
-
-
 
 }

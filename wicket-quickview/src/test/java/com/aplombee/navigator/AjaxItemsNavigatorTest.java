@@ -95,7 +95,7 @@ public class AjaxItemsNavigatorTest {
             protected void populate(Item item) {
             }
         };
-        repeater.setReuse(ReUse.ITEMSNAVIGATION);
+        repeater.setReuseStrategy(new ItemsNavigationStrategy());
         parent.add(repeater);
         parent.setOutputMarkupPlaceholderTag(true);
 
@@ -116,7 +116,7 @@ public class AjaxItemsNavigatorTest {
             protected void populate(Item item) {
             }
         };
-        repeater.setReuse(ReUse.ITEMSNAVIGATION);
+        repeater.setReuseStrategy(new ItemsNavigationStrategy());
         parent.add(repeater);
         parent.setOutputMarkupId(true);
 

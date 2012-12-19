@@ -137,8 +137,8 @@ public class RepeaterUtil implements  IRepeaterUtil{
      */
     @Override
     public final void parentNotSuitable(IQuickView quickView) {
-        Args.notNull(quickView,"quickview") ;
-        if (quickView.getReuse() == ReUse.PAGING || quickView.getReuse() == ReUse.CURRENTPAGE) {
+        Args.notNull(quickView, "quickview");
+        if (!quickView.getReuseStrategy() .isAddItemsSupported()) {
             return;
         }
         MarkupContainer parent = quickView.getParent();
@@ -153,103 +153,31 @@ public class RepeaterUtil implements  IRepeaterUtil{
         }
     }
 
+
     /**
      * {@inheritDoc}
      */
     @Override
     public final void outPutMarkupIdNotTrue(IQuickView quickView) {
-        Args.notNull(quickView,"quickview") ;
+        Args.notNull(quickView, "quickview");
         MarkupContainer container = quickView.getParent();
         if (container.getOutputMarkupId() == false && container.getOutputMarkupPlaceholderTag() == false) {
             throw new OutputMarkupIdNotTrueException("parent doesn't have setOutputMarkupId to true");
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void reuseNotInitialized(IQuickView quickView) {
-        Args.notNull(quickView,"quickview") ;
-        if (ReUse.NOT_INITIALIZED == quickView.getReuse()) {
-            throw new ReuseNotInitializedException("reuse strategy is not set or you have set  ReUse.NOT_INITIALIZED ");
-        }
-    }
 
     /**
      * {@inheritDoc}
      */
     @Override
     public final void reuseStategyNotSupportedForItemsNavigation(IQuickView quickView) {
-        Args.notNull(quickView,"quickview") ;
-        reuseNotInitialized(quickView);
-        if (ReUse.PAGING == quickView.getReuse() || ReUse.CURRENTPAGE==quickView.getReuse()) {
-            throw new ReuseStrategyNotSupportedException(ReUse.PAGING + " stategy is not supported for itemsnavigator ");
+        Args.notNull(quickView, "quickview");
+        if (!quickView.getReuseStrategy().isAddItemsSupported()) {
+            throw new ReuseStrategyNotSupportedException(" stategy is not supported for itemsnavigator ");
         }
     }
 
-    @Override
-    public final Iterator<Item> reuseItemsIfModelsEqual(Iterator<Item> oldIterator, Iterator<Item> newIterator){
-        List<Item> list=new ArrayList<Item>();
-        while (newIterator.hasNext()){
-            Item newItem =newIterator.next();
-            Item  old=null;
-            if(oldIterator.hasNext())
-            {
-                old=(Item)oldIterator.next();
-            }
-            if(old==null){
-                list.add(newItem);
-            }
-            else
-            {
-                if(!old.getModel().equals(newItem.getModel()))
-                {
-                    list.add(newItem);
-                }else{
-                    list.add(old);
-                }
-            }
-        }
-        return list.iterator();
-    }
-
-
-    protected String scripts(String regex,String input){
-        int regexEnd=end(regex,input);
-        String afterPrepend=input.substring(regexEnd);
-        final String openBracket="\\[",closeBracket="]";
-        int openBracketEnd=end(openBracket, afterPrepend);
-        String afterOpen=afterPrepend.substring(openBracketEnd);
-        int closeBracketEnd=end(closeBracket,afterOpen);
-        String scriptsString=afterOpen.substring(0,closeBracketEnd);
-        return scriptsString;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String prependedScripts(String input){
-        final String regex="prependJavaScript";
-        return scripts(regex,input);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String appendedScripts(String input){
-        final String regex="appendJavaScript";
-        return scripts(regex,input);
-    }
-
-    public int end(final String regex,final String input){
-        Pattern pattern=Pattern.compile(regex);
-        Matcher matcher=pattern.matcher(input);
-        int end=0;
-        if( matcher.find()){
-            end=matcher.end();
-        }
-        return end;
-    }
 
     @Override
     public String scrollToBottom(String markupId){
@@ -290,6 +218,9 @@ public class RepeaterUtil implements  IRepeaterUtil{
     public String scrollTo(String markupId,int height){
         return String.format("scrollTo('%s',%d);",markupId,height);
     }
+
+
+
     /**
      * {@inheritDoc}
      */
@@ -297,6 +228,7 @@ public class RepeaterUtil implements  IRepeaterUtil{
     public String isComponentScrollBarAtBottom(MarkupContainer component) {
         return String.format("isComponentScrollBarAtBottom('%s');",component.getMarkupId());
     }
+
     /**
      * {@inheritDoc}
      */

@@ -23,9 +23,11 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.repeater.IItemFactory;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.visit.IVisit;
@@ -37,6 +39,15 @@ import org.apache.wicket.util.visit.IVisitor;
  * @author Vineet Semwal
  */
 public abstract class QuickViewBase<T> extends RepeatingView implements IQuickView {
+   private IQuickReuseStrategy reuseStrategy;
+
+    public void setReuseStrategy(IQuickReuseStrategy reuseStrategy){
+        this.reuseStrategy = reuseStrategy;
+    }
+
+    public IQuickReuseStrategy getReuseStrategy(){
+        return reuseStrategy;
+    }
 
       //items created per request ,if used with PagingNavigator/AjaxPagingNavigator then it's the items per page
     private int itemsPerRequest=Integer.MAX_VALUE;
@@ -90,33 +101,6 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         return dataProvider;
     }
 
-    /**
-     * reuse strategy
-     */
-    private ReUse reuse;
-
-    @Override
-    public ReUse getReuse() {
-        return reuse;
-    }
-
-    /**
-     * set reuse strategy
-     * <p/>
-     * for paging ie. when used with {@link org.apache.wicket.markup.html.navigation.paging.PagingNavigator} or {@link org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigator}  the
-     * {@link ReUse.PAGING} is preferred
-     * <p/>
-     * for rows navigation purpose {@link ReUse.ITEMSNAVIGATION} is preferred
-     *
-     * @param reuse
-     */
-    public void setReuse(ReUse reuse) {
-        Args.notNull(reuse,"reuse");
-        if(reuse==ReUse.NOT_INITIALIZED){
-            throw  new IllegalArgumentException("reuse can't be set to NOT_INITIALIZED ");
-        }
-        this.reuse = reuse;
-    }
 
     protected IRepeaterUtil getRepeaterUtil() {
        return RepeaterUtil.get();
@@ -131,13 +115,14 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      * @param reuse           children are created again on render
      *
      */
-    public QuickViewBase(String id, IDataProvider<T> dataProvider, ReUse reuse) {
+    public QuickViewBase(String id, IDataProvider<T> dataProvider, IQuickReuseStrategy reuseStrategy) {
         super(id);
         Args.notNull(dataProvider, "dataProvider");
-        Args.notNull(reuse, "reuse");
-        this.reuse = reuse;
+        Args.notNull(reuseStrategy, "reuseStrategy");
          this.dataProvider = dataProvider;
+        this.reuseStrategy=reuseStrategy;
     }
+
 
     /**
      *  override if you want to provide other version of jquery .by default 1.7.2 version is used
@@ -170,6 +155,13 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
 
 
 
+    protected Item<T> newItem(int index, IModel<T> model) {
+        Item<T> item = new Item<T>(newChildId(),index, model);
+        item.setMarkupId(item.getId());
+        item.setOutputMarkupId(true);
+        return item;
+    }
+
     /**
      * creates new item,this method can be used in stateless environment,unique id is what you have to provide
      *
@@ -194,8 +186,14 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      * @param object model object
      * @return    item
      */
-    public Item buildItem(T object) {
-       return buildItem(newChildId(), getChildId(), object);
+    public Item buildItem(int index,T object) {
+       return buildItem(newChildId(),index, object);
+    }
+
+    protected Item buildItem(int index,IModel<T> model) {
+       Item<T>item=newItem(index,model);
+        populate(item);
+        return item;
     }
 
     public boolean isAjax() {
@@ -235,82 +233,120 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     protected void onPopulate() {
         super.onPopulate();
         clearCachedItemCount();
-       getRepeaterUtil().reuseNotInitialized(this);
-       getRepeaterUtil().parentNotSuitable(this);
-        simpleRemoveAllIfNotReuse();
-        int current=_getCurrentPage();
-        if (size() == 0) {
-
-             // all children might have got removed ,if true then create children of last page
-             //for first render currentpage will be 0
-
-            if (ReUse.PAGING == reuse) {
-                createChildren(current);
-            }
-
-
-             //   not first render but items were removed
-
-            if ((ReUse.ITEMSNAVIGATION == reuse) )  {
-                createChildren(0);
-                _setCurrentPage(0);
-            }
-
-
-             // first render,no children were added,so populated with first page
-
-            if((ReUse.ALL == reuse) || (ReUse.CURRENTPAGE == reuse)){
-               createChildren(0);
-            }
+        int page=_getCurrentPage();
+        Iterator<Item<T>>existing=(Iterator)itemsIterator();
+        int offset=page*getItemsPerRequest();
+       Iterator<IModel<T>>newModels=newModels(offset,itemsPerRequest);
+        Iterator<Item<T>> newIterator=  reuseStrategy.getItems( dataProvider,(int)itemsPerRequest, factory(),newModels ,existing);
+        simpleRemoveAll();
+      // if reuse strategy creates items for zero page every time QuickView is re-rendered
+        if(reuseStrategy.isAlwaysZeroPageCreatedOnReRender()){
+            _setCurrentPage(0);
         }
-        /**
-         * stategy is reuse and it's not first render
-         */
-        else {
-            /**
-             * if reuse=CURRENTPAGE ,reuse the current page elements and remove all others
-             */
-            if (ReUse.CURRENTPAGE == reuse) {
-                Iterator<Item<T>>iterator= reuseItemsForCurrentPage(currentPage) ;
-                simpleRemoveAll();
-                createChildren(iterator);
+        createChildren(newIterator);
+    }
 
-            }
 
-        }
+
+    public IItemFactory<T> factory(){
+      return new IItemFactory<T>() {
+          @Override
+          public Item<T> newItem(int index, IModel<T> model) {
+            return buildItem(index, model);
+          }
+      };
+    }
+
+
+    @Override
+    public List<Item<T>> addItemsForPage(final int page) {
+        int offset=page*getItemsPerRequest();
+        Iterator<IModel<T>>newModels=newModels(offset, itemsPerRequest);
+       Iterator<Item<T>>newIterator=  reuseStrategy.addItems(getRepeaterUtil().safeLongToInt(offset), factory(), newModels);
+        List<Item<T>>components=new ArrayList<Item<T>>();
+        while (newIterator.hasNext()){
+            Item<T>temp=newIterator.next();
+            components.add(temp);
+            add(temp);
+         }
+       return components;
     }
 
 
     /**
-     * reuse items if the models are equal
-     */
-    protected Iterator<Item<T>>reuseItemsForCurrentPage(int currentPage){
-        long start = currentPage * getItemsPerRequest();
-        Iterator<Component>oldIterator=itemsIterator();
-        Iterator<? extends T> objects = getDataProvider().iterator(getRepeaterUtil().safeLongToInt(start), getItemsPerRequest());
-        Iterator<Item<T>>newIterator=buildItems(0,objects);
-         return (Iterator)getRepeaterUtil().reuseItemsIfModelsEqual((Iterator) oldIterator, (Iterator) newIterator);
-    }
-
-    public Item<T> getItem(int index) {
-        return (Item) get(index);
-    }
-
-
-
-    /**
-     * creates children for the page provided
+     * Helper class that converts input from IDataProvider to an iterator over view items.
      *
-     * @param page
+     * @author Igor Vaynberg (ivaynberg)
+     *
+     * @param <T>
+     *            Model object type
      */
-    protected void createChildren(int page) {
-        long items = page * getItemsPerRequest();
-        Iterator<? extends T> iterator = getDataProvider().iterator(getRepeaterUtil().safeLongToInt(items), getItemsPerRequest());
-        Iterator<Item<T>>itemsIterator=buildItems(0, iterator);
-       createChildren(itemsIterator);
+    protected static final class ModelIterator<T> implements Iterator<IModel<T>>
+    {
+        private final Iterator<? extends T> items;
+        private final IDataProvider<T> dataProvider;
+        private final long max;
+        private long index;
+
+        /**
+         * Constructor
+         *
+         * @param dataProvider
+         *            data provider
+         * @param offset
+         *            index of first item
+         * @param count
+         *            max number of items to return
+         */
+        public ModelIterator(IDataProvider<T> dataProvider, int offset, int count)
+        {
+            this.dataProvider = dataProvider;
+            max = count;
+
+            items = count > 0 ? dataProvider.iterator(offset, count) : null;
+        }
+
+        /**
+         * @see java.util.Iterator#remove()
+         */
+        @Override
+        public void remove()
+        {
+            throw new UnsupportedOperationException();
+        }
+
+        /**
+         * @see java.util.Iterator#hasNext()
+         */
+        @Override
+        public boolean hasNext()
+        {
+            return items != null && items.hasNext() && (index < max);
+        }
+
+        /**
+         * @see java.util.Iterator#next()
+         */
+        @Override
+        public IModel<T> next()
+        {
+            index++;
+            return dataProvider.model(items.next());
+        }
     }
+
+    protected Iterator<IModel<T>>newModels(int offset,int count){
+       return new ModelIterator<T>(dataProvider,offset,count);
+
+    }
+
+    public Item<T> getItem(long index) {
+        return (Item) get(getRepeaterUtil().safeLongToInt(index));
+    }
+
 
     protected void createChildren(Iterator<Item<T>>iterator) {
+      Args.notNull(iterator,"iterator");
        while (iterator.hasNext()){
            Item<T>item=iterator.next();
            simpleAdd(item);
@@ -321,7 +357,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         List<Item<T>> items=new ArrayList<Item<T>>();
         for(int i=index; iterator.hasNext();i++){
             T object=iterator.next();
-            Item<T>item=buildItem(newChildId(), i,object);
+            Item<T>item=buildItem( i,object);
             items.add(item);
         }
            return items.iterator();
@@ -495,6 +531,53 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         return this;
     }
 
+    /**
+     *
+     *
+     *  this does 2 steps
+     *
+     *  1)creates children ,children will get the model object after iterating over objects passed as argument
+     *  2)adds children to View using {@link this#add(org.apache.wicket.Component...)}
+     * @param objects  iterator of model objects for children
+     * @return this
+     */
+
+
+    public MarkupContainer addNewItems(T... objects){
+        List<T>list=new ArrayList<T>();
+        for(T obj:objects){
+          list.add(obj);
+        }
+        Iterator<Item<T>>items= buildItems(list.iterator());
+        while (items.hasNext()){
+            add(items.next())  ;
+        }
+        return this;
+    }
+
+
+    /**
+     *  this does 2 steps
+     *
+     *  1)creates children ,children will get the model object after iterating over objects passed as argument
+     *  2)adds children to View using {@link this#addAtStart(org.apache.wicket.Component...)}
+     * @param objects  iterator of model objects for children
+     * @return this
+     */
+
+    public MarkupContainer addNewItemsAtStart(T... objects){
+        List<T>list=new ArrayList<T>();
+        for(T obj:objects){
+            list.add(obj);
+        }
+        Iterator<Item<T>>items= buildItems(list.iterator());
+        while (items.hasNext()){
+            addAtStart(items.next())  ;
+        }
+        return this;
+    }
+
+
 
     /**
      * {@inheritDoc}
@@ -517,24 +600,6 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     /**
      * {@inheritDoc}
      */
-    @Override
-   public List<Item<T>> addItemsForPage(final int page) {
-        final int start=page* getItemsPerRequest();
-       clearCachedItemCount();
-       int itemIndex=start;
-       Iterator<? extends T> objects = getDataProvider().iterator(start, getItemsPerRequest());
-        List<Item<T>> components = new ArrayList<Item<T>>();
-        Iterator<Item<T>>items = buildItems(itemIndex,objects);
-        while (items.hasNext()) {
-            Item<T>item=items.next();
-            components.add(item);
-            add(item);
-        }
-
-        return components;
-    }
-
-
     @Override
     public MarkupContainer remove(final Component component) {
         Args.notNull(component, "component can't be null");
@@ -577,14 +642,6 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         return this;
     }
 
-    /**
-     * removes all children if reuse is not true
-     */
-    public void simpleRemoveAllIfNotReuse() {
-        if (reuse == ReUse.PAGING || reuse == ReUse.ITEMSNAVIGATION) {
-            simpleRemoveAll();
-        }
-    }
 
     /**
      * when called on ajax event ,this method moves navigation-bar to bottom,
@@ -757,6 +814,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         dataProvider.detach();
         super.onDetach();
     }
+
 
 
 }
