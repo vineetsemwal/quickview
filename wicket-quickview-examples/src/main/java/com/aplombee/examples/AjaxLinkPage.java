@@ -64,7 +64,7 @@ public class AjaxLinkPage extends WebPage {
             public void onClick(AjaxRequestTarget target) {
                 int newObject=list.get(list.size()-1) +1;
                 list.add( newObject);
-                number.createAndAdd(newObject);  //just enough to create a new row at last
+                number.addNewItems(newObject);  //just enough to create a new row at last
                  }
 
         };
@@ -79,7 +79,7 @@ public class AjaxLinkPage extends WebPage {
             public void onClick(AjaxRequestTarget target) {
                 int newObject=list.get(0)-1;
                 list.add(0,newObject);
-                number.createAndAddAtStart(newObject);  //just enough to create a new row at start
+                number.addNewItemsAtStart(newObject);  //just enough to create a new row at start
             }
 
         };

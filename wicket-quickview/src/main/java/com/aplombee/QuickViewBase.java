@@ -519,7 +519,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      */
 
 
-    public MarkupContainer createAndAdd(T ... objects){
+    public MarkupContainer addNewItems(T... objects){
         List<T>list=new ArrayList<T>();
         for(T obj:objects){
           list.add(obj);
@@ -532,7 +532,6 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     }
 
 
-
     /**
      *  this does 2 steps
      *
@@ -542,7 +541,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      * @return this
      */
 
-    public MarkupContainer createAndAddAtStart(T ... objects){
+    public MarkupContainer addNewItemsAtStart(T... objects){
         List<T>list=new ArrayList<T>();
         for(T obj:objects){
             list.add(obj);

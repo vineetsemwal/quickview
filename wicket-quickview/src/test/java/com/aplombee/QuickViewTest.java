@@ -344,10 +344,10 @@ public class QuickViewTest {
 
 
     /**
-     * createAndAdd(object1,object2)
+     * addNewItems(object1,object2)
      */
     @Test(groups = {"wicketTests"})
-    public void createAndAdd_1() {
+    public void addNewItems_1() {
         int oneBlock = 2;
         final WebMarkupContainer parent = Mockito.mock(WebMarkupContainer.class);
         IDataProvider dataProvider = Mockito.mock(IDataProvider.class);
@@ -402,7 +402,7 @@ public class QuickViewTest {
         QuickView<TestObj> sparc = Mockito.spy(arc);
         Mockito.when(sparc.buildItem(index1,obj1)).thenReturn(item1) ;
         Mockito.when(sparc.buildItem(index2,obj2)).thenReturn(item2);
-        sparc.createAndAdd(obj1,obj2);
+        sparc.addNewItems(obj1, obj2);
         Mockito.verify(sparc,Mockito.times(1)).buildItem(index1, obj1);
         Mockito.verify(sparc,Mockito.times(1)).buildItem(index2, obj2);
         Mockito.verify(sparc, Mockito.times(1)).add(item1);
@@ -412,10 +412,10 @@ public class QuickViewTest {
 
 
     /**
-     * createAndAddAtStart(T ... object)
+     * addNewItemsAtStart(T ... object)
      */
     @Test(groups = {"wicketTests"})
-    public void createAndAddAtStart_1() {
+    public void addNewItemsAtStart_1() {
         int oneBlock = 2;
         final WebMarkupContainer parent = Mockito.mock(WebMarkupContainer.class);
         IDataProvider dataProvider = Mockito.mock(IDataProvider.class);
@@ -470,7 +470,7 @@ public class QuickViewTest {
         QuickView<TestObj> sparc = Mockito.spy(arc);
         Mockito.when(sparc.buildItem(index1,obj1)).thenReturn(item1) ;
         Mockito.when(sparc.buildItem(index2,obj2)).thenReturn(item2);
-        sparc.createAndAddAtStart(obj1,obj2);
+        sparc.addNewItemsAtStart(obj1, obj2);
         Mockito.verify(sparc,Mockito.times(1)).buildItem(index1, obj1);
         Mockito.verify(sparc,Mockito.times(1)).buildItem(index2, obj2);
         Mockito.verify(sparc, Mockito.times(1)).addAtStart(item1);
@@ -643,13 +643,13 @@ public class QuickViewTest {
     }
 
     /**
-     * reuse={@link ReUse.DEFAULT_PAGING}  ,size=0   .current page=2  ,firstPageCreatedOnReRender=false
+     * current page=5  ,firstPageCreatedOnReRender=false
      */
 
     @Test(groups = {"wicketTests"})
     public void onPopulate_1() {
         IDataProvider provider = Mockito.mock(IDataProvider.class);
-        final int size = 0, currentPage = 5;
+        final int currentPage = 5;
         final IRepeaterUtil util = Mockito.mock(IRepeaterUtil.class);
         IQuickReuseStrategy reuse = Mockito.mock(IQuickReuseStrategy.class);
         //first page not set
@@ -689,10 +689,6 @@ public class QuickViewTest {
                 return this;
             }
 
-            @Override
-            public int size() {
-                return size;
-            }
 
             @Override
             public long _getCurrentPage() {
@@ -721,8 +717,9 @@ public class QuickViewTest {
         order.verify(reuse, Mockito.times(1)).getItems(provider, itemsPerRequest, factory, newModels, existing);
         order.verify(spy, Mockito.times(1)).simpleRemoveAll();
         order.verify(spy, Mockito.times(1)).createChildren(newItems);
-        // page=0 is not set
         Mockito.verify(spy, Mockito.never())._setCurrentPage(0);
+        // page=0 is not set
+
         //first page created always=true
         Mockito.when(reuse.isAlwaysZeroPageCreatedOnReRender()).thenReturn(true);
         spy.onPopulate();
@@ -732,6 +729,8 @@ public class QuickViewTest {
         order.verify(reuse, Mockito.times(1)).getItems(provider, itemsPerRequest, factory, newModels, existing);
         order.verify(spy, Mockito.times(1)).simpleRemoveAll();
         order.verify(spy, Mockito.times(1)).createChildren(newItems);
+        Mockito.verify(spy, Mockito.times(1))._setCurrentPage(0);
+
         // page=0 is  set
         Mockito.verify(spy, Mockito.times(1))._setCurrentPage(0);
 
