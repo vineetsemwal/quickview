@@ -77,7 +77,7 @@ public class ReuseAllStrategy extends AbstractItemsNavigationStrategy{
     }
 
     @Override
-    public boolean isAlwaysZeroPageCreatedOnReRender() {
+    public boolean isAlwaysZeroPageCreatedOnRender() {
         return false;
     }
 }

@@ -25,16 +25,12 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.link.AbstractLink;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.repeater.IItemFactory;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
@@ -716,7 +712,7 @@ public class QuickViewTest {
         final IRepeaterUtil util = Mockito.mock(IRepeaterUtil.class);
         IQuickReuseStrategy reuse = Mockito.mock(IQuickReuseStrategy.class);
         //first page not set
-        Mockito.when(reuse.isAlwaysZeroPageCreatedOnReRender()).thenReturn(false);
+        Mockito.when(reuse.isAlwaysZeroPageCreatedOnRender()).thenReturn(false);
         final IItemFactory factory = Mockito.mock(IItemFactory.class);
         final Iterator existing = Mockito.mock(Iterator.class);
         final Iterator newModels = Mockito.mock(Iterator.class);
@@ -787,7 +783,7 @@ public class QuickViewTest {
         // page=0 is not set
         Mockito.verify(spy, Mockito.never())._setCurrentPage(0);
         //first page created always=true
-        Mockito.when(reuse.isAlwaysZeroPageCreatedOnReRender()).thenReturn(true);
+        Mockito.when(reuse.isAlwaysZeroPageCreatedOnRender()).thenReturn(true);
         spy.onPopulate();
 
         order = Mockito.inOrder(reuse, spy, provider);
@@ -1089,7 +1085,7 @@ public class QuickViewTest {
         } ;
         Item one=quickView.buildItem(0,67);
         Item two=quickView.buildItem(1,68);
-        quickView.simpleAdd(one,two);
+        quickView.simpleAdd(one, two);
         quickView.simpleRemoveAll();
         Assert.assertEquals(quickView.size(), 0);
     }
@@ -1431,7 +1427,7 @@ public class QuickViewTest {
         parent.internalInitialize();
         parent.beforeRender();
        ResourceReference actual= repeater.jqueryReference();
-        Assert.assertEquals(actual,JqueryResourceReference.get());
+        Assert.assertEquals(actual, JqueryResourceReference.get());
     }
 
     /**
@@ -1460,7 +1456,7 @@ public class QuickViewTest {
         parent.internalInitialize();
         parent.beforeRender();
         ResourceReference actual= repeater.jqueryReference();
-        Assert.assertEquals(actual,JqueryCompressedReference.get());
+        Assert.assertEquals(actual, JqueryCompressedReference.get());
     }
 
     public AjaxRequestTarget mockTarget() {
