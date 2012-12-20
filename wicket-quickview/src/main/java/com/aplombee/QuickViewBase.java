@@ -208,7 +208,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      super.onPopulate();
         clearCachedItemCount();
         // if reuse strategy creates items for zero page every time QuickView is re-rendered
-        if(reuseStrategy.isAlwaysZeroPageCreatedOnReRender()){
+        if(reuseStrategy.isAlwaysZeroPageCreatedOnRender()){
             _setCurrentPage(0);
         }
         long page=_getCurrentPage();

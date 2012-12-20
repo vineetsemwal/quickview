@@ -20,8 +20,6 @@ package com.aplombee;
 
 import org.apache.wicket.markup.repeater.IItemFactory;
 import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.repeater.data.IDataProvider;
-import org.apache.wicket.markup.repeater.data.ListDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.mockito.Mockito;
@@ -49,7 +47,7 @@ public class ReuseAllStrategyTest extends AbstractItemsNavigationStrategyTest{
 
     @Test(groups = {"wicketTests"})
     public void isZeroPageCreatedOnReRender_1(){
-        Assert.assertFalse(new ReuseAllStrategy().isAlwaysZeroPageCreatedOnReRender());
+        Assert.assertFalse(new ReuseAllStrategy().isAlwaysZeroPageCreatedOnRender());
     }
 
     /**

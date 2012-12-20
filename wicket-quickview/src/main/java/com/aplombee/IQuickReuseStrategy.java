@@ -76,10 +76,10 @@ public interface IQuickReuseStrategy extends IItemReuseStrategy {
     boolean isAddItemsSupported();
 
     /**
-     * if the strategy creates items for zero page every time view is re-rendered then returns true else false
+     * if the strategy creates items for zero page every time view is rendered then returns true else false
      *
-     * @return  true if zero page has to be created everytime view is re-rendered else false
+     * @return  true if zero page has to be created everytime view is rendered else false
      */
-    boolean isAlwaysZeroPageCreatedOnReRender();
+    boolean isAlwaysZeroPageCreatedOnRender();
 
 }

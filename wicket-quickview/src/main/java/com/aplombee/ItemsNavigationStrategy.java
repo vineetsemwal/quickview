@@ -67,7 +67,7 @@ public class ItemsNavigationStrategy extends AbstractItemsNavigationStrategy {
     }
 
     @Override
-    public boolean isAlwaysZeroPageCreatedOnReRender() {
+    public boolean isAlwaysZeroPageCreatedOnRender() {
         return true;
     }
 }
