@@ -56,7 +56,7 @@ public class ReuseAllStrategy extends AbstractItemsNavigationStrategy{
      * @return iterator over exisiting items
      */
     @Override
-    public <T> Iterator<Item<T>> getItems(IDataProvider<T> dataProvider, int itemsPerRequest, IItemFactory<T> factory, Iterator<IModel<T>> newModels, Iterator<Item<T>> existingItems) {
+    public <T> Iterator<Item<T>> getItems( IItemFactory<T> factory, Iterator<IModel<T>> newModels, Iterator<Item<T>> existingItems) {
         List<Item<T>>copy=new ArrayList<Item<T>>();
         while(existingItems.hasNext()){
             copy.add(existingItems.next());

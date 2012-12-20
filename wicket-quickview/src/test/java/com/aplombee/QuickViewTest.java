@@ -661,7 +661,7 @@ public class QuickViewTest {
         Iterator data = Mockito.mock(Iterator.class);
         final int itemsPerRequest = 2;
         final int offset = currentPage * itemsPerRequest;
-        Mockito.when(reuse.getItems(provider, itemsPerRequest, factory, newModels, existing)).thenReturn(newItems);
+        Mockito.when(reuse.getItems( factory, newModels, existing)).thenReturn(newItems);
         QuickView repeater = new QuickView("repeater", provider, reuse, itemsPerRequest) {
 
             @Override
@@ -714,7 +714,7 @@ public class QuickViewTest {
 
         InOrder order = Mockito.inOrder(reuse, spy, provider);
         order.verify(spy).newModels(offset, itemsPerRequest);
-        order.verify(reuse, Mockito.times(1)).getItems(provider, itemsPerRequest, factory, newModels, existing);
+        order.verify(reuse, Mockito.times(1)).getItems( factory, newModels, existing);
         order.verify(spy, Mockito.times(1)).simpleRemoveAll();
         order.verify(spy, Mockito.times(1)).createChildren(newItems);
         Mockito.verify(spy, Mockito.never())._setCurrentPage(0);
@@ -726,7 +726,7 @@ public class QuickViewTest {
 
         order = Mockito.inOrder(reuse, spy, provider);
         order.verify(spy).newModels(offset, itemsPerRequest);
-        order.verify(reuse, Mockito.times(1)).getItems(provider, itemsPerRequest, factory, newModels, existing);
+        order.verify(reuse, Mockito.times(1)).getItems( factory, newModels, existing);
         order.verify(spy, Mockito.times(1)).simpleRemoveAll();
         order.verify(spy, Mockito.times(1)).createChildren(newItems);
         Mockito.verify(spy, Mockito.times(1))._setCurrentPage(0);
