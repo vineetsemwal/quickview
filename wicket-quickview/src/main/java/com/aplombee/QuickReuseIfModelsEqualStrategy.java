@@ -46,7 +46,7 @@ public class QuickReuseIfModelsEqualStrategy extends AbstractPagingNavigationStr
      *      java.util.Iterator, java.util.Iterator)
      */
       @Override
-    public <T> Iterator<Item<T>> getItems(IDataProvider<T> dataProvider, int itemsPerRequest, IItemFactory<T> factory, Iterator<IModel<T>> newModels, Iterator<Item<T>> existingItems) {
+    public <T> Iterator<Item<T>> getItems( IItemFactory<T> factory, Iterator<IModel<T>> newModels, Iterator<Item<T>> existingItems) {
         return ReuseIfModelsEqualStrategy.getInstance().getItems(factory,newModels,existingItems);
     }
 

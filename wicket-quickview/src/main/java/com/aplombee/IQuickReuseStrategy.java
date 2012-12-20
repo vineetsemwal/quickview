@@ -33,7 +33,7 @@ import java.util.Iterator;
  * iterator, so it is important that the strategy preserve this order
  * </p>
  *
- * depending on use any new reuse strategy can be created ,few ready-made for QuickView strategies are <br/>
+ * depending on use any new reuse strategy can be created ,few ready-made strategies for QuickView are <br/>
  *
  * 1) {@link DefaultQuickReuseStrategy}
  *
@@ -49,7 +49,7 @@ import java.util.Iterator;
  *
  * @author Vineet Semwal
  */
-public interface IQuickReuseStrategy extends Serializable {
+public interface IQuickReuseStrategy extends IItemReuseStrategy {
 
     /**
      * Returns an iterator over items that will be added to the view without re-rendering the QuickView
@@ -66,25 +66,6 @@ public interface IQuickReuseStrategy extends Serializable {
      */
     <T> Iterator<Item<T>> addItems(int startIndex,IItemFactory<T> factory, Iterator<IModel<T>> newModels);
 
-    /**
-     * Returns an iterator over items that will be added to the view when QuickView is re-rendered. The iterator needs to return
-     * all the items because the old ones are removed prior to the new ones added.
-     *
-     * @param dataProvider dataProvider provided to QuickView
-     *
-     * @param itemsPerRequest no of item created per request
-     *
-     * @param <T>    type of Item
-     *
-     * @param factory
-     *            implementation of IItemFactory
-     * @param newModels
-     *            iterator over models for items
-     * @param existingItems
-     *            iterator over child items
-     * @return iterator over items that will be added after all the old items are moved.
-     */
-    <T> Iterator<Item<T>> getItems(IDataProvider<T> dataProvider,int itemsPerRequest, IItemFactory<T> factory, Iterator<IModel<T>> newModels, Iterator<Item<T>> existingItems);
 
 
     /**

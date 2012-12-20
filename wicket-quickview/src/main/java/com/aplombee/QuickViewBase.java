@@ -231,18 +231,18 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
 
     @Override
     protected void onPopulate() {
-        super.onPopulate();
+     super.onPopulate();
         clearCachedItemCount();
+        // if reuse strategy creates items for zero page every time QuickView is re-rendered
+        if(reuseStrategy.isAlwaysZeroPageCreatedOnReRender()){
+            _setCurrentPage(0);
+        }
         int page=_getCurrentPage();
         Iterator<Item<T>>existing=(Iterator)itemsIterator();
         int offset=page*getItemsPerRequest();
        Iterator<IModel<T>>newModels=newModels(offset,itemsPerRequest);
-        Iterator<Item<T>> newIterator=  reuseStrategy.getItems( dataProvider,(int)itemsPerRequest, factory(),newModels ,existing);
+        Iterator<Item<T>> newIterator=  reuseStrategy.getItems( factory(),newModels ,existing);
         simpleRemoveAll();
-      // if reuse strategy creates items for zero page every time QuickView is re-rendered
-        if(reuseStrategy.isAlwaysZeroPageCreatedOnReRender()){
-            _setCurrentPage(0);
-        }
         createChildren(newIterator);
     }
 

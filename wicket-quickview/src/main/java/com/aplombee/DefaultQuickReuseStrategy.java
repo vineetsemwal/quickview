@@ -54,7 +54,7 @@ public class DefaultQuickReuseStrategy extends AbstractPagingNavigationStrategy 
      * @return iterator over items that will be added after all the old items are moved.
      */
     @Override
-    public <T> Iterator<Item<T>> getItems(IDataProvider<T>dataProvider,int itemsPerRequest,IItemFactory<T> factory, Iterator<IModel<T>> newModels, Iterator<Item<T>> existingItems) {
+    public <T> Iterator<Item<T>> getItems(IItemFactory<T> factory, Iterator<IModel<T>> newModels, Iterator<Item<T>> existingItems) {
       return DefaultItemReuseStrategy.getInstance().getItems(factory,newModels,existingItems);
     }
 
