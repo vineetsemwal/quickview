@@ -56,6 +56,7 @@ public interface IQuickReuseStrategy extends IItemReuseStrategy {
      *
      * @param <T>
      *            type of Item
+     * @param startIndex index from where new items will be added
      *
      * @param factory
      *            implementation of IItemFactory
