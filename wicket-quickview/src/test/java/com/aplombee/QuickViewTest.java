@@ -1189,9 +1189,7 @@ public class QuickViewTest {
 
     }
 
-    /**
-     * model object is integer
-     */
+
     @Test(groups = {"wicketTests"})
     public void newItem_1() {
         final int object = 89;
@@ -1205,35 +1203,14 @@ public class QuickViewTest {
         };
         final long index = 9l;
         final String id = "67";
-        Item<Integer> item = quickView.newItem(id, index, object);
+        Item<Integer> item = quickView.newItem(id, index, model);
         Assert.assertEquals(item.getModelObject().intValue(), 89);
         Assert.assertEquals(item.getMarkupId(), id);
         Assert.assertEquals(item.getIndex(), index);
         Assert.assertTrue(item.getOutputMarkupId());
     }
 
-    /**
-     * modelobject is string
-     */
-    @Test(groups = {"wicketTests"})
-    public void newItem_2() {
-        final String object = "theobject";
-        IDataProvider data = Mockito.mock(IDataProvider.class);
-        Model<String> model = new Model<String>(object);
-        Mockito.when(data.model(object)).thenReturn(model);
-        QuickView<String> quickView = new QuickView<String>("id", data) {
-            @Override
-            protected void populate(Item<String> item) {
-            }
-        };
-        final long index = 9l;
-        final String id = "345";
-        Item<String> item = quickView.newItem(id, index, object);
-        Assert.assertEquals(item.getModelObject(), object);
-        Assert.assertEquals(item.getMarkupId(), id);
-        Assert.assertTrue(item.getOutputMarkupId());
-        Assert.assertEquals(item.getIndex(), index);
-    }
+
 
     /**
      * test for  {@link QuickViewBase#buildItem(id, index, object)}
@@ -1241,6 +1218,8 @@ public class QuickViewTest {
     @Test(groups = {"wicketTests"})
     public void buildItem_1() {
         IDataProvider data = Mockito.mock(IDataProvider.class);
+        IModel model=Mockito.mock(IModel.class);
+
         final Item item = Mockito.mock(Item.class);
         QuickView<TestObj> quickView = new QuickView<TestObj>("id", data) {
             @Override
@@ -1248,27 +1227,61 @@ public class QuickViewTest {
             }
 
             @Override
-            protected Item newItem(String id, long index, TestObj object) {
+            protected Item<TestObj> newItem(String id, long index, IModel<TestObj> model) {
                 return item;
             }
         };
         final long index = 9l;
         final String id = "87";
         final TestObj object = Mockito.mock(TestObj.class);
+        Mockito.when(model.getObject()).thenReturn(object);
+        Mockito.when(data.model(object)).thenReturn(model);
         QuickView<TestObj> spy = Mockito.spy(quickView);
         Item<TestObj> actual = spy.buildItem(id, index, object);
         Assert.assertEquals(actual, item);
         InOrder order = Mockito.inOrder(spy, item);
-        order.verify(spy, Mockito.times(1)).newItem(id, index, object);
+        order.verify(spy, Mockito.times(1)).newItem(id, index, model);
+        order.verify(spy, Mockito.times(1)).populate(item);
+    }
+
+    /**
+     * test for  {@link QuickViewBase#buildItem(id, index, model)}
+     */
+    @Test(groups = {"wicketTests"})
+    public void buildItem_2() {
+        IDataProvider data = Mockito.mock(IDataProvider.class);
+        IModel model=Mockito.mock(IModel.class);
+
+        final Item item = Mockito.mock(Item.class);
+        QuickView<TestObj> quickView = new QuickView<TestObj>("id", data) {
+            @Override
+            protected void populate(Item item) {
+            }
+
+            @Override
+            protected Item<TestObj> newItem(String id, long index, IModel<TestObj> model) {
+                return item;
+            }
+        };
+        final long index = 9l;
+        final String id = "87";
+        final TestObj object = Mockito.mock(TestObj.class);
+        Mockito.when(model.getObject()).thenReturn(object);
+        Mockito.when(data.model(object)).thenReturn(model);
+        QuickView<TestObj> spy = Mockito.spy(quickView);
+        Item<TestObj> actual = spy.buildItem(id, index, model);
+        Assert.assertEquals(actual, item);
+        InOrder order = Mockito.inOrder(spy, item);
+        order.verify(spy, Mockito.times(1)).newItem(id, index, model);
         order.verify(spy, Mockito.times(1)).populate(item);
     }
 
 
     /**
-     * test for  {@link QuickViewBase#buildItem(object)}
+     * test for  {@link QuickViewBase#buildItem(index,object)}
      */
     @Test(groups = {"wicketTests"})
-    public void buildItem_2() {
+    public void buildItem_3() {
         IDataProvider data = Mockito.mock(IDataProvider.class);
         final Item item = Mockito.mock(Item.class);
         final String childId = "78";

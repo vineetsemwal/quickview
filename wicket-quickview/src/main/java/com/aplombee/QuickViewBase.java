@@ -122,18 +122,9 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     }
 
 
-    protected Item<T> newItem(String id,long index, T object) {
-        Item<T> item = new Item<T>(id, getRepeaterUtil().safeLongToInt(index), getDataProvider().model(object));
+    protected Item<T> newItem(String id,long index, IModel<T> model) {
+        Item<T> item = new Item<T>(id, getRepeaterUtil().safeLongToInt(index), model);
         item.setMarkupId(String.valueOf(id));
-        item.setOutputMarkupId(true);
-        return item;
-    }
-
-
-
-    protected Item<T> newItem(long index, IModel<T>model) {
-        Item<T> item = new Item<T>(newChildId(),getRepeaterUtil().safeLongToInt(index), model);
-        item.setMarkupId(item.getId());
         item.setOutputMarkupId(true);
         return item;
     }
@@ -147,10 +138,15 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      * @return
      */
     public Item<T> buildItem(String id,long index, T object) {
-        Item<T> item = newItem(id,index, object);
+       return buildItem(id,index,getDataProvider().model(object));
+     }
+
+    protected Item<T> buildItem(String id,long index, IModel<T> model) {
+        Item<T> item = newItem(id,index, model);
         populate(item);
         return item;
-       }
+    }
+
 
 
     /**
@@ -165,10 +161,9 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     }
 
     protected Item buildItem(long index,IModel<T> model) {
-       Item<T>item=newItem(index,model);
-        populate(item);
-        return item;
+       return  buildItem(newChildId(),index,model);
     }
+
 
     public boolean isAjax() {
         return getWebRequest().isAjax();
