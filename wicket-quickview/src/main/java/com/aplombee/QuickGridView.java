@@ -269,8 +269,8 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
                     CellItem<T> cell = iterator.next();
                     rowItem.getRepeater().add(cell);
                 } else {
-                    CellItem<T> item = buildEmptyCellItem();
-                    rowItem.getRepeater().add(item);
+                    CellItem<T> cell = buildEmptyCellItem(newChildId(),i);
+                    rowItem.getRepeater().add(cell);
                 }
             }
 
@@ -279,9 +279,9 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
     }
 
 
-    protected Iterator<CellItem<T>> buildCells(final long index, Iterator<? extends T> iterator) {
+    protected Iterator<CellItem<T>> buildCells(final int index, Iterator<? extends T> iterator) {
         List<CellItem<T>> cells = new ArrayList<CellItem<T>>();
-        for (long i = index; iterator.hasNext(); i++) {
+        for (int i = index; iterator.hasNext(); i++) {
             T object = iterator.next();
             CellItem<T> cell = buildCellItem(newChildId(), i, object);
             cells.add(cell);
@@ -336,8 +336,13 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
      * @param object model object set to the cellitem
      * @return CellItem
      */
-    public CellItem<T> buildCellItem(String id, long index, T object) {
-        CellItem<T> cell = newCellItem(id, getRepeaterUtil().safeLongToInt(index), object);
+    public CellItem<T> buildCellItem(String id, int index, T object) {
+        return buildCellItem(id,index,getDataProvider().model(object));
+    }
+
+
+    protected CellItem<T> buildCellItem(String id, int index, IModel<T>model) {
+        CellItem<T> cell = newCellItem(id, index, model);
         populate(cell);
         return cell;
     }
@@ -347,8 +352,8 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
      *
      * @return CellItem
      */
-    public CellItem<T> buildEmptyCellItem() {
-        return buildEmptyCellItem(newChildId(), getChildId());
+    public CellItem<T> buildEmptyCellItem( int index) {
+      return buildEmptyCellItem(newChildId(),index);
     }
 
     /**
@@ -367,8 +372,8 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
      *
      * @return CellItem
      */
-    public CellItem<T> buildCellItem(T object) {
-        return buildCellItem(newChildId(), getChildId(), object);
+    public CellItem<T> buildCellItem(int index,T object) {
+        return buildCellItem(newChildId(), index, object);
     }
 
     public RowItem buildRowItem(String id, long index) {
@@ -415,31 +420,20 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
         return (Iterator) cells();
     }
 
-    /**
-     * @param id     cell's id
-     * @param index  cell's index
-     * @param object cell's modelobject
-     * @return cellitem
-     */
-    public CellItem<T> newCellItem(String id, long index, T object) {
-        return new CellItem<T>(id, getRepeaterUtil().safeLongToInt(index), getDataProvider().model(object));
-    }
 
-    public CellItem<T> newCellItem(int index,IModel<T>model) {
-        return new CellItem<T>(newChildId(), getRepeaterUtil().safeLongToInt(index),model);
+    protected CellItem<T> newCellItem(String id,int index, IModel<T> model) {
+        return new CellItem<T>(id, index,model);
     }
 
 
     public CellItem<T> buildCellItem(int index,IModel<T>model) {
-        CellItem<T>cell= newCellItem(index,model);
-        populate(cell);
-        return cell;
+        return buildCellItem(newChildId(),index,model);
     }
 
 
 
     public CellItem<T> newEmptyCellItem(String id, int index) {
-        return new CellItem<T>(id, getRepeaterUtil().safeLongToInt(index), new Model(), true);
+        return new CellItem<T>(id, index, new Model(), true);
     }
 
 

@@ -33,6 +33,7 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
 import org.apache.wicket.mock.MockApplication;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -268,9 +269,9 @@ public class QuickGridViewTest {
         };
 
         final String id="id";
-        final long index=845;
+        final int index=845;
         WicketTester tester=new WicketTester(createMockApplication());
-        QuickGridView.CellItem cell=grid.newCellItem(id, index, object);
+        QuickGridView.CellItem cell=grid.newCellItem(id, index, model);
         tester.startComponentInPage(cell);
         Assert.assertEquals(cell.getMarkupId(),id);
         Assert.assertEquals(cell.getId(),id);
@@ -333,10 +334,7 @@ public class QuickGridViewTest {
                 return String.valueOf(childId);
             }
 
-            @Override
-            public int getChildId() {
-                return childId;
-            }
+
         };
          QuickGridView spy=Mockito.spy(grid);
 
@@ -369,7 +367,7 @@ public class QuickGridViewTest {
                 return cell;
             }
             @Override
-            public CellItem<Integer> newCellItem(String id, long index,Integer object) {
+            public CellItem<Integer> newCellItem(String id, int index,IModel<Integer> model) {
                 return cell;
             }
 
@@ -378,14 +376,11 @@ public class QuickGridViewTest {
                 return String.valueOf(childId);
             }
 
-            @Override
-            public int getChildId() {
-                return childId;
-            }
         };
         QuickGridView spy=Mockito.spy(grid);
-        QuickGridView.CellItem actual=spy.buildEmptyCellItem();
-        Mockito.verify(spy,Mockito.times(1)).newEmptyCellItem(String.valueOf(childId),childId);
+        final int index=6787;
+        QuickGridView.CellItem actual=spy.buildEmptyCellItem(index);
+        Mockito.verify(spy,Mockito.times(1)).newEmptyCellItem(String.valueOf(childId),index);
         Mockito.verify(spy,Mockito.times(1)).populateEmptyItem(cell);
     }
 
@@ -407,7 +402,7 @@ public class QuickGridViewTest {
             }
 
             @Override
-            public CellItem<Integer> newCellItem(String id, long index,Integer object) {
+            public CellItem<Integer> newCellItem(String id, int index,IModel<Integer> model) {
                 return cell;
             }
 
@@ -416,16 +411,15 @@ public class QuickGridViewTest {
                 return String.valueOf(childId);
             }
 
-            @Override
-            public int getChildId() {
-                return childId;
-            }
         };
         QuickGridView spy=Mockito.spy(grid);
 
         final int object=876;//any object/number
-        QuickGridView.CellItem actual=spy.buildCellItem(String.valueOf(childId), childId,object);
-        Mockito.verify(spy,Mockito.times(1)).newCellItem(String.valueOf(childId), childId,object);
+        final int index=34556;
+         Model<Integer>model=new Model<Integer>(object);
+        Mockito.when(data.model(object)).thenReturn(model);
+        QuickGridView.CellItem actual=spy.buildCellItem(String.valueOf(childId), index,object);
+        Mockito.verify(spy,Mockito.times(1)).newCellItem(String.valueOf(childId), index,model);
         Mockito.verify(spy,Mockito.times(1)).populate(cell);
     }
 
@@ -449,7 +443,7 @@ public class QuickGridViewTest {
             }
 
             @Override
-            public CellItem<Integer> newCellItem(String id, long index,Integer object) {
+            public CellItem<Integer> newCellItem(String id, int index,IModel<Integer> model) {
                 return cell;
             }
 
@@ -458,18 +452,57 @@ public class QuickGridViewTest {
                 return String.valueOf(childId);
             }
 
-            @Override
-            public int getChildId() {
-                return childId;
-            }
         };
         QuickGridView spy=Mockito.spy(grid);
          final int object=908;
-        QuickGridView.CellItem actual=spy.buildCellItem(object);
-        Mockito.verify(spy,Mockito.times(1)).newCellItem(String.valueOf(childId),childId,object);
+        final int index=345;
+        Model<Integer>model=new Model<Integer>(object);
+        Mockito.when(data.model(object)).thenReturn(model);
+        QuickGridView.CellItem actual=spy.buildCellItem(index,object);
+        Mockito.verify(spy,Mockito.times(1)).newCellItem(String.valueOf(childId),index,model);
         Mockito.verify(spy,Mockito.times(1)).populate(cell);
     }
 
+
+    /**
+     * buildCellItem(index,object)
+     */
+    @Test(groups = {"wicketTests"})
+    public void buildCellItem_3(){
+        final QuickGridView.CellItem cell= Mockito.mock(QuickGridView.CellItem.class);
+        IDataProvider data = Mockito.mock(IDataProvider.class);
+        final long childId=89l;
+
+        QuickGridView<Integer> grid = new QuickGridView<Integer>("grid", data) {
+            @Override
+            protected void populate(CellItem item) {
+            }
+
+            @Override
+            protected void populateEmptyItem(CellItem item) {
+            }
+
+            @Override
+            public CellItem<Integer> newCellItem(String id, int index,IModel<Integer> model) {
+                return cell;
+            }
+
+            @Override
+            public String newChildId() {
+                return String.valueOf(childId);
+            }
+
+
+        };
+        QuickGridView spy=Mockito.spy(grid);
+        final int object=908;
+        final int index=345;
+        Model<Integer>model=new Model<Integer>(object);
+        Mockito.when(data.model(object)).thenReturn(model);
+        QuickGridView.CellItem actual=spy.buildCellItem(index,model);
+        Mockito.verify(spy,Mockito.times(1)).newCellItem(String.valueOf(childId),index,model);
+        Mockito.verify(spy,Mockito.times(1)).populate(cell);
+    }
 
     /*
      *start index=0
@@ -647,7 +680,7 @@ public class QuickGridViewTest {
             }
 
             @Override
-            public Iterator<CellItem> buildCells(long index, Iterator iterator) {
+            public Iterator<CellItem> buildCells(int index, Iterator iterator) {
                 return cells;
             }
 
@@ -690,7 +723,7 @@ public class QuickGridViewTest {
             }
 
             @Override
-            public Iterator<CellItem<Integer>> buildCells(long index, Iterator<? extends Integer> iterator) {
+            public Iterator<CellItem<Integer>> buildCells(int index, Iterator<? extends Integer> iterator) {
                     return cells;
             }
 
@@ -1131,12 +1164,12 @@ public class QuickGridViewTest {
             }
         };
         grid.setColumns(3);
-        QuickGridView.CellItem cell1=grid.buildCellItem(10);
+        QuickGridView.CellItem cell1=grid.buildCellItem(89789089,10);
         QuickGridView.RowItem rowItem=grid.buildRowItem("56",0);
        rowItem.getRepeater().add(cell1);
-        QuickGridView.CellItem cell2=grid.buildCellItem(20);
+        QuickGridView.CellItem cell2=grid.buildCellItem(89789,20);
         rowItem.getRepeater().add(cell2);
-        QuickGridView.CellItem cell3=grid.buildEmptyCellItem();
+        QuickGridView.CellItem cell3=grid.buildEmptyCellItem(897745);
         rowItem.getRepeater().add(cell3);
         grid.addRow(rowItem);
          QuickGridView.CellItem actual=grid.findFirstEmptyCell();
@@ -1161,12 +1194,12 @@ public class QuickGridViewTest {
             }
         };
         grid.setColumns(3);
-        QuickGridView.CellItem cell1=grid.buildCellItem(10);
+        QuickGridView.CellItem cell1=grid.buildCellItem(10,345);
         QuickGridView.RowItem rowItem=grid.buildRowItem("56",0);
         rowItem.getRepeater().add(cell1);
-        QuickGridView.CellItem cell2=grid.buildCellItem(20);
+        QuickGridView.CellItem cell2=grid.buildCellItem(20,546);
         rowItem.getRepeater().add(cell2);
-        QuickGridView.CellItem cell3=grid.buildCellItem(30);
+        QuickGridView.CellItem cell3=grid.buildCellItem(30,3098);
         rowItem.getRepeater().add(cell3);
         grid.addRow(rowItem);
 
@@ -1188,8 +1221,8 @@ public class QuickGridViewTest {
         };
         grid.setColumns(2);
        QuickGridView.RowItem row= grid.buildRowItem();
-        QuickGridView.CellItem cell1=grid.buildCellItem(10);
-        QuickGridView.CellItem cell2=grid.buildCellItem(20);
+        QuickGridView.CellItem cell1=grid.buildCellItem(78998,10);
+        QuickGridView.CellItem cell2=grid.buildCellItem(89798,20);
         // grid.addCells(row,cell1,cell2) ;
          row.getRepeater().add(cell1,cell2);
       QuickGridView.CellItem actual1= row.getCellItem(0);
@@ -1217,12 +1250,12 @@ public class QuickGridViewTest {
             }
         };
         grid.setColumns(3);
-        QuickGridView.CellItem cell1=grid.buildCellItem(10);
+        QuickGridView.CellItem cell1=grid.buildCellItem(89780989,10);
         QuickGridView.RowItem rowItem=grid.buildRowItem("56",0);
         rowItem.getRepeater().add(cell1);
-        QuickGridView.CellItem cell2=grid.buildCellItem(20);
+        QuickGridView.CellItem cell2=grid.buildCellItem(897980,20);
         rowItem.getRepeater().add(cell2);
-        QuickGridView.CellItem cell3=grid.buildEmptyCellItem();
+        QuickGridView.CellItem cell3=grid.buildEmptyCellItem(98989);
         rowItem.getRepeater().add(cell3);
         grid.addRow(rowItem);
 

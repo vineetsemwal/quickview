@@ -1124,7 +1124,7 @@ public class QuickViewTest {
         } ;
         final int index=9;
         final String id="67";
-       Item <Integer>item= quickView.newItem(id, index, object);
+       Item <Integer>item= quickView.newItem(id, index, model);
         Assert.assertEquals(item.getModelObject().intValue(), 89);
         Assert.assertEquals(item.getMarkupId(), id);
         Assert.assertEquals(item.getIndex(),index);
@@ -1147,7 +1147,7 @@ public class QuickViewTest {
         } ;
         final int index=9;
         final String id="345";
-        Item <String>item= quickView.newItem(id,index,object);
+        Item <String>item= quickView.newItem(id,index,model);
         Assert.assertEquals(item.getModelObject(),object);
         Assert.assertEquals(item.getMarkupId(),id);
         Assert.assertTrue(item.getOutputMarkupId());
@@ -1161,6 +1161,8 @@ public class QuickViewTest {
     @Test(groups = {"wicketTests"})
     public void buildItem_1() {
         IDataProvider data = Mockito.mock(IDataProvider.class);
+        IModel model=Mockito.mock(IModel.class);
+
         final Item item = Mockito.mock(Item.class);
         QuickView<TestObj> quickView = new QuickView<TestObj>("id", data) {
             @Override
@@ -1168,18 +1170,20 @@ public class QuickViewTest {
             }
 
             @Override
-            protected Item newItem(String id, int index, TestObj object) {
+            protected Item newItem(String id, int index, IModel<TestObj> model) {
                 return item;
             }
         };
         final int index = 9;
         final String id = "87";
         final TestObj object = Mockito.mock(TestObj.class);
+        Mockito.when(model.getObject()).thenReturn(object);
+        Mockito.when(data.model(object)).thenReturn(model);
         QuickView<TestObj> spy = Mockito.spy(quickView);
         Item<TestObj> actual = spy.buildItem(id, index, object);
         Assert.assertEquals(actual, item);
         InOrder order = Mockito.inOrder(spy, item);
-        order.verify(spy, Mockito.times(1)).newItem(id, index, object);
+        order.verify(spy, Mockito.times(1)).newItem(id, index, model);
         order.verify(spy, Mockito.times(1)).populate(item);
     }
 

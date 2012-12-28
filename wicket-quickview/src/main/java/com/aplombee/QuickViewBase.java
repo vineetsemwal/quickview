@@ -56,13 +56,13 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     }
 
     /**
-     * for newchildId
+     * child id
      */
     private int childId =0;
-    public int getChildId(){
-        return  childId;
-    }
 
+    /**
+     * for newchildId
+     */
     @Override
     public String newChildId() {
         childId++;
@@ -145,18 +145,9 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      * @param id     child id
      * @return Child created
      */
-    protected Item<T> newItem(String id,int index, T object) {
-        Item<T> item = new Item<T>(id, index, getDataProvider().model(object));
+    protected Item<T> newItem(String id,int index, IModel<T> model) {
+        Item<T> item = new Item<T>(id, index, model);
         item.setMarkupId(String.valueOf(id));
-        item.setOutputMarkupId(true);
-        return item;
-    }
-
-
-
-    protected Item<T> newItem(int index, IModel<T> model) {
-        Item<T> item = new Item<T>(newChildId(),index, model);
-        item.setMarkupId(item.getId());
         item.setOutputMarkupId(true);
         return item;
     }
@@ -169,9 +160,11 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      * @return     item
      */
     public Item<T> buildItem(String id,int index, T object) {
-        Item<T> item = newItem(id,index, object);
-        item.setMarkupId(String.valueOf(id));
-        item.setOutputMarkupId(true);
+       return buildItem(id,index,getDataProvider().model(object));
+     }
+
+    protected Item<T> buildItem(String id,int index, IModel<T> model) {
+        Item<T> item = newItem(id,index, model);
         populate(item);
         return item;
     }
@@ -190,9 +183,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     }
 
     protected Item buildItem(int index,IModel<T> model) {
-       Item<T>item=newItem(index,model);
-        populate(item);
-        return item;
+       return  buildItem(newChildId(),index,model);
     }
 
     public boolean isAjax() {
