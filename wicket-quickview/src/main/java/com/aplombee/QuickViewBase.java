@@ -60,10 +60,6 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
 
     private long childId =0;
 
-    public long getChildId(){
-        return childId;
-    }
-
     @Override
     public String newChildId() {
         childId++;

@@ -321,10 +321,7 @@ public class QuickGridViewTest {
                 return String.valueOf(childId);
             }
 
-            @Override
-            public long getChildId() {
-                return childId;
-            }
+
         };
          QuickGridView spy=Mockito.spy(grid);
 
@@ -366,10 +363,7 @@ public class QuickGridViewTest {
                 return String.valueOf(childId);
             }
 
-            @Override
-            public long getChildId() {
-                return childId;
-            }
+
         };
         QuickGridView spy=Mockito.spy(grid);
         final long index=6787;
@@ -406,10 +400,7 @@ public class QuickGridViewTest {
                 return String.valueOf(childId);
             }
 
-            @Override
-            public long getChildId() {
-                return childId;
-            }
+
         };
         QuickGridView spy=Mockito.spy(grid);
 
@@ -451,10 +442,6 @@ public class QuickGridViewTest {
                 return String.valueOf(childId);
             }
 
-            @Override
-            public long getChildId() {
-                return childId;
-            }
         };
         QuickGridView spy=Mockito.spy(grid);
          final int object=908;
@@ -495,10 +482,7 @@ public class QuickGridViewTest {
                 return String.valueOf(childId);
             }
 
-            @Override
-            public long getChildId() {
-                return childId;
-            }
+
         };
         QuickGridView spy=Mockito.spy(grid);
         final int object=908;

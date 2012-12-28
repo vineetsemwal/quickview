@@ -1145,7 +1145,6 @@ public class QuickViewTest {
         Item two = quickView.buildItem(90, 68);
         quickView.simpleAdd(one, two);
         quickView.simpleRemove(one);
-        Assert.assertEquals(quickView.getChildId(), 2l);
         Assert.assertEquals(quickView.size(), 1);
     }
 
@@ -1166,8 +1165,7 @@ public class QuickViewTest {
         Item two = quickView.buildItem(index2, 68);
         quickView.simpleAdd(one, two);
         quickView.simpleRemoveAll();
-        Assert.assertEquals(quickView.getChildId(), 2l);
-        Assert.assertEquals(quickView.size(), 0);
+       Assert.assertEquals(quickView.size(), 0);
     }
 
     @Test(groups = {"wicketTests"})
@@ -1180,11 +1178,9 @@ public class QuickViewTest {
         };
         Item one = quickView.buildItem(78, 67);
         quickView.simpleAdd(one);
-        Assert.assertEquals(quickView.getChildId(), 1);
         Assert.assertEquals(quickView.size(), 1);
         Item two = quickView.buildItem(79, 68);
         quickView.simpleAdd(two);
-        Assert.assertEquals(quickView.getChildId(), 2);
         Assert.assertEquals(quickView.size(), 2);
 
     }
@@ -1300,10 +1296,7 @@ public class QuickViewTest {
                 return childId;
             }
 
-            @Override
-            public long getChildId() {
-                return Long.parseLong(childId);
-            }
+
         };
         QuickView<TestObj> spy = Mockito.spy(quickView);
         TestObj obj = Mockito.mock(TestObj.class);
