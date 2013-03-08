@@ -45,7 +45,7 @@ public class RepeaterUtilTest {
     public void insertBefore_1(){
         final String child="child" ,parent="parent",tag="div";
                String actual= RepeaterUtil.get().insertBefore(tag, child, parent);
-        String expected="insertBefore('div','child','parent');";
+        String expected = "QuickView.insertBefore('div','child','parent');";
         Assert.assertEquals(actual.trim(), expected.trim());
     }
     @Test(groups = {"utilTests"})
@@ -73,7 +73,7 @@ public class RepeaterUtilTest {
         };
         tester.startComponentInPage(panel);
         final Item<Integer> item = (Item) quickView.get(0);
-        String expected = String.format("insertBefore('%s','%s','%s');", TestQuickViewContainer.TAG_NAME, item.getMarkupId(), parent.getMarkupId());
+        String expected = String.format("QuickView.insertBefore('%s','%s','%s');", TestQuickViewContainer.TAG_NAME, item.getMarkupId(), parent.getMarkupId());
         String actual = RepeaterUtil.get().insertBefore(item, parent);
         Assert.assertEquals(actual.trim(), expected.trim());
     }
@@ -154,7 +154,7 @@ public class RepeaterUtilTest {
     public void insertAfter_1(){
         final String child="child" ,parent="parent",tag="div";
         String call= RepeaterUtil.get().insertAfter(tag, child, parent);
-        String expected="insertAfter('div','child','parent');";
+        String expected = "QuickView.insertAfter('div','child','parent');";
         Assert.assertEquals(call,expected);
     }
 
@@ -185,7 +185,7 @@ public class RepeaterUtilTest {
         };
         tester.startComponentInPage(panel);
         final Item<Integer> item = (Item) quickView.get(0);
-        String expected = String.format("insertAfter('%s','%s','%s');", TestQuickViewContainer.TAG_NAME, item.getMarkupId(), parent.getMarkupId());
+        String expected = String.format("QuickView.insertAfter('%s','%s','%s');", TestQuickViewContainer.TAG_NAME, item.getMarkupId(), parent.getMarkupId());
         String actual = RepeaterUtil.get().insertAfter(item, parent);
         Assert.assertEquals(actual.trim(), expected.trim());
     }
@@ -193,7 +193,7 @@ public class RepeaterUtilTest {
     @Test(groups = {"utilTests"})
     public void removeItem_1(){
       final String repeaterMarkupId="quick";
-      final String expected="removeItem('quick');";
+        final String expected = "QuickView.removeItem('quick');";
        final  String actual=RepeaterUtil.get().removeItem(repeaterMarkupId);
         Assert.assertEquals(actual.trim(),expected.trim());
     }
@@ -204,7 +204,7 @@ public class RepeaterUtilTest {
         Item item=Mockito.mock(Item.class);
         Mockito.when(item.getMarkupId()).thenReturn(repeaterMarkupId);
         final  String actual=RepeaterUtil.get().removeItem(item);
-        final String expected="removeItem('quick');";
+        final String expected = "QuickView.removeItem('quick');";
         Assert.assertEquals(actual.trim(),expected.trim());
     }
 
