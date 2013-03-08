@@ -53,7 +53,7 @@ public class RepeaterUtil implements IRepeaterUtil {
      * {@inheritDoc}
      */
     public String insertBefore(String tag, String markupId, String parentMarkupId) {
-        String script = String.format("insertBefore('%s','%s','%s');", tag, markupId, parentMarkupId);
+        String script = String.format("QuickView.insertBefore('%s','%s','%s');", tag, markupId, parentMarkupId);
         return script;
     }
 
@@ -73,7 +73,7 @@ public class RepeaterUtil implements IRepeaterUtil {
      */
     @Override
     public String insertAfter(String tag, String markupId, String parentMarkupId) {
-        String script = String.format("insertAfter('%s','%s','%s');", tag, markupId, parentMarkupId);
+        String script = String.format("QuickView.insertAfter('%s','%s','%s');", tag, markupId, parentMarkupId);
         return script;
 
     }
@@ -102,7 +102,7 @@ public class RepeaterUtil implements IRepeaterUtil {
      */
     @Override
     public String removeItem(String markupId) {
-        String script = String.format("removeItem('%s');", markupId);
+        String script = String.format("QuickView.removeItem('%s');", markupId);
         return script;
     }
 
@@ -171,7 +171,7 @@ public class RepeaterUtil implements IRepeaterUtil {
 
     @Override
     public String scrollToBottom(String markupId) {
-        return String.format("scrollToBottom('%s');", markupId);
+        return String.format("QuickView.scrollToBottom('%s');", markupId);
     }
 
     /**
@@ -184,7 +184,7 @@ public class RepeaterUtil implements IRepeaterUtil {
 
     @Override
     public String scrollToTop(String markupId) {
-        return String.format("scrollToTop('%s');", markupId);
+        return String.format("QuickView.scrollToTop('%s');", markupId);
     }
 
     /**
@@ -206,7 +206,7 @@ public class RepeaterUtil implements IRepeaterUtil {
 
     @Override
     public String scrollTo(String markupId, int height) {
-        return String.format("scrollTo('%s',%d);", markupId, height);
+        return String.format("QuickView.scrollTo('%s',%d);", markupId, height);
     }
 
 
@@ -216,7 +216,7 @@ public class RepeaterUtil implements IRepeaterUtil {
      */
     @Override
     public String isComponentScrollBarAtBottom(MarkupContainer component) {
-        return String.format("isComponentScrollBarAtBottom('%s');", component.getMarkupId());
+        return String.format("QuickView.isComponentScrollBarAtBottom('%s');", component.getMarkupId());
     }
 
     /**
@@ -224,7 +224,7 @@ public class RepeaterUtil implements IRepeaterUtil {
      */
     @Override
     public String isPageScrollBarAtBottom() {
-        return "isPageScrollBarAtBottom();";
+        return "QuickView.isPageScrollBarAtBottom();";
     }
 
 

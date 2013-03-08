@@ -50,7 +50,7 @@ public class RepeaterUtilTest {
     public void insertBefore_1() {
         final String child = "child", parent = "parent", tag = "div";
         String actual = RepeaterUtil.get().insertBefore(tag, child, parent);
-        String expected = "insertBefore('div','child','parent');";
+        String expected = "QuickView.insertBefore('div','child','parent');";
         Assert.assertEquals(actual.trim(), expected.trim());
     }
 
@@ -80,7 +80,7 @@ public class RepeaterUtilTest {
         };
         tester.startComponentInPage(panel);
         final Item<Integer> item = (Item) quickView.get(0);
-        String expected = String.format("insertBefore('%s','%s','%s');", TestQuickViewContainer.TAG_NAME, item.getMarkupId(), parent.getMarkupId());
+        String expected = String.format("QuickView.insertBefore('%s','%s','%s');", TestQuickViewContainer.TAG_NAME, item.getMarkupId(), parent.getMarkupId());
         String actual = RepeaterUtil.get().insertBefore(item, parent);
         Assert.assertEquals(actual.trim(), expected.trim());
     }
@@ -166,7 +166,7 @@ public class RepeaterUtilTest {
     public void insertAfter_1() {
         final String child = "child", parent = "parent", tag = "div";
         String call = RepeaterUtil.get().insertAfter(tag, child, parent);
-        String expected = "insertAfter('div','child','parent');";
+        String expected = "QuickView.insertAfter('div','child','parent');";
         Assert.assertEquals(call, expected);
     }
 
@@ -196,7 +196,7 @@ public class RepeaterUtilTest {
         };
         tester.startComponentInPage(panel);
         final Item<Integer> item = (Item) quickView.get(0);
-        String expected = String.format("insertAfter('%s','%s','%s');", TestQuickViewContainer.TAG_NAME, item.getMarkupId(), parent.getMarkupId());
+        String expected = String.format("QuickView.insertAfter('%s','%s','%s');", TestQuickViewContainer.TAG_NAME, item.getMarkupId(), parent.getMarkupId());
         String actual = RepeaterUtil.get().insertAfter(item, parent);
         Assert.assertEquals(actual.trim(), expected.trim());
     }
@@ -204,7 +204,7 @@ public class RepeaterUtilTest {
     @Test(groups = {"utilTests"})
     public void removeItem_1() {
         final String repeaterMarkupId = "quick";
-        final String expected = "removeItem('quick');";
+        final String expected = "QuickView.removeItem('quick');";
         final String actual = RepeaterUtil.get().removeItem(repeaterMarkupId);
         Assert.assertEquals(actual.trim(), expected.trim());
     }
@@ -215,7 +215,7 @@ public class RepeaterUtilTest {
         Item item = Mockito.mock(Item.class);
         Mockito.when(item.getMarkupId()).thenReturn(repeaterMarkupId);
         final String actual = RepeaterUtil.get().removeItem(item);
-        final String expected = "removeItem('quick');";
+        final String expected = "QuickView.removeItem('quick');";
         Assert.assertEquals(actual.trim(), expected.trim());
     }
 
@@ -223,7 +223,7 @@ public class RepeaterUtilTest {
     @Test(groups = {"utilTests"})
     public void scrollToTop() {
         final String repeaterMarkupId = "quick";
-        final String expected = "scrollToTop('quick');";
+        final String expected = "QuickView.scrollToTop('quick');";
         final String actual = RepeaterUtil.get().scrollToTop(repeaterMarkupId);
         Assert.assertEquals(actual.trim(), expected.trim());
     }
@@ -231,7 +231,7 @@ public class RepeaterUtilTest {
     @Test(groups = {"utilTests"})
     public void scrollToBottom() {
         final String repeaterMarkupId = "quick";
-        final String expected = "scrollToBottom('quick');";
+        final String expected = "QuickView.scrollToBottom('quick');";
         final String actual = RepeaterUtil.get().scrollToBottom(repeaterMarkupId);
         Assert.assertEquals(actual.trim(), expected.trim());
     }
@@ -240,7 +240,7 @@ public class RepeaterUtilTest {
     public void scrollTo_1() {
         final int height = 7;
         final String repeaterMarkupId = "quick";
-        final String expected = "scrollTo('quick',7);";
+        final String expected = "QuickView.scrollTo('quick',7);";
         final String actual = RepeaterUtil.get().scrollTo(repeaterMarkupId, height);
         Assert.assertEquals(actual.trim(), expected.trim());
     }
@@ -249,7 +249,7 @@ public class RepeaterUtilTest {
     public void scrollTo_2() {
         final int height = 9;
         final String repeaterMarkupId = "quick";
-        final String expected = "scrollTo('quick',9);";
+        final String expected = "QuickView.scrollTo('quick',9);";
         final String actual = RepeaterUtil.get().scrollTo(repeaterMarkupId, height);
         Assert.assertEquals(actual.trim(), expected.trim());
     }
@@ -434,14 +434,14 @@ public class RepeaterUtilTest {
         WebMarkupContainer c = new WebMarkupContainer("parent");
         c.setMarkupId("parent");
         String actual = RepeaterUtil.get().isComponentScrollBarAtBottom(c);
-        String expected = "isComponentScrollBarAtBottom('parent');";
+        String expected = "QuickView.isComponentScrollBarAtBottom('parent');";
         Assert.assertEquals(actual, expected);
     }
 
     @Test(groups = {"utilTests"})
     public void isPageScrollBarAtBottom() {
         String actual = RepeaterUtil.get().isPageScrollBarAtBottom();
-        String expected = "isPageScrollBarAtBottom();";
+        String expected = "QuickView.isPageScrollBarAtBottom();";
         Assert.assertEquals(actual, expected);
     }
 

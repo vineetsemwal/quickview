@@ -3,56 +3,51 @@
  */
 
 
+var QuickView={
 
-function removeItem(id) {
+removeItem : function(id) {
     $("#" + id).remove();
-}
+},
 
-function insertAfter(tag, theId, parentContainerId) {
-    var item = document.createElement(tag);
-    item.id = theId;
+insertAfter :function(tag, theId, parentContainerId) {
+    var item = QuickView.createItem(tag, theId);
     $("#" + parentContainerId).append(item);
-}
-
-function insertBefore(tag, theId, parentContainerId) {
-    var item = document.createElement(tag);
-    item.id = theId;
+},
+        
+insertBefore :function(tag, theId, parentContainerId) {
+    var item = QuickView.createItem(tag, theId);
     $("#" + parentContainerId).prepend(item);
-}
+},
 
-function scrollToBottom(id)
+createItem :function(tag, theId) {
+    return $("<" + tag + ">").attr("id", theId);
+},
+
+scrollToBottom : function(id)
 {
     var element = $("#" + id);
     scrollTo(id, $(element).height());
-}
+},
 
-function scrollToTop(id) {
+scrollToTop : function(id) {
     scrollTo(id, 0);
-}
+} ,
 
-function scrollTo(id, height) {
+scrollTo :function(id, height) {
     var element = $("#" + id);
     $(element).scrollTop(height);
-}
+},
 
 
-function isComponentScrollBarAtBottom(id) {
+isComponentScrollBarAtBottom : function(id) {
     var el = $("#" + id);
-    if ($(el).prop("offsetHeight") + $(el).scrollTop() >= $(el).prop("scrollHeight")) {
-        return true;
-    }
-    else {
-        return false;
-    }
+    return ($(el).prop("offsetHeight") + $(el).scrollTop() >= $(el).prop("scrollHeight"));
+},
+
+isPageScrollBarAtBottom :function() {
+    return (($(window).height() + $(window).scrollTop()) >= $(document).height());
 }
 
-function isPageScrollBarAtBottom() {
-    if (($(window).height() + $(window).scrollTop()) >= $(document).height()) {
-        return true;
-    }
-    else {
-        return false;
-    }
-}
+};
 
 
