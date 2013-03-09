@@ -31,7 +31,7 @@ import java.util.List;
  */
 public interface IRepeaterUtil {
     /**
-     * insertBefore js call
+     * insertBefore js call ,creates a new dom tag element as the first element of parent
      *
      * @param tag      repeater tag
      * @param id       repeater markupid
@@ -41,7 +41,7 @@ public interface IRepeaterUtil {
     String insertBefore(String tag, String id, String parentId);
 
     /**
-     * insertBefore js call for the repeeater and parent passed
+     * insertBefore js call ,creates a new dom tag element as the first element of parent
      *
      * @param component repeater
      * @param parent    parent to which repeater is added
@@ -50,12 +50,22 @@ public interface IRepeaterUtil {
     String insertBefore(MarkupContainer component, MarkupContainer parent);
 
     /**
+     * creates a new dom tag element as the last element of parent with parentId
      * @param tag      repeater tag
      * @param id       repeater markupid
      * @param parentId parent markupid
      * @return insertAfter call of js
      */
     String insertAfter(String tag, String id, String parentId);
+
+    /**
+     * creates a new dom tag element as the last element of parent
+     * @param c      repeater
+     * @param parent parent
+     * @return insertAfter js call
+     */
+    String insertAfter(MarkupContainer c, MarkupContainer parent);
+
 
     /**
      * finds {@link ComponentTag} of the component passed
@@ -65,12 +75,6 @@ public interface IRepeaterUtil {
      */
     ComponentTag getComponentTag(Component c);
 
-    /**
-     * @param c      repeater
-     * @param parent parent
-     * @return insertAfter js call
-     */
-    String insertAfter(MarkupContainer c, MarkupContainer parent);
 
     /**
      * removes js call for item whose markupid is passed
