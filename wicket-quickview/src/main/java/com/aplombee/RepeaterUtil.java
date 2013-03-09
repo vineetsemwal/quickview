@@ -22,9 +22,6 @@ import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.util.lang.Args;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
  * @author Vineet Semwal
  */
@@ -52,8 +49,8 @@ public class RepeaterUtil implements IRepeaterUtil {
     /**
      * {@inheritDoc}
      */
-    public String insertBefore(String tag, String markupId, String parentMarkupId) {
-        String script = String.format("QuickView.insertBefore('%s','%s','%s');", tag, markupId, parentMarkupId);
+    public String prepend(String tag, String markupId, String parentMarkupId) {
+        String script = String.format("QuickView.prepend('%s','%s','%s');", tag, markupId, parentMarkupId);
         return script;
     }
 
@@ -62,8 +59,8 @@ public class RepeaterUtil implements IRepeaterUtil {
      * {@inheritDoc}
      */
     @Override
-    public String insertBefore(MarkupContainer component, MarkupContainer parent) {
-        String script = insertBefore(getComponentTag(component).getName(), component.getMarkupId(), parent.getMarkupId());
+    public String prepend(MarkupContainer component, MarkupContainer parent) {
+        String script = prepend(getComponentTag(component).getName(), component.getMarkupId(), parent.getMarkupId());
         return script;
     }
 
@@ -72,8 +69,8 @@ public class RepeaterUtil implements IRepeaterUtil {
      * {@inheritDoc}
      */
     @Override
-    public String insertAfter(String tag, String markupId, String parentMarkupId) {
-        String script = String.format("QuickView.insertAfter('%s','%s','%s');", tag, markupId, parentMarkupId);
+    public String append(String tag, String markupId, String parentMarkupId) {
+        String script = String.format("QuickView.append('%s','%s','%s');", tag, markupId, parentMarkupId);
         return script;
 
     }
@@ -93,8 +90,8 @@ public class RepeaterUtil implements IRepeaterUtil {
      * {@inheritDoc}
      */
     @Override
-    public String insertAfter(MarkupContainer c, MarkupContainer parent) {
-        return insertAfter(getComponentTag(c).getName(), c.getMarkupId(), parent.getMarkupId());
+    public String append(MarkupContainer c, MarkupContainer parent) {
+        return append(getComponentTag(c).getName(), c.getMarkupId(), parent.getMarkupId());
     }
 
     /**

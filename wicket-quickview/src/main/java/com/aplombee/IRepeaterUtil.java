@@ -31,40 +31,40 @@ import java.util.List;
  */
 public interface IRepeaterUtil {
     /**
-     * insertBefore js call ,creates a new dom tag element as the first element of parent
+     * prepend js call ,creates a new dom tag element as the first element of parent
      *
      * @param tag      repeater tag
      * @param id       repeater markupid
      * @param parentId parent markupid
-     * @return insertBefore call of js
+     * @return prepend call of js
      */
-    String insertBefore(String tag, String id, String parentId);
+    String prepend(String tag, String id, String parentId);
 
     /**
-     * insertBefore js call ,creates a new dom tag element as the first element of parent
+     * prepend js call ,creates a new dom tag element as the first element of parent
      *
      * @param component repeater
      * @param parent    parent to which repeater is added
-     * @return insertBefore call of js
+     * @return prepend call of js
      */
-    String insertBefore(MarkupContainer component, MarkupContainer parent);
+    String prepend(MarkupContainer component, MarkupContainer parent);
 
     /**
      * creates a new dom tag element as the last element of parent with parentId
      * @param tag      repeater tag
      * @param id       repeater markupid
      * @param parentId parent markupid
-     * @return insertAfter call of js
+     * @return append call of js
      */
-    String insertAfter(String tag, String id, String parentId);
+    String append(String tag, String id, String parentId);
 
     /**
      * creates a new dom tag element as the last element of parent
      * @param c      repeater
      * @param parent parent
-     * @return insertAfter js call
+     * @return append js call
      */
-    String insertAfter(MarkupContainer c, MarkupContainer parent);
+    String append(MarkupContainer c, MarkupContainer parent);
 
 
     /**

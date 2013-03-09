@@ -23,7 +23,7 @@
  */
 var QuickView = {
     /**
-      creates a new dom element with tag and id provided in parameters
+     creates a new dom element with tag and id provided in parameters
      */
     createItem: function(tag, theId) {
         return $("<" + tag + ">").attr("id", theId);
@@ -32,50 +32,49 @@ var QuickView = {
         $("#" + id).remove();
     },
     /**
-    creates a new dom tag element as the last element of  dome element with id  parentContainerId
-    */
-    insertAfter: function(tag, theId, parentContainerId) {
+     creates a new dom tag element as the last element of  dome element with id  parentContainerId
+     */
+    append: function(tag, theId, parentContainerId) {
         var item = QuickView.createItem(tag, theId);
         $("#" + parentContainerId).append(item);
     },
-
     /**
-        creates a new dom tag element as the first element of element with  parentContainerId
+     creates a new dom tag element as the first element of element with  parentContainerId
      */
-    insertBefore: function(tag, theId, parentContainerId) {
+    prepend: function(tag, theId, parentContainerId) {
         var item = QuickView.createItem(tag, theId);
         $("#" + parentContainerId).prepend(item);
     },
     /**
-    position the scrollbar to bottom
-    */
+     position the scrollbar to bottom
+     */
     scrollToBottom: function(id)
     {
         var element = $("#" + id);
         scrollTo(id, $(element).height());
     },
     /**
-        position the scrollbar to top
+     position the scrollbar to top
      */
     scrollToTop: function(id) {
         scrollTo(id, 0);
     },
     /**
-        position the scrollbar to provided height
+     position the scrollbar to provided height
      */
     scrollTo: function(id, height) {
         var element = $("#" + id);
         $(element).scrollTop(height);
     },
     /**
-      returns true if the scrollbar of element with parameter id is moved at the bottom else it returns false
-    */
+     returns true if the scrollbar of element with parameter id is moved at the bottom else it returns false
+     */
     isComponentScrollBarAtBottom: function(id) {
         var el = $("#" + id);
         return ($(el).prop("offsetHeight") + $(el).scrollTop() >= $(el).prop("scrollHeight"));
     },
     /**
-         returns true if the scrollbar of the page is moved at the bottom else it returns false
+     returns true if the scrollbar of the page is moved at the bottom else it returns false
      */
     isPageScrollBarAtBottom: function() {
         return (($(window).height() + $(window).scrollTop()) >= $(document).height());

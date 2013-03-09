@@ -747,7 +747,7 @@ public class QuickGridViewTest {
         final String call="insert after";
         QuickGridView.RowItem row=Mockito.mock(QuickGridView.RowItem.class);
         final MarkupContainer parent=Mockito.mock(MarkupContainer.class);
-        Mockito.when(util.insertAfter(row,parent)).thenReturn(call);
+        Mockito.when(util.append(row, parent)).thenReturn(call);
         QuickGridView<Integer> grid=new QuickGridView<Integer>("grid",provider) {
             @Override
             protected void populate(CellItem<Integer> item) {
@@ -802,7 +802,7 @@ public class QuickGridViewTest {
         final String call="insert after";
         QuickGridView.RowItem row=Mockito.mock(QuickGridView.RowItem.class);
         final MarkupContainer parent=Mockito.mock(MarkupContainer.class);
-        Mockito.when(util.insertAfter(row,parent)).thenReturn(call);
+        Mockito.when(util.append(row, parent)).thenReturn(call);
         QuickGridView<Integer> grid=new QuickGridView<Integer>("grid",provider) {
             @Override
             protected void populate(CellItem<Integer> item) {
@@ -857,7 +857,7 @@ public class QuickGridViewTest {
         final String call="insert before";
         QuickGridView.RowItem row=Mockito.mock(QuickGridView.RowItem.class);
         final MarkupContainer parent=Mockito.mock(MarkupContainer.class);
-        Mockito.when(util.insertBefore(row,parent)).thenReturn(call);
+        Mockito.when(util.prepend(row, parent)).thenReturn(call);
         QuickGridView<Integer> grid=new QuickGridView<Integer>("grid",provider) {
             @Override
             protected void populate(CellItem<Integer> item) {

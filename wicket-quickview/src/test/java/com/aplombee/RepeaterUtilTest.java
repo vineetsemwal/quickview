@@ -47,15 +47,15 @@ public class RepeaterUtilTest {
     }
 
     @Test(groups = {"utilTests"})
-    public void insertBefore_1() {
+    public void prepend_1() {
         final String child = "child", parent = "parent", tag = "div";
-        String actual = RepeaterUtil.get().insertBefore(tag, child, parent);
-        String expected = "QuickView.insertBefore('div','child','parent');";
+        String actual = RepeaterUtil.get().prepend(tag, child, parent);
+        String expected = "QuickView.prepend('div','child','parent');";
         Assert.assertEquals(actual.trim(), expected.trim());
     }
 
     @Test(groups = {"utilTests"})
-    public void insertBefore_2() {
+    public void prepend_2() {
         QuickMockApplication app = new QuickMockApplication();
         WicketTester tester = new WicketTester(app);
         final QuickViewParent parent = new QuickViewParent("parent");
@@ -80,8 +80,8 @@ public class RepeaterUtilTest {
         };
         tester.startComponentInPage(panel);
         final Item<Integer> item = (Item) quickView.get(0);
-        String expected = String.format("QuickView.insertBefore('%s','%s','%s');", TestQuickViewContainer.TAG_NAME, item.getMarkupId(), parent.getMarkupId());
-        String actual = RepeaterUtil.get().insertBefore(item, parent);
+        String expected = String.format("QuickView.prepend('%s','%s','%s');", TestQuickViewContainer.TAG_NAME, item.getMarkupId(), parent.getMarkupId());
+        String actual = RepeaterUtil.get().prepend(item, parent);
         Assert.assertEquals(actual.trim(), expected.trim());
     }
 
@@ -163,16 +163,16 @@ public class RepeaterUtilTest {
     }
 
     @Test(groups = {"utilTests"})
-    public void insertAfter_1() {
+    public void append_1() {
         final String child = "child", parent = "parent", tag = "div";
-        String call = RepeaterUtil.get().insertAfter(tag, child, parent);
-        String expected = "QuickView.insertAfter('div','child','parent');";
+        String call = RepeaterUtil.get().append(tag, child, parent);
+        String expected = "QuickView.append('div','child','parent');";
         Assert.assertEquals(call, expected);
     }
 
 
     @Test(groups = {"utilTests"})
-    public void insertAfter_2() {
+    public void append_2() {
         QuickMockApplication app = new QuickMockApplication();
         WicketTester tester = new WicketTester(app);
         final QuickViewParent parent = new QuickViewParent("parent");
@@ -196,8 +196,8 @@ public class RepeaterUtilTest {
         };
         tester.startComponentInPage(panel);
         final Item<Integer> item = (Item) quickView.get(0);
-        String expected = String.format("QuickView.insertAfter('%s','%s','%s');", TestQuickViewContainer.TAG_NAME, item.getMarkupId(), parent.getMarkupId());
-        String actual = RepeaterUtil.get().insertAfter(item, parent);
+        String expected = String.format("QuickView.append('%s','%s','%s');", TestQuickViewContainer.TAG_NAME, item.getMarkupId(), parent.getMarkupId());
+        String actual = RepeaterUtil.get().append(item, parent);
         Assert.assertEquals(actual.trim(), expected.trim());
     }
 
