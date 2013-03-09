@@ -17,6 +17,7 @@
 package com.aplombee;
 
 
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
@@ -203,19 +204,21 @@ public class RepeaterUtilTest {
 
     @Test(groups = {"utilTests"})
     public void removeItem_1() {
-        final String repeaterMarkupId = "quick";
-        final String expected = "QuickView.removeItem('quick');";
-        final String actual = RepeaterUtil.get().removeItem(repeaterMarkupId);
+        final String itemId = "67",parentId="p1";
+        final String expected = "QuickView.removeItem('67','p1');";
+        final String actual = RepeaterUtil.get().removeItem(itemId,parentId);
         Assert.assertEquals(actual.trim(), expected.trim());
     }
 
     @Test(groups = {"utilTests"})
     public void removeItem() {
-        final String repeaterMarkupId = "quick";
+        final String itemMarkupId = "76";
         Item item = Mockito.mock(Item.class);
-        Mockito.when(item.getMarkupId()).thenReturn(repeaterMarkupId);
-        final String actual = RepeaterUtil.get().removeItem(item);
-        final String expected = "QuickView.removeItem('quick');";
+        Mockito.when(item.getMarkupId()).thenReturn(itemMarkupId);
+        Component parent=new WebMarkupContainer("p");
+        parent.setMarkupId("p1");
+        final String actual = RepeaterUtil.get().removeItem(item,parent);
+        final String expected = "QuickView.removeItem('76','p1');";
         Assert.assertEquals(actual.trim(), expected.trim());
     }
 

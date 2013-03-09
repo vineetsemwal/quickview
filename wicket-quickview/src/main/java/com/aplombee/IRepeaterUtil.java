@@ -80,17 +80,19 @@ public interface IRepeaterUtil {
      * removes js call for item whose markupid is passed
      *
      * @param id markupid of the element which needs to be removed
+     * @param parentId markupId of parent
      * @return remove js call
      */
-    String removeItem(String id);
+    String removeItem(String id,String parentId);
 
     /**
      * removes js call for component which is provided
      *
      * @param component
+     * @param parent
      * @return remove js call
      */
-    String removeItem(Component component);
+    String removeItem(Component component,Component parent);
 
     /**
      * safely converts long to int

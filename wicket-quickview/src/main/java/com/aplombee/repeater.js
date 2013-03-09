@@ -28,8 +28,12 @@ var QuickView = {
     createItem: function(tag, theId) {
         return $("<" + tag + ">").attr("id", theId);
     },
-    removeItem: function(id) {
-        $("#" + id).remove();
+            
+    /**
+     * removes element with 'id' of parent with id 'parentId'
+     */        
+    removeItem: function(id,parentId) {
+        $("#" + parentId).children().remove("#"+id);
     },
     /**
      creates a new dom tag element as the last element of  dome element with id  parentContainerId

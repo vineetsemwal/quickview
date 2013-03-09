@@ -190,7 +190,7 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
     public void removeRow(RowItem<T> rowItem) {
         Args.notNull(rowItem, "rowItem can't be null");
         if (isAjax()) {
-            String call = getRepeaterUtil().removeItem(rowItem);
+            String call = getRepeaterUtil().removeItem(rowItem,_getParent());
             getSynchronizer().getPrependScripts().add(call);
             getSynchronizer().add(rowItem);
         }

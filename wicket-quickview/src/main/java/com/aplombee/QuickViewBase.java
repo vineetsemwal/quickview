@@ -568,7 +568,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     public MarkupContainer remove(final Component component) {
         Args.notNull(component, "component can't be null");
         if (isAjax()) {
-          String removeScript = getRepeaterUtil().removeItem(component);
+          String removeScript = getRepeaterUtil().removeItem(component,_getParent());
            getSynchronizer().getPrependScripts().add(removeScript);
            getSynchronizer().add(component);
         }

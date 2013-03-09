@@ -524,7 +524,7 @@ public class QuickViewTest {
 
         };
         final String script = "script..";
-        Mockito.when(util.removeItem(c)).thenReturn(script);
+        Mockito.when(util.removeItem(c,parent)).thenReturn(script);
         QuickView spy = Mockito.spy(arc);
         spy.remove(c);
         Mockito.verify(spy, Mockito.times(1)).simpleRemove(c);

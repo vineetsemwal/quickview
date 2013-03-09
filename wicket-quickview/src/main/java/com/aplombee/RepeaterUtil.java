@@ -98,8 +98,8 @@ public class RepeaterUtil implements IRepeaterUtil {
      * {@inheritDoc}
      */
     @Override
-    public String removeItem(String markupId) {
-        String script = String.format("QuickView.removeItem('%s');", markupId);
+    public String removeItem(String markupId,String parentId) {
+        String script = String.format("QuickView.removeItem('%s','%s');", markupId,parentId);
         return script;
     }
 
@@ -107,9 +107,10 @@ public class RepeaterUtil implements IRepeaterUtil {
      * {@inheritDoc}
      */
     @Override
-    public String removeItem(Component component) {
+    public String removeItem(Component component,Component parent) {
         Args.notNull(component, "component");
-        return removeItem(component.getMarkupId());
+        Args.notNull(parent, "parent");
+        return removeItem(component.getMarkupId(),parent.getMarkupId());
     }
 
     /**
