@@ -955,7 +955,7 @@ public class QuickGridViewTest {
         spy.removeRow(row);
         Mockito.verify(spy,Mockito.times(1)).simpleRemove(row);
         Mockito.verify(scripts,Mockito.times(1)).add(call);
-        Mockito.verify(synchronizer,Mockito.times(1)).add(row);
+        Mockito.verify(synchronizer,Mockito.never()).add(row);
     }
 
 

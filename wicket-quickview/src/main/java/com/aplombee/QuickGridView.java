@@ -192,7 +192,6 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
         if (isAjax()) {
             String call = getRepeaterUtil().removeItem(rowItem,_getParent());
             getSynchronizer().getPrependScripts().add(call);
-            getSynchronizer().add(rowItem);
         }
         simpleRemove(rowItem);
     }

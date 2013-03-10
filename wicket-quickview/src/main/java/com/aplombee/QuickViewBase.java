@@ -570,7 +570,6 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         if (isAjax()) {
           String removeScript = getRepeaterUtil().removeItem(component,_getParent());
            getSynchronizer().getPrependScripts().add(removeScript);
-           getSynchronizer().add(component);
         }
         return simpleRemove(component);
     }

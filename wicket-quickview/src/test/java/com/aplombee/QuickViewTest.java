@@ -528,7 +528,7 @@ public class QuickViewTest {
         QuickView spy = Mockito.spy(arc);
         spy.remove(c);
         Mockito.verify(spy, Mockito.times(1)).simpleRemove(c);
-        Mockito.verify(synchronizer, Mockito.times(1)).add(c);
+        Mockito.verify(synchronizer, Mockito.never()).add(c);
         Mockito.verify(scripts, Mockito.times(1)).add(script);
 
     }
