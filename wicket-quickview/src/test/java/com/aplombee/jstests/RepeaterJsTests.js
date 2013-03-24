@@ -93,7 +93,7 @@ test("isPageScrollBarAtBottom",function(){
 
 
 
-//style="overflow-y:auto;height:150px;width:50%"
+//style="overflow-y:auto;height:150px;width:50px"
 test("isComponentScrollBarAtBottom",function(){
     $("#parent").css("overflow-y","auto").height(150).width(50);
     QuickView.append('li', "34","parent");
@@ -106,7 +106,7 @@ test("isComponentScrollBarAtBottom",function(){
 });
 
 
-//style="overflow-y:auto;height:150px;width:50%"
+//style="overflow-y:auto;height:150px;width:50px"
 test("isComponentScrollBarAtBottom",function(){
     $("#parent").css("overflow-y","auto").height(150).width(50);
     QuickView.append('li', "34","parent");
