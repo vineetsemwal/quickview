@@ -228,7 +228,7 @@ public class QuickViewTest {
 
         };
         final String script = "script..";
-        Mockito.when(util.insertAfter(c, parent)).thenReturn(script);
+        Mockito.when(util.append(c, parent)).thenReturn(script);
         QuickView<TestObj> sparc = Mockito.spy(quickView);
         sparc.add(c);
 
@@ -284,8 +284,8 @@ public class QuickViewTest {
             }
         };
         final String script = "script..", script2 = "script2!";
-        Mockito.when(util.insertAfter(c, parent)).thenReturn(script);
-        Mockito.when(util.insertAfter(c2, parent)).thenReturn(script2);
+        Mockito.when(util.append(c, parent)).thenReturn(script);
+        Mockito.when(util.append(c2, parent)).thenReturn(script2);
         QuickView sparc = Mockito.spy(arc);
         sparc.add(c, c2);
         Mockito.verify(sparc, Mockito.times(1)).simpleAdd(c, c2);
@@ -340,7 +340,7 @@ public class QuickViewTest {
             }
         };
         final String script = "script..";
-        Mockito.when(util.insertAfter(c, parent)).thenReturn(script);
+        Mockito.when(util.append(c, parent)).thenReturn(script);
         QuickView<TestObj> sparc = Mockito.spy(arc);
         sparc.add(c);
 
@@ -394,7 +394,7 @@ public class QuickViewTest {
 
         };
         final String script = "script..";
-        Mockito.when(util.insertBefore(c, parent)).thenReturn(script);
+        Mockito.when(util.prepend(c, parent)).thenReturn(script);
         QuickView sparc = Mockito.spy(quickView);
         sparc.addAtStart(c);
         Mockito.verify(sparc, Mockito.times(1)).simpleAdd(c);
@@ -448,8 +448,8 @@ public class QuickViewTest {
             }
         };
         final String script = "script..", script2 = "script2!";
-        Mockito.when(util.insertBefore(c, parent)).thenReturn(script);
-        Mockito.when(util.insertBefore(c2, parent)).thenReturn(script2);
+        Mockito.when(util.prepend(c, parent)).thenReturn(script);
+        Mockito.when(util.prepend(c2, parent)).thenReturn(script2);
         QuickView sparc = Mockito.spy(arc);
         sparc.addAtStart(c, c2);
         Mockito.verify(sparc, Mockito.times(1)).simpleAdd(c, c2);
@@ -691,11 +691,10 @@ public class QuickViewTest {
 
         };
         final String script = "script..";
-        Mockito.when(util.removeItem(c)).thenReturn(script);
+        Mockito.when(util.removeItem(c,parent)).thenReturn(script);
         QuickView spy = Mockito.spy(arc);
         spy.remove(c);
         Mockito.verify(spy, Mockito.times(1)).simpleRemove(c);
-        Mockito.verify(synchronizer, Mockito.times(1)).add(c);
         Mockito.verify(scripts, Mockito.times(1)).add(script);
 
     }

@@ -1,13 +1,13 @@
 /**
  *
  Copyright 2012 Vineet Semwal
-
+ 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
-
+ 
  http://www.apache.org/licenses/LICENSE-2.0
-
+ 
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,8 +17,8 @@
 
 /**
  * to use a method use QuickView.methodName(parameter) foreg. QuickView.createItem("div","someid");
- *
- *
+ *  
+ * 
  * @author Vineet Semwal
  */
 var QuickView = {
@@ -28,10 +28,10 @@ var QuickView = {
     createItem: function(tag, theId) {
         return $("<" + tag + ">").prop("id", theId);
     },
-
+            
     /**
      * removes element with 'id' of parent with id 'parentId'
-     */
+     */        
     removeItem: function(id,parentId) {
         $("#" + parentId).children().remove("#"+id);
     },
@@ -75,7 +75,7 @@ var QuickView = {
      */
     isComponentScrollBarAtBottom: function(id) {
         var el = $("#" + id);
-        // offsetheight : element height
+        // offsetheight : element height	
         // scrolltop : height of scroll from top
         // scroll-height:height of the scroll view of an element
         return ($(el).prop("offsetHeight") + $(el).scrollTop() >= $(el).prop("scrollHeight"));
@@ -88,5 +88,4 @@ var QuickView = {
     }
 
 };
-
 

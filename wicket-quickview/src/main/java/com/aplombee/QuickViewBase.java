@@ -514,7 +514,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
 
         for (int i = 0; i < c.length; i++) {
             MarkupContainer parent = _getParent();
-            String script = getRepeaterUtil().insertAfter((Item)c[i], parent);
+            String script = getRepeaterUtil().append((Item)c[i], parent);
             getSynchronizer().getPrependScripts().add(script);
           }
         getSynchronizer().add(c);
@@ -595,10 +595,8 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         Args.notNull(component, "component can't be null");
         AjaxRequestTarget target = getAjaxRequestTarget();
         if (isAjax()) {
-            String removeScript = getRepeaterUtil().removeItem(component);
-            //target.prependJavaScript(removeScript);
-            getSynchronizer().getPrependScripts().add(removeScript);
-           getSynchronizer().add(component);
+          String removeScript = getRepeaterUtil().removeItem(component,_getParent());
+           getSynchronizer().getPrependScripts().add(removeScript);
         }
         return simpleRemove(component);
     }
@@ -625,7 +623,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
 
         for (int i = 0; i < components.length; i++) {
             MarkupContainer parent = _getParent();
-            String updateBeforeScript = getRepeaterUtil().insertBefore((Item)components[i], parent);
+            String updateBeforeScript = getRepeaterUtil().prepend((Item)components[i], parent);
             getSynchronizer().getPrependScripts().add(updateBeforeScript);
         }
         getSynchronizer().add(components);

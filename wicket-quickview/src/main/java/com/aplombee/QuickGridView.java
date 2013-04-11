@@ -146,7 +146,7 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
             return this;
         }
 
-        String call = getRepeaterUtil().insertBefore(rowItem, _getParent());
+        String call = getRepeaterUtil().prepend(rowItem, _getParent());
         getSynchronizer().getPrependScripts().add(call);
         getSynchronizer().add(rowItem);
         return this;
@@ -158,7 +158,7 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
         if (!isAjax()) {
             return this;
         }
-        String call = getRepeaterUtil().insertAfter(rowItem, _getParent());
+        String call = getRepeaterUtil().append(rowItem, _getParent());
         Synchronizer listener = getSynchronizer();
         listener.getPrependScripts().add(call);
         listener.add(rowItem);
@@ -190,9 +190,8 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
     public void removeRow(RowItem<T> rowItem) {
         Args.notNull(rowItem, "rowItem can't be null");
         if (isAjax()) {
-            String call = getRepeaterUtil().removeItem(rowItem);
+            String call = getRepeaterUtil().removeItem(rowItem,_getParent());
             getSynchronizer().getPrependScripts().add(call);
-            getSynchronizer().add(rowItem);
         }
         simpleRemove(rowItem);
     }
