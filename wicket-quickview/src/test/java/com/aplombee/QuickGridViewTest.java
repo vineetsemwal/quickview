@@ -210,7 +210,6 @@ public class QuickGridViewTest {
         final String id="id";
         final long index=845;
        QuickGridView.RowItem row= grid.newRowItem(id, 845);
-        Assert.assertEquals(row.getMarkupId(),id);
         Assert.assertEquals(row.getIndex(),index);
         Assert.assertEquals(row.getId(),id);
     }
@@ -273,7 +272,7 @@ public class QuickGridViewTest {
         WicketTester tester=new WicketTester(createMockApplication());
         QuickGridView.CellItem cell=grid.newCellItem(id, index, model);
         tester.startComponentInPage(cell);
-        Assert.assertEquals(cell.getMarkupId(),id);
+        Assert.assertEquals(cell.getId(),id);
         Assert.assertEquals(cell.getId(),id);
         Assert.assertEquals(cell.getIndex(),index);
         Assert.assertEquals(cell.getModelObject(),object);
@@ -299,7 +298,6 @@ public class QuickGridViewTest {
         final String id="id";
         final int index=845;
         QuickGridView.CellItem cell=grid.newEmptyCellItem(id, index);
-        Assert.assertEquals(cell.getMarkupId(),id);
         Assert.assertEquals(cell.getId(),id);
         Assert.assertEquals(cell.getIndex(),index);
         Assert.assertNull(cell.getModelObject());

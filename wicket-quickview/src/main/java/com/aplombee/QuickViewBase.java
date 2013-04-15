@@ -147,7 +147,6 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      */
     protected Item<T> newItem(String id,int index, IModel<T> model) {
         Item<T> item = new Item<T>(id, index, model);
-        item.setMarkupId(String.valueOf(id));
         item.setOutputMarkupId(true);
         return item;
     }

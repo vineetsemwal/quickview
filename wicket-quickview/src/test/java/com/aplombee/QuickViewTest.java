@@ -1125,7 +1125,7 @@ public class QuickViewTest {
         final String id="67";
        Item <Integer>item= quickView.newItem(id, index, model);
         Assert.assertEquals(item.getModelObject().intValue(), 89);
-        Assert.assertEquals(item.getMarkupId(), id);
+        Assert.assertEquals(item.getId(), id);
         Assert.assertEquals(item.getIndex(),index);
         Assert.assertTrue(item.getOutputMarkupId());
     }
@@ -1148,7 +1148,7 @@ public class QuickViewTest {
         final String id="345";
         Item <String>item= quickView.newItem(id,index,model);
         Assert.assertEquals(item.getModelObject(),object);
-        Assert.assertEquals(item.getMarkupId(),id);
+        Assert.assertEquals(item.getId(),id);
         Assert.assertTrue(item.getOutputMarkupId());
         Assert.assertEquals(item.getIndex(),index);
 
