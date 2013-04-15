@@ -15,10 +15,7 @@
  limitations under the License.
  */
 package com.aplombee;
-import org.apache.wicket.Application;
-import org.apache.wicket.Component;
-import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.*;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -120,7 +117,6 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
 
     protected Item<T> newItem(String id,long index, IModel<T> model) {
         Item<T> item = new Item<T>(id, getRepeaterUtil().safeLongToInt(index), model);
-        item.setMarkupId(String.valueOf(id));
         item.setOutputMarkupId(true);
         return item;
     }

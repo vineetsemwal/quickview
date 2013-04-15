@@ -446,7 +446,6 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
         public RowItem(String id, int index, IModel<T> model) {
             super(id, index, model);
             setOutputMarkupId(true);
-            setMarkupId(id);
         }
 
         /**
@@ -491,7 +490,6 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
         public CellItem(String id, int index, IModel<T> model, boolean empty) {
             super(id, index, model);
             setOutputMarkupId(true);
-            setMarkupId(id);
             this.empty = empty;
         }
 
