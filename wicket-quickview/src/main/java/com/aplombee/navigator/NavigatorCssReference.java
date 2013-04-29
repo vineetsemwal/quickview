@@ -22,7 +22,7 @@ import org.apache.wicket.request.resource.PackageResourceReference;
  * @author  Vineet Semwal
  */
 public class NavigatorCssReference extends PackageResourceReference {
-    public static NavigatorCssReference instance = new NavigatorCssReference();
+    public static final NavigatorCssReference instance = new NavigatorCssReference();
 
     private NavigatorCssReference() {
         super(ItemsNavigatorBase.class, "navigate.css");

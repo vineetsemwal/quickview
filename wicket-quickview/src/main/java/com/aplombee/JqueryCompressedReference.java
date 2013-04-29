@@ -10,7 +10,7 @@ import org.apache.wicket.request.resource.PackageResourceReference;
  *
  */
 public class JqueryCompressedReference extends PackageResourceReference {
-    private static JqueryCompressedReference instance=new JqueryCompressedReference();
+    private static final JqueryCompressedReference instance=new JqueryCompressedReference();
     private JqueryCompressedReference(){
         super(JqueryResourceReference.class,"jquery-1.7.2.min.js");
     }

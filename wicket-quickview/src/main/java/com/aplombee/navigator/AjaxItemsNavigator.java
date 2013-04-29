@@ -15,7 +15,7 @@
  limitations under the License.
  */
 package com.aplombee.navigator;
-import org.apache.log4j.Logger;
+
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -31,8 +31,6 @@ import com.aplombee.IQuickView;
  * @author Vineet Semwal
  */
 public class AjaxItemsNavigator extends ItemsNavigatorBase {
-
-    private static Logger logger = Logger.getLogger(AjaxItemsNavigator.class);
 
     /**
      * this navigator onclick creates new items for the quickview
