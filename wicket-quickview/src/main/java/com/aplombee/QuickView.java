@@ -17,7 +17,6 @@
 package com.aplombee;
 
 
-import org.apache.log4j.Logger;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 
 /**
@@ -39,7 +38,6 @@ import org.apache.wicket.markup.repeater.data.IDataProvider;
  */
 public abstract class QuickView<T> extends QuickViewBase<T> {
 
-    private static Logger logger = Logger.getLogger(QuickView.class);
     /**
      *
      * @param id

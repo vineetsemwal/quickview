@@ -17,7 +17,6 @@
 package com.aplombee.navigator;
 
 import com.aplombee.IQuickView;
-import org.apache.log4j.Logger;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.model.IModel;
@@ -34,8 +33,6 @@ import org.apache.wicket.model.Model;
  *
  */
 public class AjaxItemsNavigator extends ItemsNavigatorBase {
-
-    private static Logger logger = Logger.getLogger(AjaxItemsNavigator.class);
 
     /**
      *  this navigator onclick creates new items for the quickview

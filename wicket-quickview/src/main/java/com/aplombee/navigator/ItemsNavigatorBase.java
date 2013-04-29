@@ -19,7 +19,6 @@ package com.aplombee.navigator;
 import com.aplombee.IQuickView;
 import com.aplombee.IRepeaterUtil;
 import com.aplombee.RepeaterUtil;
-import org.apache.log4j.Logger;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -47,8 +46,6 @@ public abstract class ItemsNavigatorBase extends Panel {
     public IRepeaterUtil getRepeaterUtil() {
         return RepeaterUtil.get();
     }
-
-    private static Logger logger = Logger.getLogger(ItemsNavigatorBase.class);
 
     private String cssClass;
 
