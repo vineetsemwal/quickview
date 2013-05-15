@@ -39,7 +39,7 @@ Copyright 2012 Vineet Semwal
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
-	
+
 	<dependencies>
 		<!--  WICKET DEPENDENCIES -->
 		<dependency>
@@ -59,21 +59,20 @@ Copyright 2012 Vineet Semwal
             <artifactId>testng</artifactId>
              <scope>test</scope>
     </dependency>
-      
-    
-		<!-- LOGGING DEPENDENCIES - LOG4J -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<scope>provided</scope>
-		</dependency>
 
-		<!--  JUNIT DEPENDENCY FOR TESTING -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+
+        <!--  JUNIT DEPENDENCY FOR TESTING -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

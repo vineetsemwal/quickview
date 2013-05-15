@@ -17,7 +17,7 @@
 package com.aplombee;
 
 
-import org.apache.log4j.Logger;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -48,8 +48,6 @@ import static org.mockito.Mockito.when;
  * @author Vineet Semwal
  */
 public class QuickViewTest {
-
-    private static Logger logger = Logger.getLogger(QuickViewTest.class);
     Component updateBefore;
 
     WicketTester tester;
@@ -69,7 +67,7 @@ public class QuickViewTest {
      */
     @Test(groups = {"wicketTests"})
     public void constructor_1() {
-        int oneBlock = 2;
+         int oneBlock = 2;
         final String repeaterId = "repeater";
         IDataProvider<TestObj> provider = mockProvider(oneBlock);
         IQuickReuseStrategy reuse = Mockito.mock(IQuickReuseStrategy.class);

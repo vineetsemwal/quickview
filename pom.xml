@@ -38,6 +38,7 @@ Copyright 2012 Vineet Semwal
 		</license>
 	</licenses>
 	<properties>
+        <slf4j.version>1.6.4</slf4j.version>
 		<wicket.version>6.0-SNAPSHOT</wicket.version>
 		<jetty.version>7.6.3.v20120416</jetty.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -53,16 +54,19 @@ Copyright 2012 Vineet Semwal
 
 
 		<!-- LOGGING DEPENDENCIES - LOG4J -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.6.2</version>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.16</version>
-		</dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <version>${slf4j.version}</version>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+
 
      <dependency>
             <groupId>org.testng</groupId>
