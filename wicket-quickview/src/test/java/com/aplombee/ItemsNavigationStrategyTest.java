@@ -45,8 +45,8 @@ public class ItemsNavigationStrategyTest extends AbstractItemsNavigationStrategy
     }
 
     @Test(groups = {"wicketTests"})
-    public void isZeroPageCreatedOnReRender_1(){
-       Assert.assertTrue(new ItemsNavigationStrategy().isAlwaysZeroPageCreatedOnRender());
+    public void pageCreatedOnReRender_1(){
+       Assert.assertTrue(new ItemsNavigationStrategy().getPageCreatedOnRender()==0);
     }
 
     @Test(groups = {"wicketTests"} )

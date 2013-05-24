@@ -39,7 +39,7 @@ public class AbstractPagingNavigationStrategyTest {
         strategy.addItems(startIndex,factory,newModels);
     }
 
-    public void assertZeroPageCreatedOnReRender(IQuickReuseStrategy strategy){
-        Assert.assertFalse(strategy.isAlwaysZeroPageCreatedOnRender());
+    public void assertPageCreatedOnReRender(IQuickReuseStrategy strategy){
+        Assert.assertTrue(strategy.getPageCreatedOnRender()<0);
     }
 }

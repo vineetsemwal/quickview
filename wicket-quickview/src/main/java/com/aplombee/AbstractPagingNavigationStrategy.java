@@ -45,7 +45,7 @@ public abstract class AbstractPagingNavigationStrategy implements IQuickReuseStr
     }
 
     @Override
-    public boolean isAlwaysZeroPageCreatedOnRender() {
-        return  false;
+    public long getPageCreatedOnRender() {
+        return -1;
     }
 }

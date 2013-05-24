@@ -30,8 +30,8 @@ public class QuickReuseIfModelsEqualStrategyTest extends AbstractPagingNavigatio
         super.assertIsAddItemsSupported(new QuickReuseIfModelsEqualStrategy());
     }
     @Test(groups = {"wicketTests"})
-    public void isFirstPageCreatedOnReRender_1(){
-        super.assertZeroPageCreatedOnReRender(new QuickReuseIfModelsEqualStrategy());
+    public void pageCreatedOnReRender_1(){
+        super.assertPageCreatedOnReRender(new QuickReuseIfModelsEqualStrategy());
     }
 
     @Test(groups = {"wicketTests"} ,expectedExceptions = IRepeaterUtil.ReuseStrategyNotSupportedException.class)

@@ -46,8 +46,8 @@ public class ReuseAllStrategyTest extends AbstractItemsNavigationStrategyTest{
     }
 
     @Test(groups = {"wicketTests"})
-    public void isZeroPageCreatedOnReRender_1(){
-        Assert.assertFalse(new ReuseAllStrategy().isAlwaysZeroPageCreatedOnRender());
+    public void getPageCreatedOnReRender_1(){
+        Assert.assertTrue(new ReuseAllStrategy().getPageCreatedOnRender()<0);
     }
 
     /**

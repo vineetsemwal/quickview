@@ -650,8 +650,8 @@ public class QuickViewTest {
         final int currentPage = 5;
         final IRepeaterUtil util = Mockito.mock(IRepeaterUtil.class);
         IQuickReuseStrategy reuse = Mockito.mock(IQuickReuseStrategy.class);
-        //first page not set
-        Mockito.when(reuse.isAlwaysZeroPageCreatedOnRender()).thenReturn(false);
+         //page not set from reuse strategy
+        Mockito.when(reuse.getPageCreatedOnRender()).thenReturn(-1l);
         final IItemFactory factory = Mockito.mock(IItemFactory.class);
         final Iterator existing = Mockito.mock(Iterator.class);
         final Iterator newModels = Mockito.mock(Iterator.class);
@@ -716,10 +716,8 @@ public class QuickViewTest {
         order.verify(spy, Mockito.times(1)).simpleRemoveAll();
         order.verify(spy, Mockito.times(1)).createChildren(newItems);
         Mockito.verify(spy, Mockito.never())._setCurrentPage(0);
-        // page=0 is not set
-
-        //first page created always=true
-        Mockito.when(reuse.isAlwaysZeroPageCreatedOnRender()).thenReturn(true);
+        //page set from reuse strategy
+        Mockito.when(reuse.getPageCreatedOnRender()).thenReturn(0l);
         spy.onPopulate();
 
         order = Mockito.inOrder(reuse, spy, provider);

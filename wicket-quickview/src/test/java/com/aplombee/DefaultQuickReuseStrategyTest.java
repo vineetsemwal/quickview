@@ -48,8 +48,8 @@ public class DefaultQuickReuseStrategyTest extends AbstractPagingNavigationStrat
     }
 
     @Test(groups = {"wicketTests"})
-    public void isFirstPageCreatedOnReRender_1(){
-        super.assertZeroPageCreatedOnReRender(new DefaultQuickReuseStrategy());
+    public void getPageCreatedOnReRender_1(){
+        super.assertPageCreatedOnReRender(new DefaultQuickReuseStrategy());
     }
     /**
      * existing items empty
