@@ -92,6 +92,14 @@ test("isPageScrollBarAtBottom",function(){
 });
 
 
+test("showPageScrollBar",function(){
+    $("ul").height(100);
+     QuickView.showPageScrollBar();
+     var result=$(document).height() > $(window).height() ;
+     ok(result===true);
+});
+
+
 
 //style="overflow-y:auto;height:150px;width:50%"
 test("isComponentScrollBarAtBottom",function(){

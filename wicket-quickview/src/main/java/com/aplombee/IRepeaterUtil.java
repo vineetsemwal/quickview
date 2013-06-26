@@ -167,7 +167,7 @@ public interface IRepeaterUtil {
      */
     public String isPageScrollBarAtBottom();
 
-
+     String showPageScrollBar();
     /**
      *  throw this exception if quickview's parent is not found
      *

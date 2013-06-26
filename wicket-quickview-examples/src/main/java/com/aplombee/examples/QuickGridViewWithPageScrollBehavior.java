@@ -72,6 +72,11 @@ public class QuickGridViewWithPageScrollBehavior extends WebPage {
             protected void onScroll(AjaxRequestTarget target) {
               addItemsForNextPage(gridView);
             }
+
+            @Override
+            protected boolean forceScrollBarForPage() {
+                return true;
+            }
         });
 
     }

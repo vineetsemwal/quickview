@@ -37,11 +37,24 @@ public abstract class AjaxPageScrollEventBehavior extends AjaxScrollEventBehavio
         return script;
     }
 
+    /**
+     * @return true if page scroll bar should be automatically provided,
+     * it assures document height is greater than window height by setting min-height on body
+     * if document height is already greater than window height then it does nothing.
+     * by default this method returns false.
+     *
+     */
+    protected boolean forceScrollBarForPage() {
+        return false;
+    }
 
     @Override
     public void renderHead(Component component, IHeaderResponse response) {
         super.renderHead(component, response);
         response.renderOnDomReadyJavaScript(newScrollScript());
+        if (forceScrollBarForPage()) {
+        response.renderOnDomReadyJavaScript(RepeaterUtil.get().showPageScrollBar() +";");
+        }
     }
 
     @Override

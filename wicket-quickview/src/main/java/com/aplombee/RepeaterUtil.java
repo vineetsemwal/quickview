@@ -238,5 +238,11 @@ public class RepeaterUtil implements  IRepeaterUtil{
         return "QuickView.isPageScrollBarAtBottom();";
     }
 
-
+     /**
+     * {@inheritDoc}
+     */
+    @Override
+   public String showPageScrollBar(){
+    return "QuickView.showPageScrollBar();";
+}
 }
