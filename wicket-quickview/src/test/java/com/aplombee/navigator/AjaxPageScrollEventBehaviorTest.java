@@ -21,7 +21,10 @@ import junit.framework.Assert;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.IAjaxCallListener;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
 /**
@@ -57,4 +60,5 @@ public class AjaxPageScrollEventBehaviorTest {
         }
         Assert.assertTrue(isAdded);
     }
+    
 }

@@ -69,6 +69,12 @@ public class PageScrollBar extends WebPage{
             protected void onScroll(AjaxRequestTarget target) {
                addItemsForNextPage(quickView);
             }
+
+            @Override
+            protected boolean forceScrollBarForPage() {
+            return true;
+            }
+            
         });
             add(numbers);
 

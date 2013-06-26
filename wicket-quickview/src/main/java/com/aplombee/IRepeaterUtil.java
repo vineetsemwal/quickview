@@ -159,16 +159,16 @@ public interface IRepeaterUtil {
      * @param component
      * @return   js call string
      */
-    public String isComponentScrollBarAtBottom(MarkupContainer component);
+     String isComponentScrollBarAtBottom(MarkupContainer component);
 
     /**
      * js calls which calls methods that when fired returns true if page's navigation-bar is at the bottom
      * @param component
      * @return  js call string
      */
-    public String isPageScrollBarAtBottom();
+     String isPageScrollBarAtBottom();
 
-
+     String showPageScrollBar();
     /**
      *  throw this exception if quickview's parent is not found
      *

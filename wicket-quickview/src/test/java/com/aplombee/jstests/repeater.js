@@ -28,12 +28,11 @@ var QuickView = {
     createItem: function(tag, theId) {
         return $("<" + tag + ">").prop("id", theId);
     },
-            
     /**
      * removes element with 'id' of parent with id 'parentId'
-     */        
-    removeItem: function(id,parentId) {
-        $("#" + parentId).children().remove("#"+id);
+     */
+    removeItem: function(id, parentId) {
+        $("#" + parentId).children().remove("#" + id);
     },
     /**
      creates a new dom tag element as the last element of  dome element with id  parentContainerId
@@ -85,6 +84,19 @@ var QuickView = {
      */
     isPageScrollBarAtBottom: function() {
         return (($(window).height() + $(window).scrollTop()) >= $(document).height());
+        
+    },
+     
+    /**
+     it assures document height is greater than window height by setting min-height on body 
+      if document height is already greater than window height then it does nothing.
+    */
+    showPageScrollBar: function() {
+        var winHeight = $(window).height();
+        if (winHeight >= $(document).height()) {
+            var newDHeight = winHeight + 10; //random 10px added to assure document height is greater than window 
+            $('body').css('min-height', newDHeight);
+        }
     }
 
 };
