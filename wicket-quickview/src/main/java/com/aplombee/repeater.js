@@ -83,9 +83,10 @@ var QuickView = {
      returns true if the scrollbar of the page is moved at the bottom else it returns false
      */
     isPageScrollBarAtBottom: function() {
-        return (($(window).height() + $(window).scrollTop()) >= $(document).height());
-        
-    },
+            // 50 px added as it's nicer to not force user to move scrollbar to the absolute bottom for new items
+      return (($(window).height() + $(window).scrollTop())+50 >= $(document).height());
+
+        },
      
     /**
      it assures document height is greater than window height by setting min-height on body 

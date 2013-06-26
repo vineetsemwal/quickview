@@ -1,13 +1,13 @@
 /**
  *
  Copyright 2012 Vineet Semwal
- 
+
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
- 
+
  http://www.apache.org/licenses/LICENSE-2.0
- 
+
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,8 +17,8 @@
 
 /**
  * to use a method use QuickView.methodName(parameter) foreg. QuickView.createItem("div","someid");
- *  
- * 
+ *
+ *
  * @author Vineet Semwal
  */
 var QuickView = {
@@ -74,7 +74,7 @@ var QuickView = {
      */
     isComponentScrollBarAtBottom: function(id) {
         var el = $("#" + id);
-        // offsetheight : element height	
+        // offsetheight : element height
         // scrolltop : height of scroll from top
         // scroll-height:height of the scroll view of an element
         return ($(el).prop("offsetHeight") + $(el).scrollTop() >= $(el).prop("scrollHeight"));
@@ -83,18 +83,19 @@ var QuickView = {
      returns true if the scrollbar of the page is moved at the bottom else it returns false
      */
     isPageScrollBarAtBottom: function() {
-        return (($(window).height() + $(window).scrollTop()) >= $(document).height());
-        
-    },
-     
+            // 50 px added as it's nicer to not force user to move scrollbar to the absolute bottom for new items
+      return (($(window).height() + $(window).scrollTop())+50 >= $(document).height());
+
+        },
+
     /**
-     it assures document height is greater than window height by setting min-height on body 
+     it assures document height is greater than window height by setting min-height on body
       if document height is already greater than window height then it does nothing.
     */
     showPageScrollBar: function() {
         var winHeight = $(window).height();
         if (winHeight >= $(document).height()) {
-            var newDHeight = winHeight + 10; //random 10px added to assure document height is greater than window 
+            var newDHeight = winHeight + 10; //random 10px added to assure document height is greater than window
             $('body').css('min-height', newDHeight);
         }
     }
