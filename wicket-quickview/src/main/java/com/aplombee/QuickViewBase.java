@@ -84,7 +84,10 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
 
     }
 
-    private transient long itemsCount=-1;
+    /**
+     *  cached only for a request
+     */
+    private transient Long itemsCount=null;
 
     private IDataProvider<T> dataProvider;
 
@@ -346,8 +349,8 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
          }
 
     public final long getItemsCount(){
-        if(itemsCount>=0){
-            return itemsCount;
+        if(itemsCount!=null){
+            return itemsCount.longValue();
         }
            itemsCount=getDataProvider().size();
             return itemsCount;
@@ -355,7 +358,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
 
     private void clearCachedItemCount()
     {
-        itemsCount= -1;
+        itemsCount= null;
     }
 
     public long getRowsCount(){
@@ -678,6 +681,12 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         public List<String> getPrependScripts(){
             return prependScripts;
         }
+
+        private List<String>appendScripts=new ArrayList<String>();
+        public List<String>getAppendScripts(){
+         return appendScripts;
+        }
+
         public List<Component>getComponents(){
             return components;
         }
@@ -695,6 +704,10 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
                 for(String script: prependScripts){
                    target.prependJavaScript(script);
                 }
+
+               for(String script: appendScripts){
+                   target.appendJavaScript(script);
+               }
 
                target.add(components.toArray(new Component[0]));
             }
