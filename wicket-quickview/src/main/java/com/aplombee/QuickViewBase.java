@@ -348,6 +348,13 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         response.render(JavaScriptHeaderItem.forReference(Application.get().getJavaScriptLibrarySettings().getJQueryReference()));
          }
 
+    /**
+     * same as dataprovider size but cached for request to improve performance  in case of multiple call to avoid 
+     * unnecessary expensive call of {@link org.apache.wicket.markup.repeater.data.IDataProvider#size()}
+     *
+     * @return  dataprovider's size
+     */
+
     public final long getItemsCount(){
         if(itemsCount!=null){
             return itemsCount.longValue();
@@ -361,7 +368,12 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         itemsCount= null;
     }
 
-    public long getRowsCount(){
+    /**
+     * same as {@link this#getItemsCount()} but takes into account hierarchy so if the view is not visible in hierarchy
+     * the returned value is zero else return the getItemsCount() value
+     * @return
+     */
+    public final long getRowsCount(){
         if(!isVisibleInHierarchy()){
             return 0;
         }
