@@ -17,6 +17,7 @@
 package com.aplombee;
 
 
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 
 /**
@@ -72,6 +73,43 @@ public abstract class QuickView<T> extends QuickViewBase<T> {
 
     public QuickView(String id, IDataProvider<T> dataProvider, int itemsPerRequest) {
         super(id, dataProvider, new DefaultQuickReuseStrategy());
+        setItemsPerRequest(itemsPerRequest);
+    }
+
+    /**
+     *
+     * @param id
+     * @param dataProvider
+     *  @param itemsPerRequest items to be constructed per Page or request
+     */
+    public QuickView(String id, IDataProvider<T> dataProvider, IQuickReuseStrategy reuseStrategy, int itemsPerRequest,Component start ,Component end) {
+        super(id, dataProvider, reuseStrategy,start,end);
+        setItemsPerRequest(itemsPerRequest);
+
+    }
+
+    /**
+     *
+     * @param id
+     * @param dataProvider
+     *
+     */
+    public QuickView(String id, IDataProvider<T> dataProvider,IQuickReuseStrategy reuseStrategy,Component start ,Component end) {
+        super(id, dataProvider, reuseStrategy,start,end);
+    }
+
+    /**
+     *
+     * @param id
+     * @param dataProvider
+     *
+     */
+    public QuickView(String id, IDataProvider<T> dataProvider,Component start,Component end) {
+        super(id, dataProvider,new DefaultQuickReuseStrategy(),start,end);
+    }
+
+    public QuickView(String id, IDataProvider<T> dataProvider, int itemsPerRequest,Component start ,Component end) {
+        super(id, dataProvider, new DefaultQuickReuseStrategy(),start,end);
         setItemsPerRequest(itemsPerRequest);
     }
 }

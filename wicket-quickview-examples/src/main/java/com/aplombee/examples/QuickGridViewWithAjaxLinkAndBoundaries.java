@@ -14,29 +14,33 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
+
 package com.aplombee.examples;
 
 import com.aplombee.ItemsNavigationStrategy;
-import com.aplombee.QuickView;
+import com.aplombee.QuickGridView;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * QuickGridView with AjaxLink
+ *
  * @author Vineet Semwal
  */
-public class AjaxLinkPage extends WebPage {
+public class QuickGridViewWithAjaxLinkAndBoundaries extends WebPage {
     private List<Integer> list = new ArrayList<Integer>();
 
-    public AjaxLinkPage() {
-        for (int i = 0; i < 4; i++) {
+    public QuickGridViewWithAjaxLinkAndBoundaries() {
+        for (int i = 0; i < 10; i++) {
             list.add(i);
         }
     }
@@ -45,15 +49,26 @@ public class AjaxLinkPage extends WebPage {
     @Override
     protected void onInitialize() {
         super.onInitialize();
+
         IDataProvider<Integer> data = new ListDataProvider<Integer>(list);
         WebMarkupContainer numbers = new WebMarkupContainer("numbers");   //parent for quickview
         numbers.setOutputMarkupId(true);  //needed for ajax
-        final QuickView<Integer> number = new QuickView<Integer>("number", data, new ItemsNavigationStrategy()) {
+        Component start,end;
+        numbers.add(start=new Label("start").setOutputMarkupPlaceholderTag(true));
+        numbers.add(end=new Label("end").setOutputMarkupPlaceholderTag(true)) ;
+
+        final QuickGridView<Integer> number = new QuickGridView<Integer>("number", data,new ItemsNavigationStrategy() ,start,end) {
             @Override
-            protected void populate(Item<Integer> item) {
+            protected void populate(CellItem<Integer> item) {
                 item.add(new Label("display", item.getModel()));
             }
+
+            @Override
+            protected void populateEmptyItem(CellItem<Integer> item) {
+                item.add(new Label("display"));
+            }
         };
+        number.setColumns(2);
         numbers.add(number);
         add(numbers);
 
@@ -63,8 +78,15 @@ public class AjaxLinkPage extends WebPage {
             public void onClick(AjaxRequestTarget target) {
                 int newObject=list.get(list.size()-1) +1;
                 list.add( newObject);
-                number.addNewItems(newObject);  //just enough to create a new row at last
-                 }
+                int newObject2=list.get(list.size()-1) +1;
+                list.add( newObject2);
+                List<Integer>newOnes=new ArrayList<Integer>();
+                newOnes.add(newObject);
+                newOnes.add(newObject2);
+
+                number.addRows(newOnes.iterator());//just enough to add new rows and corresponding cells
+
+            }
 
         };
         addLink.setOutputMarkupPlaceholderTag(true);
@@ -73,17 +95,25 @@ public class AjaxLinkPage extends WebPage {
 
         AjaxLink addAtStartLink = new AjaxLink("addAtStartLink") {
 
-
             @Override
             public void onClick(AjaxRequestTarget target) {
-                int newObject=list.get(0)-1;
-                list.add(0,newObject);
-                number.addNewItemsAtStart(newObject);  //just enough to create a new row at start
+                int newObject=list.get(0) -1;
+                list.add(0, newObject);
+                int newObject2=newObject -1;
+                list.add(0, newObject2);
+                List<Integer>newOnes=new ArrayList<Integer>();
+                newOnes.add(newObject2);
+                newOnes.add(newObject);
+
+                 number.addRowsAtStart(newOnes.iterator());//just enough to add new rows  and corresponding cells
+
             }
 
         };
         addAtStartLink.setOutputMarkupPlaceholderTag(true);
         add(addAtStartLink);
+
+
     }
 
 }

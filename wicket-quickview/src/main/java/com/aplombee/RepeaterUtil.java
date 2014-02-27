@@ -49,8 +49,9 @@ public class RepeaterUtil implements IRepeaterUtil {
     /**
      * {@inheritDoc}
      */
-    public String prepend(String tag, String markupId, String parentMarkupId) {
-        String script = String.format("QuickView.prepend('%s','%s','%s');", tag, markupId, parentMarkupId);
+    public String prepend(String tag, String markupId, String parentMarkupId,String firstChildId ,String markId) {
+        String script = String.format("QuickView.prepend('%s','%s','%s' ,'%s' ,'%s');", tag,
+                markupId, parentMarkupId ,firstChildId,markId);
         return script;
     }
 
@@ -59,8 +60,18 @@ public class RepeaterUtil implements IRepeaterUtil {
      * {@inheritDoc}
      */
     @Override
-    public String prepend(MarkupContainer component, MarkupContainer parent) {
-        String script = prepend(getComponentTag(component).getName(), component.getMarkupId(), parent.getMarkupId());
+    public String prepend(MarkupContainer component, MarkupContainer parent,Component start,Component end) {
+        String startId="";
+        if(end!=null){
+            startId=end.getMarkupId();
+        }
+        String endId="";
+        if(start!=null){
+            endId=start.getMarkupId();
+        }
+
+        String script = prepend(getComponentTag(component).getName(),
+                component.getMarkupId(), parent.getMarkupId(),endId ,startId );
         return script;
     }
 
@@ -69,10 +80,29 @@ public class RepeaterUtil implements IRepeaterUtil {
      * {@inheritDoc}
      */
     @Override
-    public String append(String tag, String markupId, String parentMarkupId) {
-        String script = String.format("QuickView.append('%s','%s','%s');", tag, markupId, parentMarkupId);
+    public String append(String tag, String markupId, String parentMarkupId,String startId ,String endId) {
+        String script = String.format("QuickView.append('%s','%s','%s' ,'%s' ,'%s');", tag, markupId,
+                parentMarkupId ,startId ,endId);
         return script;
+    }
 
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String append(MarkupContainer c, MarkupContainer parent,Component start,Component end) {
+        String startId="";
+        if(start!=null){
+         startId=start.getMarkupId();
+        }
+        String endIdId="";
+        if(end!=null){
+            endIdId=end.getMarkupId();
+        }
+
+        return append(getComponentTag(c).getName(), c.getMarkupId(), parent.getMarkupId()
+                ,startId ,endIdId );
     }
 
     /**
@@ -85,14 +115,6 @@ public class RepeaterUtil implements IRepeaterUtil {
         return stream.getTag();
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String append(MarkupContainer c, MarkupContainer parent) {
-        return append(getComponentTag(c).getName(), c.getMarkupId(), parent.getMarkupId());
-    }
 
     /**
      * {@inheritDoc}
@@ -139,9 +161,6 @@ public class RepeaterUtil implements IRepeaterUtil {
         }
         if (parent instanceof Page) {
             throw new QuickViewNotAddedToParentException("add quickview to a markupcontainer");
-        }
-        if (parent.size() > 1) {
-            throw new ParentNotUnaryException("the markupcontainer to which quickview is attached should have quickview as its only child");
         }
     }
 

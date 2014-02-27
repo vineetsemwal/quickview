@@ -38,7 +38,7 @@ public interface IRepeaterUtil {
      * @param parentId parent markupid
      * @return prepend call of js
      */
-    String prepend(String tag, String id, String parentId);
+    String prepend(String tag, String id, String parentId,String startId,String endId);
 
     /**
      * prepend js call ,creates a new dom tag element as the first element of parent
@@ -47,7 +47,7 @@ public interface IRepeaterUtil {
      * @param parent    parent to which repeater is added
      * @return prepend call of js
      */
-    String prepend(MarkupContainer component, MarkupContainer parent);
+    String prepend(MarkupContainer component, MarkupContainer parent,Component start,Component end);
 
     /**
      * creates a new dom tag element as the last element of parent with parentId
@@ -56,7 +56,7 @@ public interface IRepeaterUtil {
      * @param parentId parent markupid
      * @return append call of js
      */
-    String append(String tag, String id, String parentId);
+    String append(String tag, String id, String parentId,String startId,String endId);
 
     /**
      * creates a new dom tag element as the last element of parent
@@ -64,7 +64,7 @@ public interface IRepeaterUtil {
      * @param parent parent
      * @return append js call
      */
-    String append(MarkupContainer c, MarkupContainer parent);
+    String append(MarkupContainer c, MarkupContainer parent,Component start,Component end);
 
 
     /**
@@ -200,24 +200,6 @@ public interface IRepeaterUtil {
         }
     }
 
-    /**
-     *  throw this exception if quickview's parent has more than one child in case of items navigation
-     * @author Vineet Semwal
-     */
-    public static class ParentNotUnaryException extends RuntimeException {
-        public ParentNotUnaryException(String message) {
-            super(message);
-        }
-    }
 
 
-    /**
-     *  throw this exception if quickview is not initialized with reuse constant
-     * @author Vineet Semwal
-     */
-    public static class ReuseNotInitializedException extends RuntimeException {
-        public ReuseNotInitializedException(String message) {
-            super(message);
-        }
-    }
 }

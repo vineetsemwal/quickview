@@ -32,6 +32,8 @@ public class HomePage extends WebPage {
 
         BookmarkablePageLink ajaxLink=new BookmarkablePageLink("ajaxLink",AjaxLinkPage.class);
         add(ajaxLink);
+        BookmarkablePageLink ajaxLinkWithBoundaries=new BookmarkablePageLink("ajaxLinkWB",AjaxLinkPageWithBoundaries.class);
+        add(ajaxLinkWithBoundaries);
 
         BookmarkablePageLink removeLink=new BookmarkablePageLink("removeLink",RemoveItemsPage.class);
         add(removeLink);
@@ -53,6 +55,10 @@ public class HomePage extends WebPage {
 
         BookmarkablePageLink gvAjaxLink=new BookmarkablePageLink("gvAjaxLink",QuickGridViewWithAjaxLink.class);
         add(gvAjaxLink);
+
+        BookmarkablePageLink gvAjaxLinkAndBoundaries=new BookmarkablePageLink("gvAjaxLinkWb",QuickGridViewWithAjaxLinkAndBoundaries.class);
+        add(gvAjaxLinkAndBoundaries);
+
 
     }
 }

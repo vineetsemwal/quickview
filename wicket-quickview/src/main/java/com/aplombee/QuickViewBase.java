@@ -102,6 +102,15 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
 
     private long currentPage;
 
+    private Component start,end;
+
+    public final Component getStart(){
+      return start;
+    }
+
+    public  final Component getEnd(){
+      return end;
+    }
 
     /**
      * @param id              component id
@@ -116,6 +125,32 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         this.dataProvider = dataProvider;
         this.reuseStrategy=reuseStrategy;
     }
+
+
+
+    /**
+     * @param id              component id
+     * @param dataProvider    dataprovider of objects
+     * @param reuse           children are created again on render
+     *
+     */
+    public QuickViewBase(String id, IDataProvider<T> dataProvider, IQuickReuseStrategy reuseStrategy,Component start,Component end) {
+        super(id);
+        Args.notNull(dataProvider, "dataProvider");
+        Args.notNull(reuseStrategy, "reuseStrategy");
+        this.dataProvider = dataProvider;
+        this.reuseStrategy=reuseStrategy;
+        this.start=start;
+        if(start!=null){
+         start.setOutputMarkupPlaceholderTag(true);
+        }
+        this.end=end;
+        if(end!=null){
+        end.setOutputMarkupPlaceholderTag(true);
+        }
+
+    }
+
 
 
     protected Item<T> newItem(String id,long index, IModel<T> model) {
@@ -496,14 +531,14 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
 
     @Override
     public MarkupContainer add(final Component... components) {
-        simpleAdd(components);
+       simpleAdd(components);
         if (!isAjax()) {
             return this;
         }
 
         for (int i = 0; i < components.length; i++) {
             MarkupContainer parent = _getParent();
-            String script = getRepeaterUtil().append((Item) components[i], parent);
+            String script = getRepeaterUtil().append((Item) components[i], parent,start,end);
             getSynchronizer().getPrependScripts().add(script);
           }
         getSynchronizer().add(components);
@@ -608,7 +643,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
 
         for (int i = 0; i < components.length; i++) {
             MarkupContainer parent = _getParent();
-            String updateBeforeScript = getRepeaterUtil().prepend((Item) components[i], parent);
+             String updateBeforeScript = getRepeaterUtil().prepend((Item) components[i], parent,start,end);
             getSynchronizer().getPrependScripts().add(updateBeforeScript);
         }
         getSynchronizer().add(components);

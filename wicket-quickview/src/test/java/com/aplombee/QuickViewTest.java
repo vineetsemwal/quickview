@@ -222,7 +222,64 @@ public class QuickViewTest {
 
         };
         final String script = "script..";
-        Mockito.when(util.append(c, parent)).thenReturn(script);
+        Mockito.when(util.append(c, parent,null,null)).thenReturn(script);
+        QuickView<TestObj> sparc = Mockito.spy(quickView);
+        sparc.add(c);
+
+        Mockito.verify(sparc, Mockito.times(1)).simpleAdd(c);
+        Mockito.verify(synchronizer, Mockito.times(1)).add(c);
+        Mockito.verify(scripts, Mockito.times(1)).add(script);
+
+    }
+
+
+    /**
+     * add one component ,isajax=true
+     */
+    @Test(groups = {"wicketTests"})
+    public void add_1_1() {
+        final int itemsPerRequest = 2;
+        final WebMarkupContainer parent = Mockito.mock(WebMarkupContainer.class);
+        IDataProvider dataProvider = Mockito.mock(IDataProvider.class);
+        final IRepeaterUtil util = mockRepeaterUtil();
+        final TestObj to = Mockito.mock(TestObj.class);
+        List<String> scripts = Mockito.mock(List.class);
+        final QuickViewBase.Synchronizer synchronizer = Mockito.mock(QuickViewBase.Synchronizer.class);
+        Mockito.when(synchronizer.getPrependScripts()).thenReturn(scripts);
+        final Item c = Mockito.mock(Item.class);
+      Component start=new Label("start");
+       Component end=new Label("end");
+        QuickView<TestObj> quickView = new QuickView<TestObj>("repeater", dataProvider, itemsPerRequest,start,end) {
+
+            public void populate(Item<TestObj> item) {
+            }
+
+            public MarkupContainer _getParent() {
+                return parent;
+            }
+
+            public MarkupContainer simpleAdd(Component... c) {
+                return this;
+            }
+
+
+            public boolean isAjax() {
+                return true;
+            }
+
+            @Override
+            public Synchronizer getSynchronizer() {
+                return synchronizer;
+            }
+
+            @Override
+            public IRepeaterUtil getRepeaterUtil() {
+                return util;
+            }
+
+        };
+        final String script = "script..";
+        Mockito.when(util.append(c, parent,start,end)).thenReturn(script);
         QuickView<TestObj> sparc = Mockito.spy(quickView);
         sparc.add(c);
 
@@ -278,8 +335,8 @@ public class QuickViewTest {
             }
         };
         final String script = "script..", script2 = "script2!";
-        Mockito.when(util.append(c, parent)).thenReturn(script);
-        Mockito.when(util.append(c2, parent)).thenReturn(script2);
+        Mockito.when(util.append(c, parent,null,null)).thenReturn(script);
+        Mockito.when(util.append(c2, parent,null,null)).thenReturn(script2);
         QuickView sparc = Mockito.spy(arc);
         sparc.add(c, c2);
         Mockito.verify(sparc, Mockito.times(1)).simpleAdd(c, c2);
@@ -288,6 +345,67 @@ public class QuickViewTest {
         Mockito.verify(scripts, Mockito.times(1)).add(script2);
 
     }
+
+
+    /**
+     * add two components ,isajax=true
+     */
+    @Test(groups = {"wicketTests"})
+    public void add_2_2() {
+        int oneBlock = 2;
+        List<String> scripts = Mockito.mock(List.class);
+        final QuickViewBase.Synchronizer synchronizer = Mockito.mock(QuickViewBase.Synchronizer.class);
+        Mockito.when(synchronizer.getPrependScripts()).thenReturn(scripts);
+        final WebMarkupContainer parent = Mockito.mock(WebMarkupContainer.class);
+        IDataProvider dataProvider = Mockito.mock(IDataProvider.class);
+        final IRepeaterUtil util = mockRepeaterUtil();
+        final TestObj to = Mockito.mock(TestObj.class);
+        final Item c = Mockito.mock(Item.class);
+        final Item c2 = Mockito.mock(Item.class);
+        Component start=new Label("start") ;
+        Component end=new Label("end");
+        QuickView<TestObj> arc = new QuickView<TestObj>("repeater", dataProvider, oneBlock,start,end) {
+
+            public void populate(Item<TestObj> item) {
+            }
+
+            public MarkupContainer _getParent() {
+                return parent;
+            }
+
+            public MarkupContainer simpleAdd(Component... c) {
+                return this;
+            }
+
+
+            public boolean isAjax() {
+                return true;
+            }
+
+
+            @Override
+            public IRepeaterUtil getRepeaterUtil() {
+                return util;
+            }
+
+            @Override
+            public Synchronizer getSynchronizer() {
+                return synchronizer;
+            }
+        };
+        final String script = "script..", script2 = "script2!";
+        Mockito.when(util.append(c, parent,start,end)).thenReturn(script);
+        Mockito.when(util.append(c2, parent,start,end)).thenReturn(script2);
+        QuickView sparc = Mockito.spy(arc);
+        sparc.add(c, c2);
+        Mockito.verify(sparc, Mockito.times(1)).simpleAdd(c, c2);
+        Mockito.verify(synchronizer, Mockito.times(1)).add(c, c2);
+        Mockito.verify(scripts, Mockito.times(1)).add(script);
+        Mockito.verify(scripts, Mockito.times(1)).add(script2);
+
+    }
+
+
 
 
     /**
@@ -329,7 +447,7 @@ public class QuickViewTest {
 
         };
         final String script = "script..";
-        Mockito.when(util.append(c, parent)).thenReturn(script);
+        Mockito.when(util.append(c, parent,null,null)).thenReturn(script);
         QuickView<TestObj> sparc = Mockito.spy(arc);
         sparc.add(c);
 
@@ -575,7 +693,7 @@ public class QuickViewTest {
 
         };
         final String script = "script..";
-        Mockito.when(util.prepend(c, parent)).thenReturn(script);
+        Mockito.when(util.prepend(c, parent,null,null)).thenReturn(script);
         QuickView sparc = Mockito.spy(quickView);
         sparc.addAtStart(c);
         Mockito.verify(sparc, Mockito.times(1)).simpleAdd(c);
@@ -583,6 +701,62 @@ public class QuickViewTest {
         Mockito.verify(scripts, Mockito.times(1)).add(script);
 
     }
+
+
+    /**
+     * one component added ,ajax=true ,parent added=false
+     */
+    @Test(groups = {"wicketTests"})
+    public void addAtStart_1_1() {
+        final int itemsPerRequest = 2;
+        final WebMarkupContainer parent = Mockito.mock(WebMarkupContainer.class);
+        IDataProvider dataProvider = Mockito.mock(IDataProvider.class);
+        final IRepeaterUtil util = mockRepeaterUtil();
+        final TestObj to = Mockito.mock(TestObj.class);
+        List<String> scripts = Mockito.mock(List.class);
+        final QuickViewBase.Synchronizer synchronizer = Mockito.mock(QuickViewBase.Synchronizer.class);
+        Mockito.when(synchronizer.getPrependScripts()).thenReturn(scripts);
+        final Item c = Mockito.mock(Item.class);
+        Component start=new Label("start");
+        Component end=new Label("end");
+        QuickView<TestObj> quickView = new QuickView<TestObj>("repeater", dataProvider, itemsPerRequest,start,end) {
+
+            public void populate(Item<TestObj> item) {
+            }
+
+            public MarkupContainer _getParent() {
+                return parent;
+            }
+
+            public MarkupContainer simpleAdd(Component... c) {
+                return this;
+            }
+
+            public boolean isAjax() {
+                return true;
+            }
+
+            @Override
+            public Synchronizer getSynchronizer() {
+                return synchronizer;
+            }
+
+            @Override
+            public IRepeaterUtil getRepeaterUtil() {
+                return util;
+            }
+
+        };
+        final String script = "script..";
+        Mockito.when(util.prepend(c, parent,start,end)).thenReturn(script);
+        QuickView sparc = Mockito.spy(quickView);
+        sparc.addAtStart(c);
+        Mockito.verify(sparc, Mockito.times(1)).simpleAdd(c);
+        Mockito.verify(synchronizer, Mockito.times(1)).add(c);
+        Mockito.verify(scripts, Mockito.times(1)).add(script);
+
+    }
+
 
     /**
      * add two components ,isajax=true
@@ -629,8 +803,8 @@ public class QuickViewTest {
             }
         };
         final String script = "script..", script2 = "script2!";
-        Mockito.when(util.prepend(c, parent)).thenReturn(script);
-        Mockito.when(util.prepend(c2, parent)).thenReturn(script2);
+        Mockito.when(util.prepend(c, parent,null,null)).thenReturn(script);
+        Mockito.when(util.prepend(c2, parent,null,null)).thenReturn(script2);
         QuickView sparc = Mockito.spy(arc);
         sparc.addAtStart(c, c2);
         Mockito.verify(sparc, Mockito.times(1)).simpleAdd(c, c2);
@@ -639,6 +813,65 @@ public class QuickViewTest {
         Mockito.verify(scripts, Mockito.times(1)).add(script2);
 
     }
+
+
+    /**
+     * add two components ,isajax=true
+     */
+    @Test(groups = {"wicketTests"})
+    public void addAtStart_2_2() {
+        int oneBlock = 2;
+        List<String> scripts = Mockito.mock(List.class);
+        final QuickViewBase.Synchronizer synchronizer = Mockito.mock(QuickViewBase.Synchronizer.class);
+        Mockito.when(synchronizer.getPrependScripts()).thenReturn(scripts);
+        final WebMarkupContainer parent = Mockito.mock(WebMarkupContainer.class);
+        IDataProvider dataProvider = Mockito.mock(IDataProvider.class);
+        final IRepeaterUtil util = mockRepeaterUtil();
+        final TestObj to = Mockito.mock(TestObj.class);
+        final Item c = Mockito.mock(Item.class);
+        final Item c2 = Mockito.mock(Item.class);
+         Component start=new Label("start");
+         Component end=new Label("end");
+        QuickView<TestObj> arc = new QuickView<TestObj>("repeater", dataProvider, oneBlock,start,end ) {
+
+            public void populate(Item<TestObj> item) {
+            }
+
+            public MarkupContainer _getParent() {
+                return parent;
+            }
+
+            public MarkupContainer simpleAdd(Component... c) {
+                return this;
+            }
+
+            public boolean isAjax() {
+                return true;
+            }
+
+
+            @Override
+            public IRepeaterUtil getRepeaterUtil() {
+                return util;
+            }
+
+            @Override
+            public Synchronizer getSynchronizer() {
+                return synchronizer;
+            }
+        };
+        final String script = "script..", script2 = "script2!";
+        Mockito.when(util.prepend(c, parent,start,end)).thenReturn(script);
+        Mockito.when(util.prepend(c2, parent,start,end)).thenReturn(script2);
+        QuickView sparc = Mockito.spy(arc);
+        sparc.addAtStart(c, c2);
+        Mockito.verify(sparc, Mockito.times(1)).simpleAdd(c, c2);
+        Mockito.verify(synchronizer, Mockito.times(1)).add(c, c2);
+        Mockito.verify(scripts, Mockito.times(1)).add(script);
+        Mockito.verify(scripts, Mockito.times(1)).add(script2);
+
+    }
+
 
     /**
      * current page=5  ,firstPageCreatedOnReRender=false

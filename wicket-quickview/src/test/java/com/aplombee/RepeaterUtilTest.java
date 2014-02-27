@@ -46,7 +46,7 @@ public class RepeaterUtilTest {
        Assert.assertNotNull(util);
         Assert.assertTrue(util==util2);
     }
-
+      /*
     @Test(groups = {"utilTests"})
     public void prepend_1() {
         final String child = "child", parent = "parent", tag = "div";
@@ -54,7 +54,9 @@ public class RepeaterUtilTest {
         String expected = "QuickView.prepend('div','child','parent');";
         Assert.assertEquals(actual.trim(), expected.trim());
     }
+    */
 
+    /*
     @Test(groups = {"utilTests"})
     public void prepend_2() {
         QuickMockApplication app = new QuickMockApplication();
@@ -86,6 +88,7 @@ public class RepeaterUtilTest {
         Assert.assertEquals(actual.trim(), expected.trim());
     }
 
+    */
     /**
      * check with testpanel
      */
@@ -163,6 +166,8 @@ public class RepeaterUtilTest {
         Assert.assertEquals(actual.getName(),TestQuickViewContainer.TAG_NAME);
     }
 
+    /*
+
     @Test(groups = {"utilTests"})
     public void append_1() {
         final String child = "child", parent = "parent", tag = "div";
@@ -170,8 +175,9 @@ public class RepeaterUtilTest {
         String expected = "QuickView.append('div','child','parent');";
         Assert.assertEquals(call, expected);
     }
+        */
 
-
+    /*
     @Test(groups = {"utilTests"})
     public void append_2() {
         QuickMockApplication app = new QuickMockApplication();
@@ -201,6 +207,8 @@ public class RepeaterUtilTest {
         String actual = RepeaterUtil.get().append(item, parent);
         Assert.assertEquals(actual.trim(), expected.trim());
     }
+
+    */
 
     @Test(groups = {"utilTests"})
     public void removeItem_1() {
@@ -399,20 +407,6 @@ public class RepeaterUtilTest {
         RepeaterUtil.get().parentNotSuitable(quickView);
     }
 
-    /**
-     * parent children size=2,reuse= not paging
-     */
-    @Test(groups = {"utilTests"}, expectedExceptions = RepeaterUtil.ParentNotUnaryException.class)
-    public void parentNotSuitable_5() {
-        IQuickReuseStrategy strategy=Mockito.mock(IQuickReuseStrategy.class);
-        Mockito.when(strategy.isAddItemsSupported()).thenReturn(true);
-        WebMarkupContainer parent = Mockito.mock(WebMarkupContainer.class);
-        Mockito.when(parent.size()).thenReturn(2);
-        IQuickView quickView = Mockito.mock(IQuickView.class);
-        Mockito.when(quickView.getParent()).thenReturn(parent);
-        Mockito.when(quickView.getReuseStrategy()).thenReturn(strategy);
-        RepeaterUtil.get().parentNotSuitable(quickView);
-    }
 
     /**
      * parent children size=1,reuse= not paging

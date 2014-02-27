@@ -18,6 +18,7 @@ package com.aplombee.examples;
 
 import com.aplombee.ItemsNavigationStrategy;
 import com.aplombee.QuickView;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -26,16 +27,17 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Vineet Semwal
  */
-public class AjaxLinkPage extends WebPage {
+public class AjaxLinkPageWithBoundaries extends WebPage {
     private List<Integer> list = new ArrayList<Integer>();
 
-    public AjaxLinkPage() {
+    public AjaxLinkPageWithBoundaries() {
         for (int i = 0; i < 4; i++) {
             list.add(i);
         }
@@ -47,22 +49,27 @@ public class AjaxLinkPage extends WebPage {
         super.onInitialize();
         IDataProvider<Integer> data = new ListDataProvider<Integer>(list);
         WebMarkupContainer numbers = new WebMarkupContainer("numbers");   //parent for quickview
+        Component start,end;
+        numbers.add(start=new Label("start").setOutputMarkupPlaceholderTag(true));
+        numbers.add(end=new Label("end").setOutputMarkupPlaceholderTag(true)) ;
+
         numbers.setOutputMarkupId(true);  //needed for ajax
-        final QuickView<Integer> number = new QuickView<Integer>("number", data, new ItemsNavigationStrategy()) {
+        final QuickView<Integer> number = new QuickView<Integer>("number", data, new ItemsNavigationStrategy(),start,end ) {
             @Override
             protected void populate(Item<Integer> item) {
                 item.add(new Label("display", item.getModel()));
             }
-        };
+        } ;
         numbers.add(number);
         add(numbers);
+
 
         AjaxLink addLink = new AjaxLink("addLink") {
 
             @Override
             public void onClick(AjaxRequestTarget target) {
                 int newObject=list.get(list.size()-1) +1;
-                list.add( newObject);
+                list.add(newObject);
                 number.addNewItems(newObject);  //just enough to create a new row at last
                  }
 
@@ -84,6 +91,7 @@ public class AjaxLinkPage extends WebPage {
         };
         addAtStartLink.setOutputMarkupPlaceholderTag(true);
         add(addAtStartLink);
+
     }
 
 }

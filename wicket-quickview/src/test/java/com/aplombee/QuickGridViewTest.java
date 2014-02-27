@@ -19,6 +19,7 @@ package com.aplombee;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
@@ -744,7 +745,7 @@ public class QuickGridViewTest {
         final String call="insert after";
         QuickGridView.RowItem row=Mockito.mock(QuickGridView.RowItem.class);
         final MarkupContainer parent=Mockito.mock(MarkupContainer.class);
-        Mockito.when(util.append(row, parent)).thenReturn(call);
+        Mockito.when(util.append(row, parent,null,null)).thenReturn(call);
         QuickGridView<Integer> grid=new QuickGridView<Integer>("grid",provider) {
             @Override
             protected void populate(CellItem<Integer> item) {
@@ -789,6 +790,68 @@ public class QuickGridViewTest {
     }
 
 
+
+
+    /**
+     *    ajax=true
+     */
+    @Test(groups = {"wicketTests"})
+    public void addRow_1_1(){
+        IDataProvider provider = Mockito.mock(IDataProvider.class);
+        List<String> scripts=Mockito.mock(List.class);
+        final QuickViewBase.Synchronizer synchronizer=Mockito.mock(QuickViewBase.Synchronizer.class);
+        Mockito.when(synchronizer.getPrependScripts()).thenReturn(scripts);
+        final IRepeaterUtil util=Mockito.mock(IRepeaterUtil.class);
+        final String call="insert after";
+        QuickGridView.RowItem row=Mockito.mock(QuickGridView.RowItem.class);
+       Component start=new Label("start");
+        Component end=new Label("start");
+        final MarkupContainer parent=Mockito.mock(MarkupContainer.class);
+        Mockito.when(util.append(row, parent,start,end)).thenReturn(call);
+        QuickGridView<Integer> grid=new QuickGridView<Integer>("grid",provider,start,end) {
+            @Override
+            protected void populate(CellItem<Integer> item) {
+            }
+
+            @Override
+            protected void populateEmptyItem(CellItem<Integer> item) {
+            }
+
+            @Override
+            public Synchronizer getSynchronizer() {
+                return synchronizer;
+            }
+
+            @Override
+            public boolean isAjax() {
+                return true;
+            }
+
+            @Override
+            public MarkupContainer simpleAdd(Component... c) {
+                return this;
+            }
+
+            @Override
+            protected IRepeaterUtil getRepeaterUtil() {
+                return util;
+            }
+
+            @Override
+            protected MarkupContainer _getParent() {
+                return parent;
+            }
+
+        } ;
+        QuickGridView spy=Mockito.spy(grid);
+
+        spy.addRow(row);
+        Mockito.verify(spy,Mockito.times(1)).simpleAdd(row);
+        Mockito.verify(scripts,Mockito.times(1)).add(call);
+        Mockito.verify(synchronizer,Mockito.times(1)).add(row);
+    }
+
+
     /**
      *    ajax=false
      */
@@ -799,7 +862,7 @@ public class QuickGridViewTest {
         final String call="insert after";
         QuickGridView.RowItem row=Mockito.mock(QuickGridView.RowItem.class);
         final MarkupContainer parent=Mockito.mock(MarkupContainer.class);
-        Mockito.when(util.append(row, parent)).thenReturn(call);
+        Mockito.when(util.append(row, parent,null,null)).thenReturn(call);
         QuickGridView<Integer> grid=new QuickGridView<Integer>("grid",provider) {
             @Override
             protected void populate(CellItem<Integer> item) {
@@ -854,8 +917,66 @@ public class QuickGridViewTest {
         final String call="insert before";
         QuickGridView.RowItem row=Mockito.mock(QuickGridView.RowItem.class);
         final MarkupContainer parent=Mockito.mock(MarkupContainer.class);
-        Mockito.when(util.prepend(row, parent)).thenReturn(call);
+        Mockito.when(util.prepend(row, parent,null,null)).thenReturn(call);
         QuickGridView<Integer> grid=new QuickGridView<Integer>("grid",provider) {
+            @Override
+            protected void populate(CellItem<Integer> item) {
+            }
+
+            @Override
+            protected void populateEmptyItem(CellItem<Integer> item) {
+            }
+
+            @Override
+            public Synchronizer getSynchronizer() {
+                return synchronizer;
+            }
+
+            @Override
+            public boolean isAjax() {
+                return true;
+            }
+
+            @Override
+            public MarkupContainer simpleAdd(Component... c) {
+                return this;
+            }
+
+            @Override
+            protected IRepeaterUtil getRepeaterUtil() {
+                return util;
+            }
+
+            @Override
+            protected MarkupContainer _getParent() {
+                return parent;
+            }
+
+        } ;
+        QuickGridView spy=Mockito.spy(grid);
+        spy.addRowAtStart(row);
+        Mockito.verify(spy,Mockito.times(1)).simpleAdd(row);
+        Mockito.verify(scripts,Mockito.times(1)).add(call);
+        Mockito.verify(synchronizer,Mockito.times(1)).add(row);
+    }
+
+    /**
+     *    ajax=true
+     */
+    @Test(groups = {"wicketTests"})
+    public void addRowAtStart_1_1(){
+        IDataProvider provider = Mockito.mock(IDataProvider.class);
+        List<String> scripts=Mockito.mock(List.class);
+        final QuickViewBase.Synchronizer synchronizer=Mockito.mock(QuickViewBase.Synchronizer.class);
+        Mockito.when(synchronizer.getPrependScripts()).thenReturn(scripts);
+        final IRepeaterUtil util=Mockito.mock(IRepeaterUtil.class);
+        final String call="insert before";
+        QuickGridView.RowItem row=Mockito.mock(QuickGridView.RowItem.class);
+        final MarkupContainer parent=Mockito.mock(MarkupContainer.class);
+        Component start=new Label("start");
+        Component end=new Label("end");
+        Mockito.when(util.prepend(row, parent,start,end)).thenReturn(call);
+        QuickGridView<Integer> grid=new QuickGridView<Integer>("grid",provider,start,end) {
             @Override
             protected void populate(CellItem<Integer> item) {
             }

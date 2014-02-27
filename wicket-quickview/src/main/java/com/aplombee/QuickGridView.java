@@ -56,6 +56,25 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
     }
 
 
+
+    /**
+     * @param id           component id
+     * @param dataProvider data provider
+     */
+    public QuickGridView(String id, IDataProvider<T> dataProvider, IQuickReuseStrategy reuseStrategy,Component start,Component end) {
+        super(id, dataProvider, reuseStrategy,start,end);
+    }
+
+    /**
+     * @param id           component id
+     * @param dataProvider data provider
+     */
+    public QuickGridView(String id, IDataProvider<T> dataProvider,Component start,Component end) {
+        super(id, dataProvider, new DefaultQuickReuseStrategy() ,start,end);
+    }
+
+
+
     public static final String COLUMNS_REPEATER_ID = "cols";
     private int columns = 1;
 
@@ -146,7 +165,7 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
             return this;
         }
 
-        String call = getRepeaterUtil().prepend(rowItem, _getParent());
+        String call = getRepeaterUtil().prepend(rowItem, _getParent(),getStart(),getEnd());
         getSynchronizer().getPrependScripts().add(call);
         getSynchronizer().add(rowItem);
         return this;
@@ -158,7 +177,7 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
         if (!isAjax()) {
             return this;
         }
-        String call = getRepeaterUtil().append(rowItem, _getParent());
+        String call = getRepeaterUtil().append(rowItem, _getParent(),getStart(),getEnd());
         Synchronizer listener = getSynchronizer();
         listener.getPrependScripts().add(call);
         listener.add(rowItem);

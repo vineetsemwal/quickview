@@ -16,6 +16,7 @@
  */
 
 /**
+   <tag id="placeholder> </tag>
  * to use a method use QuickView.methodName(parameter) foreg. QuickView.createItem("div","someid");
  *  
  * 
@@ -37,17 +38,34 @@ var QuickView = {
     /**
      creates a new dom tag element as the last element of  dome element with id  parentContainerId
      */
-    append: function(tag, theId, parentContainerId) {
+    append: function(tag, theId, parentContainerId , startId,endId  ) {
         var item = QuickView.createItem(tag, theId);
-        $("#" + parentContainerId).append(item);
+        var $parent=$("#" + parentContainerId);
+       // if the boundary is not mentioned
+        if(endId.length<1){
+         $parent.append(item);
+         return;
+        }
+        //if mentioned ,add before end boundary
+        var $end=$parent.children("#"+endId);
+        $end.before(item);
     },
+
     /**
      creates a new dom tag element as the first element of element with  parentContainerId
      */
-    prepend: function(tag, theId, parentContainerId) {
-        var item = QuickView.createItem(tag, theId);
-        $("#" + parentContainerId).prepend(item);
-    },
+    prepend: function(tag, theId, parentContainerId,startId,endId  ) {
+           var item = QuickView.createItem(tag, theId);
+            var $parent=$("#" + parentContainerId);
+             // if the boundary is not mentioned
+            if(startId.length<1){
+             $parent.prepend(item);
+             return;
+            }
+            //if mentioned ,add after start boundary
+            var $start=$parent.children("#"+startId);
+            $start.after(item);
+},
     /**
      position the scrollbar to bottom
      */
