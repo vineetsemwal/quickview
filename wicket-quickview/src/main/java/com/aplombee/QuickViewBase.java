@@ -34,6 +34,7 @@ import java.util.*;
 /**
  * base class for {@link QuickView}
  *
+ *
  * @author Vineet Semwal
  */
 public abstract class QuickViewBase<T> extends RepeatingView implements IQuickView {
@@ -104,10 +105,22 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
 
     private Component start,end;
 
+    /**
+     * represents start of view ,can be any component it's position in the markup should be just before view
+     * this is done so that the new children doesn't get mixedup with the other markup or another components
+     * specified in immediate parent
+     * @return
+     */
     public final Component getStart(){
       return start;
     }
 
+    /**
+     * represents end of view ,can be any component it's position in the markup should be just after the view
+     this is done so that the new children doesn't get mixedup with the other markup or another components
+     * specified in immediate parent
+     *  @return
+     */
     public  final Component getEnd(){
       return end;
     }
@@ -132,6 +145,9 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      * @param id              component id
      * @param dataProvider    dataprovider of objects
      * @param reuse           children are created again on render
+     * @param start  start of view
+     *  @param end  end of view
+     *
      *
      */
     public QuickViewBase(String id, IDataProvider<T> dataProvider, IQuickReuseStrategy reuseStrategy,Component start,Component end) {
