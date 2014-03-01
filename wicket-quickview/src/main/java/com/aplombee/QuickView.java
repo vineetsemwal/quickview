@@ -32,9 +32,8 @@ import org.apache.wicket.markup.repeater.data.IDataProvider;
  *  however on setting strategy like {@link ItemsNavigationStrategy} or {@link ReuseAllStrategy} QuickView get capability
  *  to add  new items without the need to re-render the view
  *
- * limitation of QuickView is the parent of QuickView should have only one child and that should be QuickView .this
- * limitation is only for case where item(s) has to be added dynamically without re-rendering the View.
- *
+ *  the preferred way to use quickview is with boundaries ie.  two components, one placed before and one placed
+ *  after quickview in markup ,together they determine start and end of quickview
  *
  */
 public abstract class QuickView<T> extends QuickViewBase<T> {
