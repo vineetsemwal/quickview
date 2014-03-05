@@ -47,7 +47,7 @@ var QuickView = {
          return;
         }
         //if mentioned ,add before end boundary
-        var $end=$parent.children("#"+endId);
+        var $end=$parent.find("#"+endId);
         $end.before(item);
     },
 
@@ -63,7 +63,7 @@ var QuickView = {
              return;
             }
             //if mentioned ,add after start boundary
-            var $start=$parent.children("#"+startId);
+            var $start=$parent.find("#"+startId);
             $start.after(item);
 },
     /**

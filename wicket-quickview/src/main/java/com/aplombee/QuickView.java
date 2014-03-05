@@ -22,7 +22,7 @@ import org.apache.wicket.markup.repeater.data.IDataProvider;
 
 /**
  *
- * adds,deletes elements without the need to re-render the View
+ *  adds,deletes elements without the need to re-render the View
  *
  * QuickView's default behavior is of paging ie. items are added to view on re-render . it uses
  * {@link DefaultQuickReuseStrategy}  by default so It works fine with
@@ -39,6 +39,7 @@ import org.apache.wicket.markup.repeater.data.IDataProvider;
 public abstract class QuickView<T> extends QuickViewBase<T> {
 
     /**
+     *
      *
      * @param id
      * @param dataProvider

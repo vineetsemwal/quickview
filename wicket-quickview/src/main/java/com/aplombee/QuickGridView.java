@@ -35,6 +35,9 @@ import java.util.List;
  * it renders items in rows and columns in table/grid format(same as GridView).it also lets you add and remove rows in ajax cases
  * without the need to repaint parent(adding parent to AjaxRequestTarget causes re-rendering of whole repeater)
  *
+ the preferred way to use QuickGridView is with boundaries ie.  two components, one placed before and one placed
+ *  after quickview in markup ,together they determine start and end of quickview
+ *
  * @author Vineet Semwal
  */
 public abstract class QuickGridView<T> extends QuickViewBase<T> {
