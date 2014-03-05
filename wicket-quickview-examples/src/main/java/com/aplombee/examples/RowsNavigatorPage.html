@@ -20,10 +20,12 @@ Copyright 2012 Vineet Semwal
   <h2>  Rows Navigation displaying all items from 0-19</h2>
 </head>
 <body style="margin-left:50px;margin-top:50px;">
- <ul wicket:id="numbers">
+ <ul wicket:id="numbers" style="list-style-type: none;">
+     <li wicket:id="start"></li>
    <li wicket:id="number">
    number=<label wicket:id="display"></label>
     </li>
+     <li wicket:id="end"></li>
  </ul>
         <div wicket:id="navigator"></div>
 </body>

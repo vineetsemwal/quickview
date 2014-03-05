@@ -47,6 +47,8 @@ public class QuickGridViewWithItemsNavigatorPage extends WebPage{
     protected void onInitialize() {
         super.onInitialize();
         IDataProvider<Integer> data=new ListDataProvider<Integer>(list);
+        WebMarkupContainer parent=new WebMarkupContainer("parent");
+        parent.setOutputMarkupPlaceholderTag(true);
 
         gridView=new QuickGridView<Integer>("gv",data,new ItemsNavigationStrategy()) {
             @Override
@@ -63,9 +65,7 @@ public class QuickGridViewWithItemsNavigatorPage extends WebPage{
         gridView.setColumns(10);
         gridView.setRows(5);
        // gridView.setReuseStrategy(new ReuseAllStrategy());
-        WebMarkupContainer parent=new WebMarkupContainer("parent");
         parent.add(gridView);
-        parent.setOutputMarkupPlaceholderTag(true);
         add(parent);
         AjaxItemsNavigator navigator=new AjaxItemsNavigator("nav",gridView);
         add(navigator);

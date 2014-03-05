@@ -18,14 +18,17 @@ package com.aplombee.examples;
 
 import com.aplombee.ItemsNavigationStrategy;
 import com.aplombee.QuickView;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,21 +51,26 @@ public class AjaxLinkPage extends WebPage {
         IDataProvider<Integer> data = new ListDataProvider<Integer>(list);
         WebMarkupContainer numbers = new WebMarkupContainer("numbers");   //parent for quickview
         numbers.setOutputMarkupId(true);  //needed for ajax
-        final QuickView<Integer> number = new QuickView<Integer>("number", data, new ItemsNavigationStrategy()) {
+        Component start,end;
+        numbers.add(start=new EmptyPanel("start").setOutputMarkupPlaceholderTag(true));
+        numbers.add(end=new EmptyPanel("end").setOutputMarkupPlaceholderTag(true)) ;
+
+        final QuickView<Integer> number = new QuickView<Integer>("number", data, new ItemsNavigationStrategy(),start,end ) {
             @Override
             protected void populate(Item<Integer> item) {
                 item.add(new Label("display", item.getModel()));
             }
-        };
+        } ;
         numbers.add(number);
         add(numbers);
+
 
         AjaxLink addLink = new AjaxLink("addLink") {
 
             @Override
             public void onClick(AjaxRequestTarget target) {
                 int newObject=list.get(list.size()-1) +1;
-                list.add( newObject);
+                list.add(newObject);
                 number.addNewItems(newObject);  //just enough to create a new row at last
                  }
 
@@ -84,6 +92,7 @@ public class AjaxLinkPage extends WebPage {
         };
         addAtStartLink.setOutputMarkupPlaceholderTag(true);
         add(addAtStartLink);
+
     }
 
 }

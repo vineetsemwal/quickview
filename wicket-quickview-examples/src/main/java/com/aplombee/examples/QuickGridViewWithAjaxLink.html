@@ -29,11 +29,22 @@ Copyright 2012 Vineet Semwal
 <a wicket:id="addAtStartLink">add new row at start</a>
 
 <table wicket:id="numbers" cellspacing="0" cellpadding="20" border="1">
+    <tr>
+     <td>any component or just plain markup can be added outside boundaries</td>
+    </tr>
+
+    <tr wicket:id="start"></tr>
     <tr wicket:id="number" >
         <td wicket:id="cols">
             <label wicket:id="display"></label>
         </td>
     </tr>
+   <tr wicket:id="end"></tr>
+
+    <tr>
+        <td>any component or just plain markup can be added outside boundaries</td>
+    </tr>
+
 </table>
 
 <a wicket:id="addLink">add new row at end</a>

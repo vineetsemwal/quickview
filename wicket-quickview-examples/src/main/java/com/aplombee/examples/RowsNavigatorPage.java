@@ -20,9 +20,11 @@ import com.aplombee.ItemsNavigationStrategy;
 import com.aplombee.QuickView;
 import com.aplombee.ReuseAllStrategy;
 import com.aplombee.navigator.AjaxItemsNavigator;
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
@@ -48,15 +50,18 @@ public class RowsNavigatorPage extends WebPage {
         super.onInitialize();
         IDataProvider<Integer>data=new ListDataProvider<Integer>(list);
         final int itemsPerRequest=4;//rows created per request
+        WebMarkupContainer numbers=new WebMarkupContainer("numbers");   //don't forget adding quickview to parent with any ajax navigator
+        Component start,end;
+        numbers.add(start=new EmptyPanel("start").setOutputMarkupPlaceholderTag(true));
+        numbers.add(end=new EmptyPanel("end").setOutputMarkupPlaceholderTag(true)) ;
         //read more about {@see ItemsNavigationStrategy} ,it is one of provided strategy that can be used in
         //cases where new items has to be added without re-rendering QuickView
-        QuickView<Integer> quickView=new QuickView<Integer>("number",data,new ItemsNavigationStrategy(),itemsPerRequest) {
+        QuickView<Integer> quickView=new QuickView<Integer>("number",data,new ItemsNavigationStrategy(),itemsPerRequest,start,end) {
             @Override
             protected void populate(Item<Integer> item) {
                 item.add(new Label("display",item.getModel()));
             }
         } ;
-       WebMarkupContainer numbers=new WebMarkupContainer("numbers");   //don't forget adding quickview to parent with any ajax navigator
           numbers.add(quickView);
            numbers.setOutputMarkupId(true); //don't forget required when using ajaxrownavigator
           add(numbers);

@@ -21,10 +21,12 @@ Copyright 2012 Vineet Semwal
     <h2>Scroll the navigation-bar of quickview's parent and more item/rows will be added</h2>
 </head>
 <body style="margin-left:50px;margin-top:50px;">
-<ul wicket:id="numbers" style="overflow-y:auto;height:150px;width:50%" >
+<ul wicket:id="numbers" style="list-style-type: none;overflow-y:auto;height:150px;width:50%" >
+    <li wicket:id="start"></li>
     <li wicket:id="number" style="margin-bottom:20px;">
         number=<label wicket:id="display"></label>
     </li>
+    <li wicket:id="end"></li>
 </ul>
 
 </body>

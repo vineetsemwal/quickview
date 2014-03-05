@@ -46,6 +46,7 @@ public class AjaxPagingNavigatorPage extends WebPage {
         super.onInitialize();
         IDataProvider<Integer> data=new ListDataProvider<Integer>(list);
         final int itemsPerRequest=4;//rows created per request
+        // boundaries not needed when parent the only use case is to ajax update the parent
         //quickview by default has DefaultReuseStrategy which works fine in case of paging
         QuickView<Integer> quickView=new QuickView<Integer>("number",data,itemsPerRequest) {
             @Override

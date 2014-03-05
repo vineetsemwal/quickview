@@ -19,13 +19,16 @@ package com.aplombee.examples;
 
 import com.aplombee.ItemsNavigationStrategy;
 import com.aplombee.QuickGridView;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,8 +53,12 @@ public class QuickGridViewWithAjaxLink extends WebPage {
 
         IDataProvider<Integer> data = new ListDataProvider<Integer>(list);
         WebMarkupContainer numbers = new WebMarkupContainer("numbers");   //parent for quickview
-        numbers.setOutputMarkupId(true);  //needed for ajax
-        final QuickGridView<Integer> number = new QuickGridView<Integer>("number", data,new ItemsNavigationStrategy()) {
+        numbers.setOutputMarkupPlaceholderTag(true);  //needed for ajax
+        Component start,end;
+        numbers.add(start=new EmptyPanel("start").setOutputMarkupPlaceholderTag(true));
+        numbers.add(end=new EmptyPanel("end").setOutputMarkupPlaceholderTag(true)) ;
+
+        final QuickGridView<Integer> number = new QuickGridView<Integer>("number", data,new ItemsNavigationStrategy() ,start,end) {
             @Override
             protected void populate(CellItem<Integer> item) {
                 item.add(new Label("display", item.getModel()));

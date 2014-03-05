@@ -19,10 +19,12 @@ package com.aplombee.examples;
 import com.aplombee.ItemsNavigationStrategy;
 import com.aplombee.QuickView;
 import com.aplombee.navigator.AjaxComponentScrollEventBehavior;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
@@ -53,16 +55,20 @@ public class ParentScrollBar extends WebPage {
         final int itemsPerRequest=14;//rows created per request
         //read more about {@see ItemsNavigationStrategy} ,it is one of provided strategy that can be used in
         //cases where new items has to be added without re-rendering QuickView
-       quickView=new QuickView<Integer>("number",data,new ItemsNavigationStrategy(),itemsPerRequest) {
+        WebMarkupContainer numbers=new WebMarkupContainer("numbers");   //don't forget adding quickview to parent with any ajax navigator
+        numbers.setOutputMarkupId(true); //don't forget required when using ajaxrownavigator
+        Component start,end;
+        numbers.add(start=new EmptyPanel("start").setOutputMarkupPlaceholderTag(true));
+        numbers.add(end=new EmptyPanel("end").setOutputMarkupPlaceholderTag(true)) ;
+        quickView=new QuickView<Integer>("number",data,new ItemsNavigationStrategy(),itemsPerRequest,start,end) {
             @Override
             protected void populate(Item<Integer> item) {
                 item.add(new Label("display",item.getModel()));
             }
         } ;
-        WebMarkupContainer numbers=new WebMarkupContainer("numbers");   //don't forget adding quickview to parent with any ajax navigator
         numbers.add(quickView);
-        numbers.setOutputMarkupId(true); //don't forget required when using ajaxrownavigator
         add(numbers);
+
         numbers.add(new AjaxComponentScrollEventBehavior(){
             @Override
             protected void onScroll(AjaxRequestTarget target) {

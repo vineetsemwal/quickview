@@ -19,10 +19,12 @@ package com.aplombee.examples;
 import com.aplombee.ItemsNavigationStrategy;
 import com.aplombee.QuickGridView;
 import com.aplombee.navigator.AjaxPageScrollEventBehavior;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
 import java.util.ArrayList;
@@ -46,9 +48,14 @@ public class QuickGridViewWithPageScrollBehavior extends WebPage {
     protected void onInitialize() {
         super.onInitialize();
         IDataProvider<Integer> data=new ListDataProvider<Integer>(list);
+        WebMarkupContainer parent=new WebMarkupContainer("parent");
+        parent.setOutputMarkupPlaceholderTag(true);
+        Component start,end;
+        parent.add(start=new EmptyPanel("start").setOutputMarkupPlaceholderTag(true));
+        parent.add(end=new EmptyPanel("end").setOutputMarkupPlaceholderTag(true)) ;
         //read more about {@see ItemsNavigationStrategy} ,it is one of provided strategy that can be used in
         //cases where new items has to be added without re-rendering QuickView
-         gridView=new QuickGridView<Integer>("gv",data,new ItemsNavigationStrategy()) {
+         gridView=new QuickGridView<Integer>("gv",data,new ItemsNavigationStrategy(),start,end) {
             @Override
             protected void populateEmptyItem(final CellItem<Integer> item) {
                 item.add(new Label("label"));
@@ -62,10 +69,10 @@ public class QuickGridViewWithPageScrollBehavior extends WebPage {
         };
         gridView.setColumns(10);
         gridView.setRows(5);
-        WebMarkupContainer parent=new WebMarkupContainer("parent");
         parent.add(gridView);
-        parent.setOutputMarkupPlaceholderTag(true);
         add(parent);
+
+
         //pagescrollbehavior added to page
         add(new AjaxPageScrollEventBehavior(){
             @Override
