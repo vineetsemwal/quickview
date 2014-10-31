@@ -39,6 +39,12 @@ public abstract class AbstractPagingNavigationStrategy implements IQuickReuseStr
         throw  new IRepeaterUtil.ReuseStrategyNotSupportedException("adding items dynamically for partial updates is not supported by this strategy");
     }
 
+
+    /**
+     * false means partial updates not supported
+     *
+     * @return
+     */
     @Override
     public boolean isAddItemsSupported(){
         return false;

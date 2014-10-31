@@ -648,6 +648,10 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      * draws a new element at start but actually the element is added at last in repeater,
      * this should not pose problem when whole repeater is rendered and if data is sorted
      *
+     *  actually it can be handled properly which means new item(s) created at start  using addAtStart
+     *  it is mentioned in issue quickview#15 (https://github.com/vineetsemwal/quickview/issues/15)
+     *
+     *
      * @param components
      * @return this
      */
@@ -707,7 +711,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      *
      * less complex/preferred/clear solution would have been checking if listener is already added in AjaxRequestTarget but
      * since there is no getter for IListeners,there is no way to know listener is added ,it might be added in later versions
-     * see WICKET-4800
+     * see issue WICKET-4800
      *
      * @return  Synchronizer
      */

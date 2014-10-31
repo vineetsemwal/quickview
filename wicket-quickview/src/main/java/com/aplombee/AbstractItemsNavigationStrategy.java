@@ -53,8 +53,7 @@ public abstract class AbstractItemsNavigationStrategy implements IQuickReuseStra
     }
 
     /**
-     * return false because this reuse stategy supports addition of items
-     *
+     * @return true means repeater supports partial updates without the need to re-render whole repeater
      */
     @Override
     public boolean isAddItemsSupported() {
