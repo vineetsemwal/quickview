@@ -42,7 +42,7 @@ import java.util.List;
 public class ReuseAllStrategy extends AbstractItemsNavigationStrategy{
 
     /**
-     * reuseas all the existing items by returning iterator over existing items after copying them
+     * reuses all the existing items by returning iterator over existing items after copying them
      *
      * @param <T>
      *            type of Item
