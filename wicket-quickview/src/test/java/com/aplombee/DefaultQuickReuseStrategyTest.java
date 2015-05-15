@@ -60,7 +60,7 @@ public class DefaultQuickReuseStrategyTest extends AbstractPagingNavigationStrat
         List<Integer> list=new ArrayList<Integer>();
         list.add(45);
         list.add(76);
-         List<Item<Integer>>existingItems=new ArrayList<Item<Integer>>();
+        List<Item<Integer>>existingItems=new ArrayList<Item<Integer>>();
         IItemFactory factory= Mockito.mock(IItemFactory.class);
         final int index=0;
         final int index2=1;

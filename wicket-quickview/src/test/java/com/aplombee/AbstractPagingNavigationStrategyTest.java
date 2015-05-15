@@ -17,9 +17,13 @@
 
 package com.aplombee;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.markup.repeater.IItemFactory;
+import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.util.tester.WicketTester;
 import org.mockito.Mockito;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 
 import java.util.Iterator;
 
@@ -27,6 +31,16 @@ import java.util.Iterator;
  * @author Vineet Semwal
  */
 public class AbstractPagingNavigationStrategyTest {
+    private WicketTester tester;
+
+    public WicketTester getTester(){
+    return tester;
+    }
+
+    @BeforeMethod
+    public void setup(){
+    tester=new WicketTester(new TestApplication());
+    }
 
     public void assertIsAddItemsSupported(IQuickReuseStrategy strategy){
        Assert.assertFalse(strategy.isAddItemsSupported());
@@ -42,4 +56,12 @@ public class AbstractPagingNavigationStrategyTest {
     public void assertPageCreatedOnReRender(IQuickReuseStrategy strategy){
         Assert.assertTrue(strategy.getPageCreatedOnRender()<0);
     }
+
+    public class TestApplication extends WebApplication{
+        @Override
+        public Class<? extends Page> getHomePage() {
+            return null;
+        }
+    }
+
 }

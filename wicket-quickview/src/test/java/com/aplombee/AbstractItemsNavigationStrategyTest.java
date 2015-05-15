@@ -19,9 +19,13 @@ package com.aplombee;
 
 import org.apache.wicket.markup.repeater.IItemFactory;
 import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.util.tester.WicketTester;
 import org.mockito.Mockito;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 
 import java.util.Iterator;
 
@@ -29,6 +33,15 @@ import java.util.Iterator;
  *  @author Vineet Semwal
  */
 public class AbstractItemsNavigationStrategyTest {
+    private WicketTester tester;
+    public WicketTester getTester(){
+    return tester;
+    }
+
+    @BeforeMethod
+    public void setup(){
+    tester=new WicketTester(createMockApplication()) ;
+    }
 
     public void assertAddItems(IQuickReuseStrategy strategy){
         IModel model1= Mockito.mock(IModel.class);
@@ -55,6 +68,10 @@ public class AbstractItemsNavigationStrategyTest {
 
        public void assertIsAddItemsSupported(IQuickReuseStrategy strategy){
         Assert.assertTrue(strategy.isAddItemsSupported());
+    }
+
+    private static WebApplication createMockApplication() {
+        return new MockApplication();
     }
 
 

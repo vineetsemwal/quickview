@@ -29,6 +29,7 @@ import org.apache.wicket.markup.repeater.IItemFactory;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
+import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -58,8 +59,7 @@ public class QuickViewTest {
     }
 
     private static WebApplication createMockApplication() {
-        WebApplication app = new QuickMockApplication();
-        return app;
+       return new MockApplication();
     }
 
     /**
@@ -874,17 +874,24 @@ public class QuickViewTest {
 
 
     /**
-     * current page=5  ,firstPageCreatedOnReRender=false
+     * current page=5  ,reuse#getPageCreatedOnRender() is zero  ,reuse#isAddItemsSuypported() is true
+     *
+     *  for eg. ItemsNaviagtionStrategy
      */
-
     @Test(groups = {"wicketTests"})
     public void onPopulate_1() {
         IDataProvider provider = Mockito.mock(IDataProvider.class);
         final int currentPage = 5;
         final IRepeaterUtil util = Mockito.mock(IRepeaterUtil.class);
         IQuickReuseStrategy reuse = Mockito.mock(IQuickReuseStrategy.class);
-         //page not set from reuse strategy
-        Mockito.when(reuse.getPageCreatedOnRender()).thenReturn(-1l);
+        //
+        // add items supported
+        //
+        Mockito.when(reuse.isAddItemsSupported()).thenReturn(true);
+        //
+        //page not set from reuse strategy
+        //
+        Mockito.when(reuse.getPageCreatedOnRender()).thenReturn(0l);
         final IItemFactory factory = Mockito.mock(IItemFactory.class);
         final Iterator existing = Mockito.mock(Iterator.class);
         final Iterator newModels = Mockito.mock(Iterator.class);
@@ -920,15 +927,81 @@ public class QuickViewTest {
                 return this;
             }
 
-
             @Override
-            public long _getCurrentPage() {
-                return currentPage;
+            protected void createChildren(Iterator iterator) {
             }
 
             @Override
-            protected Iterator newModels(long offset, long count) {
-                return newModels;
+            public IItemFactory factory() {
+                return factory;
+            }
+        };
+        QuickView spy = Mockito.spy(repeater);
+        Mockito.doReturn(newModels).when(spy).newModels(0,itemsPerRequest);
+        spy.onPopulate();
+
+        InOrder order = Mockito.inOrder(reuse, spy, provider);
+        order.verify(spy).newModels(0, itemsPerRequest);
+        order.verify(reuse).getItems(factory, newModels, existing);
+        order.verify(spy).simpleRemoveAll();
+        order.verify(spy).createChildren(newItems);
+        Mockito.verify(spy)._setCurrentPage(0);
+
+    }
+
+    /**
+     * current page=5  ,reuse#getPageCreatedOnRender() is -1 ,reuse#isAddItemsSuppored()==false
+     * for eg. Any AbstractPagingNavigationStrategy
+     *
+     */
+    @Test(groups = {"wicketTests"})
+    public void onPopulate_2() {
+        IDataProvider provider = Mockito.mock(IDataProvider.class);
+        final long currentPage = 5;
+        final IRepeaterUtil util = Mockito.mock(IRepeaterUtil.class);
+        IQuickReuseStrategy reuse = Mockito.mock(IQuickReuseStrategy.class);
+        //
+        // add items supported
+        //
+        Mockito.when(reuse.isAddItemsSupported()).thenReturn(false);
+        //
+        //page not set from reuse strategy
+        //
+        Mockito.when(reuse.getPageCreatedOnRender()).thenReturn(-1l);
+        final IItemFactory factory = Mockito.mock(IItemFactory.class);
+        final Iterator existing = Mockito.mock(Iterator.class);
+        final Iterator newModels = Mockito.mock(Iterator.class);
+        final Iterator newItems = Mockito.mock(Iterator.class);
+        Iterator data = Mockito.mock(Iterator.class);
+        final int itemsPerRequest = 2;
+       // final int offset = currentPage * itemsPerRequest;
+        Mockito.when(reuse.getItems( factory, newModels, existing)).thenReturn(newItems);
+
+        QuickView repeater = new QuickView("repeater", provider, reuse, itemsPerRequest) {
+
+            @Override
+            public Iterator<Component> itemsIterator() {
+                return existing;
+            }
+
+            @Override
+            public IRepeaterUtil getRepeaterUtil() {
+                return util;
+            }
+
+            @Override
+            protected void populate(Item item) {
+            }
+
+            @Override
+            public MarkupContainer simpleAdd(Component... c) {
+                return this;
+            }
+
+
+            @Override
+            public MarkupContainer simpleRemoveAll() {
+                return this;
             }
 
             @Override
@@ -941,28 +1014,94 @@ public class QuickViewTest {
             }
         };
         QuickView spy = Mockito.spy(repeater);
+        Mockito.doReturn(newModels).when(spy).newModels((currentPage*itemsPerRequest),itemsPerRequest);
+        Mockito.doReturn(currentPage).when(spy)._getCurrentPage();
         spy.onPopulate();
 
         InOrder order = Mockito.inOrder(reuse, spy, provider);
-        order.verify(spy).newModels(offset, itemsPerRequest);
-        order.verify(reuse, Mockito.times(1)).getItems( factory, newModels, existing);
-        order.verify(spy, Mockito.times(1)).simpleRemoveAll();
-        order.verify(spy, Mockito.times(1)).createChildren(newItems);
-        Mockito.verify(spy, Mockito.never())._setCurrentPage(0);
-        //page set from reuse strategy
-        Mockito.when(reuse.getPageCreatedOnRender()).thenReturn(0l);
+        order.verify(spy).newModels((currentPage * itemsPerRequest), itemsPerRequest);
+        order.verify(reuse).getItems(factory, newModels, existing);
+        order.verify(spy).simpleRemoveAll();
+        order.verify(spy).createChildren(newItems);
+        Mockito.verify(spy,Mockito.never())._setCurrentPage(Mockito.anyLong());
+    }
+
+
+
+
+    /**
+     * current page=5  ,reuse#getPageCreatedOnRender() is -1 ,reuse#isAddItemsSuppored()==false
+     * foreg. ReuseAllStrategy
+     */
+    @Test(groups = {"wicketTests"})
+    public void onPopulate_3() {
+        IDataProvider provider = Mockito.mock(IDataProvider.class);
+        final long currentPage = 5;
+        final IRepeaterUtil util = Mockito.mock(IRepeaterUtil.class);
+        IQuickReuseStrategy reuse = Mockito.mock(IQuickReuseStrategy.class);
+        //
+        // add items supported
+        //
+        Mockito.when(reuse.isAddItemsSupported()).thenReturn(true);
+        //
+        //page not set from reuse strategy
+        //
+        Mockito.when(reuse.getPageCreatedOnRender()).thenReturn(-1l);
+        final IItemFactory factory = Mockito.mock(IItemFactory.class);
+        final Iterator existing = Mockito.mock(Iterator.class);
+        final Iterator newModels = Mockito.mock(Iterator.class);
+        final Iterator newItems = Mockito.mock(Iterator.class);
+        Iterator data = Mockito.mock(Iterator.class);
+        final int itemsPerRequest = 2;
+        Mockito.when(reuse.getItems( factory, newModels, existing)).thenReturn(newItems);
+
+        QuickView repeater = new QuickView("repeater", provider, reuse, itemsPerRequest) {
+
+            @Override
+            public Iterator<Component> itemsIterator() {
+                return existing;
+            }
+
+            @Override
+            public IRepeaterUtil getRepeaterUtil() {
+                return util;
+            }
+
+            @Override
+            protected void populate(Item item) {
+            }
+
+            @Override
+            public MarkupContainer simpleAdd(Component... c) {
+                return this;
+            }
+
+
+            @Override
+            public MarkupContainer simpleRemoveAll() {
+                return this;
+            }
+
+            @Override
+            protected void createChildren(Iterator iterator) {
+            }
+
+            @Override
+            public IItemFactory factory() {
+                return factory;
+            }
+        };
+        QuickView spy = Mockito.spy(repeater);
+        Mockito.doReturn(newModels).when(spy).newModels(0,(currentPage+1)*itemsPerRequest);
+        Mockito.doReturn(currentPage).when(spy)._getCurrentPage();
         spy.onPopulate();
 
-        order = Mockito.inOrder(reuse, spy, provider);
-        order.verify(spy).newModels(offset, itemsPerRequest);
-        order.verify(reuse, Mockito.times(1)).getItems( factory, newModels, existing);
-        order.verify(spy, Mockito.times(1)).simpleRemoveAll();
-        order.verify(spy, Mockito.times(1)).createChildren(newItems);
-        Mockito.verify(spy, Mockito.times(1))._setCurrentPage(0);
-
-        // page=0 is  set
-        Mockito.verify(spy, Mockito.times(1))._setCurrentPage(0);
-
+        InOrder order = Mockito.inOrder(reuse, spy, provider);
+        order.verify(spy).newModels(0,(currentPage+1)*itemsPerRequest );
+        order.verify(reuse).getItems( factory, newModels, existing);
+        order.verify(spy).simpleRemoveAll();
+        order.verify(spy).createChildren(newItems);
+        Mockito.verify(spy,Mockito.never())._setCurrentPage(Mockito.anyLong());
 
     }
 

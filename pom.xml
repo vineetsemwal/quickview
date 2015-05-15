@@ -45,6 +45,22 @@ Copyright 2012 Vineet Semwal
         <jetty.version>7.6.3.v20120416</jetty.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <developers>
+     <developer>
+      <email> vineetsemwal82@gmail.com  </email>
+       <name>vineetsemwal</name>
+       <organization>aplombee</organization>
+       <organizationUrl>http://aplombee.com</organizationUrl>
+     </developer>
+
+    </developers>
+
+    <scm>
+
+
+    </scm>
+
     <dependencyManagement>
         <dependencies>
             <!--  WICKET DEPENDENCIES -->

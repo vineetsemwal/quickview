@@ -18,6 +18,7 @@ package com.aplombee;
 
 import org.apache.wicket.markup.repeater.IItemFactory;
 import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.ReuseIfModelsEqualStrategy;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.IModel;
 
@@ -26,54 +27,35 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- *  reuse strategy that reuse existing items on re-render ,this strategy supports addition of new
- *  items without the need to re-render the view
+ * reuse strategy that reuse existing items on re-render if models are equal see
+ * {@link org.apache.wicket.markup.repeater.ReuseIfModelsEqualStrategy} to read more
  *
- *  used with {@link com.aplombee.navigator.AjaxItemsNavigator}
- *  or
+ * this strategy also supports addition of new items without the need to re-render the view
+ *
+ * <p/>
+ * used with {@link com.aplombee.navigator.AjaxItemsNavigator}
+ * or
  * {@link com.aplombee.navigator.AjaxScrollEventBehaviorBase}
  * <br/>
  *
- *
- *  @author Vineet Semwal
- *
+ * @author Vineet Semwal
  */
 
-public class ReuseAllStrategy extends AbstractItemsNavigationStrategy{
+public class ReuseAllStrategy extends AbstractItemsNavigationStrategy {
 
     /**
-     * reuses all the existing items by returning iterator over existing items after copying them
+     *  reuses if models are equal
      *
-     * @param <T>
-     *            type of Item
-     *
-     * @param factory
-     *            implementation of IItemFactory
-     * @param newModels
-     *            iterator over models for items
-     * @param existingItems
-     *            iterator over child items
-     * @return iterator over exisiting items
+     * @param <T>           type of Item
+     * @param factory       implementation of IItemFactory
+     * @param newModels     iterator over models for items
+     * @param existingItems iterator over child items
+     * @return iterator over existing items
      */
     @Override
-    public <T> Iterator<Item<T>> getItems( IItemFactory<T> factory, Iterator<IModel<T>> newModels, Iterator<Item<T>> existingItems) {
-        List<Item<T>>copy=new ArrayList<Item<T>>();
-        while(existingItems.hasNext()){
-            copy.add(existingItems.next());
-        }
-        if(!copy.isEmpty())
-        {
-            return copy.iterator();
-        }
+    public <T> Iterator<Item<T>> getItems(IItemFactory<T> factory, Iterator<IModel<T>> newModels, Iterator<Item<T>> existingItems) {
+        return ReuseIfModelsEqualStrategy.getInstance().getItems(factory,newModels,existingItems);
 
-        for(int index=0;newModels.hasNext();index++)
-         {
-           IModel<T> model=newModels.next();
-           Item<T>item= factory.newItem(index,model);
-             copy.add(item);
-         }
-
-        return copy.iterator();
     }
 
 

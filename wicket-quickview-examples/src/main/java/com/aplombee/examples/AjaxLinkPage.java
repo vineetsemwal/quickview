@@ -18,6 +18,7 @@ package com.aplombee.examples;
 
 import com.aplombee.ItemsNavigationStrategy;
 import com.aplombee.QuickView;
+import com.aplombee.ReuseAllStrategy;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -55,7 +56,7 @@ public class AjaxLinkPage extends WebPage {
         numbers.add(start=new EmptyPanel("start").setOutputMarkupPlaceholderTag(true));
         numbers.add(end=new EmptyPanel("end").setOutputMarkupPlaceholderTag(true)) ;
 
-        final QuickView<Integer> number = new QuickView<Integer>("number", data, new ItemsNavigationStrategy(),start,end ) {
+        final QuickView<Integer> number = new QuickView<Integer>("number", data, new ReuseAllStrategy(),start,end ) {
             @Override
             protected void populate(Item<Integer> item) {
                 item.add(new Label("display", item.getModel()));
@@ -80,7 +81,6 @@ public class AjaxLinkPage extends WebPage {
 
 
         AjaxLink addAtStartLink = new AjaxLink("addAtStartLink") {
-
 
             @Override
             public void onClick(AjaxRequestTarget target) {

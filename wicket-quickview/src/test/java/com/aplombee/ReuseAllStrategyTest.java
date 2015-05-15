@@ -35,10 +35,6 @@ import java.util.List;
  */
 public class ReuseAllStrategyTest extends AbstractItemsNavigationStrategyTest{
 
-    @Test(groups = {"wicketTests"} )
-    public void addItems_1(){
-        super.assertAddItems(new ReuseAllStrategy());
-    }
 
     @Test(groups = {"wicketTests"})
     public void isPaging_1(){
@@ -46,24 +42,29 @@ public class ReuseAllStrategyTest extends AbstractItemsNavigationStrategyTest{
     }
 
     @Test(groups = {"wicketTests"})
-    public void getPageCreatedOnReRender_1(){
-        Assert.assertTrue(new ReuseAllStrategy().getPageCreatedOnRender()<0);
+
+    public void pageCreatedOnReRender_1(){
+       Assert.assertEquals(new ReuseAllStrategy().getPageCreatedOnRender(),-1);
     }
 
-    /**
-     * existing items empty
-     */
+    @Test(groups = {"wicketTests"} )
+    public void addItems_1(){
+        super.assertAddItems(new ReuseAllStrategy());
+    }
+
+
+
     @Test(groups = {"wicketTests"} )
     public void getItems_1(){
-        IQuickReuseStrategy strategy=new ReuseAllStrategy();
-        List<Integer> list=new ArrayList<Integer>();
+        IQuickReuseStrategy strategy=new ItemsNavigationStrategy();
+        List<Integer>list=new ArrayList<Integer>();
         list.add(45);
         list.add(76);
-        List<Item<Integer>>existingItems=new ArrayList<Item<Integer>>();
-        IItemFactory factory= Mockito.mock(IItemFactory.class);
+
+        IItemFactory factory=Mockito.mock(IItemFactory.class);
         final int index=0;
         final int index2=1;
-        IModel<Integer> model1=new Model<Integer>(list.get(0));
+        IModel<Integer>model1=new Model<Integer>(list.get(0));
         IModel<Integer>model2=new Model<Integer>(list.get(1));
         Item item1=new Item("0",0,model1) ;
         Mockito.when(factory.newItem(0,model1)).thenReturn(item1);
@@ -73,36 +74,8 @@ public class ReuseAllStrategyTest extends AbstractItemsNavigationStrategyTest{
         newModels.add(model1);
         newModels.add(model2);
 
-        Iterator<Item<Integer>> actual=  strategy.getItems(factory,newModels.iterator(),existingItems.iterator());
-        Assert.assertEquals(actual.next(), item1);
-        Assert.assertEquals(actual.next(),item2);
-        Mockito.verify(factory,Mockito.times(1)).newItem(index,model1);
-        Mockito.verify(factory,Mockito.times(1)).newItem(index2,model2);
-
-
-    }
-
-    /**
-     * existing items not empty
-     */
-    @Test(groups = {"wicketTests"} )
-    public void getItems_2(){
-        IQuickReuseStrategy strategy=new ReuseAllStrategy();
-        List<Integer> list=new ArrayList<Integer>();
-        list.add(45);
-        list.add(76);
-        IModel<Integer> model1=new Model<Integer>(list.get(0));
-        IModel<Integer>model2=new Model<Integer>(list.get(1));
-        final int index=70;
-        final int index2=56;
-        Item item1=new Item("70",index,model1) ;
-        Item item2=new Item("56",index2,model2);
-        List<Item<Integer>>existingItems=new ArrayList<Item<Integer>>();
-        existingItems.add(item1);
-        existingItems.add(item2);
-
-        Iterator<Item<Integer>> actual=  strategy.getItems(null,null,existingItems.iterator());
-        Assert.assertEquals(actual.next(), item1);
+        Iterator<Item<Integer>>actual=  strategy.getItems(factory,newModels.iterator(),null);
+        Assert.assertEquals(actual.next(),item1);
         Assert.assertEquals(actual.next(),item2);
 
     }
