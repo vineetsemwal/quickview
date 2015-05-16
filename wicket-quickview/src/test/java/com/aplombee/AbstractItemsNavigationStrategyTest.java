@@ -66,8 +66,8 @@ public class AbstractItemsNavigationStrategyTest {
 
     }
 
-       public void assertIsAddItemsSupported(IQuickReuseStrategy strategy){
-        Assert.assertTrue(strategy.isAddItemsSupported());
+       public void assertIsPartialUpdatesSupported(IQuickReuseStrategy strategy){
+        Assert.assertTrue(strategy.isPartialUpdatesSupported());
     }
 
     private static WebApplication createMockApplication() {

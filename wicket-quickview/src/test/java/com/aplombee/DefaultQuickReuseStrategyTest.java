@@ -19,8 +19,6 @@ package com.aplombee;
 
 import org.apache.wicket.markup.repeater.IItemFactory;
 import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.repeater.data.IDataProvider;
-import org.apache.wicket.markup.repeater.data.ListDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.mockito.Mockito;
@@ -44,7 +42,7 @@ public class DefaultQuickReuseStrategyTest extends AbstractPagingNavigationStrat
 
     @Test(groups = {"wicketTests"})
     public void isPaging_1(){
-     super.assertIsAddItemsSupported(new DefaultQuickReuseStrategy());
+     super.assertIsPartialUpdatesSupported(new DefaultQuickReuseStrategy());
     }
 
     @Test(groups = {"wicketTests"})

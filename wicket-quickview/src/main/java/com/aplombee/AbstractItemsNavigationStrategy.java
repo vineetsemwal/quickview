@@ -56,7 +56,7 @@ public abstract class AbstractItemsNavigationStrategy implements IQuickReuseStra
      * @return true means repeater supports partial updates without the need to re-render whole repeater
      */
     @Override
-    public boolean isAddItemsSupported() {
+    public boolean isPartialUpdatesSupported() {
         return true;
     }
 

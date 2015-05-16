@@ -303,7 +303,7 @@ public class RepeaterUtilTest {
     public void reuseStategyNotSupportedForItemsNavigation_1() {
         IQuickView quickView = Mockito.mock(IQuickView.class);
         IQuickReuseStrategy strategy=Mockito.mock(IQuickReuseStrategy.class);
-        Mockito.when(strategy.isAddItemsSupported()).thenReturn(false);
+        Mockito.when(strategy.isPartialUpdatesSupported()).thenReturn(false);
         Mockito.when(quickView.getReuseStrategy()).thenReturn(strategy);
         RepeaterUtil.get().reuseStategyNotSupportedForItemsNavigation(quickView);
     }
@@ -313,7 +313,7 @@ public class RepeaterUtilTest {
     public void reuseStategyNotSupportedForItemsNavigation_5() {
         IQuickView quickView = Mockito.mock(IQuickView.class);
         IQuickReuseStrategy strategy=Mockito.mock(IQuickReuseStrategy.class);
-        Mockito.when(strategy.isAddItemsSupported()).thenReturn(true);
+        Mockito.when(strategy.isPartialUpdatesSupported()).thenReturn(true);
        Mockito.when(quickView.getReuseStrategy()).thenReturn(strategy);
 
         RepeaterUtil.get().reuseStategyNotSupportedForItemsNavigation(quickView);
@@ -324,7 +324,7 @@ public class RepeaterUtilTest {
     public void outPutMarkupIdNotTrue_1() {
         IDataProvider data = Mockito.mock(IDataProvider.class);
         IQuickReuseStrategy strategy=Mockito.mock(IQuickReuseStrategy.class);
-        Mockito.when(strategy.isAddItemsSupported()).thenReturn(true);
+        Mockito.when(strategy.isPartialUpdatesSupported()).thenReturn(true);
         QuickView quickView = new QuickView("id", data, strategy) {
             @Override
             protected void populate(Item item) {
@@ -339,7 +339,7 @@ public class RepeaterUtilTest {
     public void outPutMarkupIdNotTrue_2() {
         IDataProvider data = Mockito.mock(IDataProvider.class);
         IQuickReuseStrategy strategy=Mockito.mock(IQuickReuseStrategy.class);
-        Mockito.when(strategy.isAddItemsSupported()).thenReturn(true);
+        Mockito.when(strategy.isPartialUpdatesSupported()).thenReturn(true);
         QuickView quickView = new QuickView("id", data,strategy) {
             @Override
             protected void populate(Item item) {
@@ -355,7 +355,7 @@ public class RepeaterUtilTest {
     public void outPutMarkupIdNotTrue_3() {
         IDataProvider data = Mockito.mock(IDataProvider.class);
        IQuickReuseStrategy strategy=Mockito.mock(IQuickReuseStrategy.class);
-       Mockito.when(strategy.isAddItemsSupported()).thenReturn(true);
+       Mockito.when(strategy.isPartialUpdatesSupported()).thenReturn(true);
         QuickView quickView = new QuickView("id", data,strategy) {
             @Override
             protected void populate(Item item) {
@@ -375,7 +375,7 @@ public class RepeaterUtilTest {
     public void parentNotSuitable_1() {
         IQuickView quickView = Mockito.mock(IQuickView.class);
         IQuickReuseStrategy strategy=Mockito.mock(IQuickReuseStrategy.class);
-        Mockito.when(strategy.isAddItemsSupported()).thenReturn(false);
+        Mockito.when(strategy.isPartialUpdatesSupported()).thenReturn(false);
         Mockito.when(quickView.getReuseStrategy()).thenReturn(strategy);
         RepeaterUtil.get().parentNotSuitable(quickView);
     }
@@ -388,7 +388,7 @@ public class RepeaterUtilTest {
     public void parentNotSuitable_2() {
         IQuickView quickView = Mockito.mock(IQuickView.class);
         IQuickReuseStrategy strategy=Mockito.mock(IQuickReuseStrategy.class);
-        Mockito.when(strategy.isAddItemsSupported()).thenReturn(true);
+        Mockito.when(strategy.isPartialUpdatesSupported()).thenReturn(true);
         Mockito.when(quickView.getReuseStrategy()).thenReturn(strategy);
         RepeaterUtil.get().parentNotSuitable(quickView);
     }
@@ -399,7 +399,7 @@ public class RepeaterUtilTest {
   @Test(groups = {"utilTests"}, expectedExceptions = RepeaterUtil.QuickViewNotAddedToParentException.class)
     public void parentNotSuitable_3() {
       IQuickReuseStrategy strategy=Mockito.mock(IQuickReuseStrategy.class);
-      Mockito.when(strategy.isAddItemsSupported()).thenReturn(true);
+      Mockito.when(strategy.isPartialUpdatesSupported()).thenReturn(true);
         WebPage parent = Mockito.mock(WebPage.class);
         IQuickView quickView = Mockito.mock(IQuickView.class);
         Mockito.when(quickView.getParent()).thenReturn(parent);
@@ -414,7 +414,7 @@ public class RepeaterUtilTest {
    @Test(groups = {"utilTests"})
     public void parentNotSuitable_6() {
        IQuickReuseStrategy strategy=Mockito.mock(IQuickReuseStrategy.class);
-       Mockito.when(strategy.isAddItemsSupported()).thenReturn(true);
+       Mockito.when(strategy.isPartialUpdatesSupported()).thenReturn(true);
         WebMarkupContainer parent = Mockito.mock(WebMarkupContainer.class);
         Mockito.when(parent.size()).thenReturn(1);
         IQuickView quickView = Mockito.mock(IQuickView.class);

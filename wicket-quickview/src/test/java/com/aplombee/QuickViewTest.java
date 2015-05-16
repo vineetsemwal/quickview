@@ -887,7 +887,7 @@ public class QuickViewTest {
         //
         // add items supported
         //
-        Mockito.when(reuse.isAddItemsSupported()).thenReturn(true);
+        Mockito.when(reuse.isPartialUpdatesSupported()).thenReturn(true);
         //
         //page not set from reuse strategy
         //
@@ -963,7 +963,7 @@ public class QuickViewTest {
         //
         // add items supported
         //
-        Mockito.when(reuse.isAddItemsSupported()).thenReturn(false);
+        Mockito.when(reuse.isPartialUpdatesSupported()).thenReturn(false);
         //
         //page not set from reuse strategy
         //
@@ -1042,7 +1042,7 @@ public class QuickViewTest {
         //
         // add items supported
         //
-        Mockito.when(reuse.isAddItemsSupported()).thenReturn(true);
+        Mockito.when(reuse.isPartialUpdatesSupported()).thenReturn(true);
         //
         //page not set from reuse strategy
         //

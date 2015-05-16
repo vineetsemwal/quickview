@@ -30,7 +30,15 @@ import java.util.List;
  * reuse strategy that reuse existing items on re-render if models are equal see
  * {@link org.apache.wicket.markup.repeater.ReuseIfModelsEqualStrategy} to read more
  *
- * this strategy also supports addition of new items without the need to re-render the view
+ *
+ * this strategy also supports partial updates ie. items can be added/removed without
+ * the need to render  view                                                    *
+ *
+ * this strategy is different from QuickReuseIfModelsEqualStrategy in that it keeps
+ * all the items upto the the page rendered on re-render , QuickReuseIfModelsEqualStrategy only
+ * renders the items for the last page on re-render
+ *
+ *
  *
  * <p/>
  * used with {@link com.aplombee.navigator.AjaxItemsNavigator}

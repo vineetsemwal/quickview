@@ -74,7 +74,7 @@ public interface IQuickReuseStrategy extends IItemReuseStrategy {
      *
      * @return   boolean
      */
-    boolean isAddItemsSupported();
+    boolean isPartialUpdatesSupported();
 
 
     /**

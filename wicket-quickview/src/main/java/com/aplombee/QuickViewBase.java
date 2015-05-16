@@ -258,7 +258,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         //this is useful for ReuseAllSStrategy
         //
         Iterator<IModel<T>> newModels;
-        if (reuseStrategy.isAddItemsSupported() && pageToBeCreated < 0) {
+        if (reuseStrategy.isPartialUpdatesSupported() && pageToBeCreated < 0) {
             long modelsCount = (page + 1) * getItemsPerRequest();
             newModels = newModels(0, modelsCount);
         } else {

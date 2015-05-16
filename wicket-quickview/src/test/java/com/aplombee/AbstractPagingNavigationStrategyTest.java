@@ -42,8 +42,8 @@ public class AbstractPagingNavigationStrategyTest {
     tester=new WicketTester(new TestApplication());
     }
 
-    public void assertIsAddItemsSupported(IQuickReuseStrategy strategy){
-       Assert.assertFalse(strategy.isAddItemsSupported());
+    public void assertIsPartialUpdatesSupported(IQuickReuseStrategy strategy){
+       Assert.assertFalse(strategy.isPartialUpdatesSupported());
     }
 
    public void assertAddItems(IQuickReuseStrategy strategy){

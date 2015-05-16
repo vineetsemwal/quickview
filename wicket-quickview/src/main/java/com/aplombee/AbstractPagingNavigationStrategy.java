@@ -46,7 +46,7 @@ public abstract class AbstractPagingNavigationStrategy implements IQuickReuseStr
      * @return
      */
     @Override
-    public boolean isAddItemsSupported(){
+    public boolean isPartialUpdatesSupported(){
         return false;
     }
 

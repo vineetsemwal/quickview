@@ -27,7 +27,7 @@ public class QuickReuseIfModelsEqualStrategyTest extends AbstractPagingNavigatio
 
     @Test(groups = {"wicketTests"})
     public void isPaging_1(){
-        super.assertIsAddItemsSupported(new QuickReuseIfModelsEqualStrategy());
+        super.assertIsPartialUpdatesSupported(new QuickReuseIfModelsEqualStrategy());
     }
     @Test(groups = {"wicketTests"})
     public void pageCreatedOnReRender_1(){
