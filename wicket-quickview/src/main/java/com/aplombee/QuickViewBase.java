@@ -371,13 +371,18 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     }
 
     protected Iterator<Item<T>> buildItems(final long index, Iterator<? extends T> iterator) {
+     return buildItemsList(index, iterator).iterator();
+    }
+
+
+    protected List<Item<T>> buildItemsList(final long index, Iterator<? extends T> iterator) {
         List<Item<T>> items = new ArrayList<Item<T>>();
         for (long i = index; iterator.hasNext(); i++) {
             T object = iterator.next();
             Item<T> item = buildItem(i, object);
             items.add(item);
         }
-        return items.iterator();
+        return items;
     }
 
     /*
@@ -388,6 +393,17 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         long index = size();
         return buildItems(index, iterator);
     }
+
+
+    /*
+     * build items from index=size
+     */
+
+    protected List<Item<T>> buildItemsList(Iterator<? extends T> iterator) {
+        long index = size();
+        return buildItemsList(index, iterator);
+    }
+
 
     @Override
     public void renderHead(IHeaderResponse response) {
@@ -587,19 +603,20 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      * 1)creates children ,children will get the model object after iterating over objects passed as argument
      * 2)adds children to View using {@link this#addAtStart(org.apache.wicket.Component...)}
      *
+     * the respective items for objects will be displayed at start of the view in the order of passed objects
+     *
+     *
      * @param objects iterator of model objects for children
      * @return this
      */
 
     public MarkupContainer addNewItemsAtStart(T... objects) {
         List<T> list = new ArrayList<T>();
-        for (T obj : objects) {
-            list.add(obj);
+        for(T object:objects){
+         list.add(object);
         }
-        Iterator<Item<T>> items = buildItems(list.iterator());
-        while (items.hasNext()) {
-            addAtStart(items.next());
-        }
+        List<Item<T>> items = buildItemsList(list.iterator());
+        addAtStart(items.toArray(new Item[0]));
         return this;
     }
 
@@ -640,7 +657,11 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
 
     /**
      * draws a new element at start but actually the element is added at last in repeater,
-     * this should not pose problem when whole repeater is rendered and if data is sorted
+     * this should not pose problem when whole repeater is re-rendered and if data is sorted
+     *
+     * the item will be displayed at start of the view in the passed order
+     *
+     *
      * <p/>
      * actually it can be handled properly which means new item(s) created at start  using addAtStart
      * it is mentioned in issue quickview#15 (https://github.com/vineetsemwal/quickview/issues/15)
@@ -654,7 +675,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
             return this;
         }
 
-        for (int i = 0; i < components.length; i++) {
+        for (int i = components.length-1; i >=0; i--) {
             MarkupContainer parent = _getParent();
             String updateBeforeScript = getRepeaterUtil().prepend((Item) components[i], parent, start, end);
             getSynchronizer().getPrependScripts().add(updateBeforeScript);

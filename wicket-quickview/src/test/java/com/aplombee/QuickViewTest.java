@@ -589,11 +589,9 @@ public class QuickViewTest {
         sparc.addNewItemsAtStart(obj1, obj2);
         Mockito.verify(sparc,Mockito.times(1)).buildItem(index1, obj1);
         Mockito.verify(sparc,Mockito.times(1)).buildItem(index2, obj2);
-        Mockito.verify(sparc, Mockito.times(1)).addAtStart(item1);
-        Mockito.verify(sparc, Mockito.times(1)).addAtStart(item2);
+        Mockito.verify(sparc, Mockito.times(1)).addAtStart(item1,item2);
 
     }
-
 
 
     @Test(groups = {"wicketTests"})
@@ -809,9 +807,15 @@ public class QuickViewTest {
         sparc.addAtStart(c, c2);
         Mockito.verify(sparc, Mockito.times(1)).simpleAdd(c, c2);
         Mockito.verify(synchronizer, Mockito.times(1)).add(c, c2);
-        Mockito.verify(scripts, Mockito.times(1)).add(script);
-        Mockito.verify(scripts, Mockito.times(1)).add(script2);
-
+        //
+        // verifying scripts for components added in reverse order
+        // as the script simply prepends the element at top
+        // so the script for first elemnt should be added later
+        //
+        //
+         InOrder order=Mockito.inOrder(scripts);
+         order.verify(scripts).add(script2) ;
+         order.verify(scripts).add(script);
     }
 
 
@@ -1915,6 +1919,52 @@ public class QuickViewTest {
         Assert.assertTrue(Long.parseLong(item2.getId()) > Long.parseLong(item1.getId()));
     }
 
+    /*
+      *start index=0
+     */
+    @Test(groups = {"wicketTests"})
+    public void buildItemsList_1() {
+        List<Integer> data = data(10);
+        IDataProvider<Integer> dataProvider = new ListDataProvider<Integer>(data);
+        QuickView quickView = new QuickView("quickview", dataProvider) {
+            @Override
+            protected void populate(Item item) {
+            }
+        };
+        Iterator<? extends Integer> dataIterator = dataProvider.iterator(0, 2);
+        List<Item<Integer>> items = quickView.buildItemsList(0, dataIterator);
+        Item<Integer> item1 = items.get(0);
+        Item<Integer> item2 = items.get(1);
+        Assert.assertEquals(item1.getIndex(), 0);
+        Assert.assertEquals(item1.getModelObject().intValue(), 0);
+        Assert.assertEquals(item2.getIndex(), 1);
+        Assert.assertEquals(item2.getModelObject().intValue(), 1);
+        Assert.assertTrue(Long.parseLong(item2.getId()) > Long.parseLong(item1.getId()));
+    }
+
+
+    /*
+     *start index=10
+    */
+    @Test(groups = {"wicketTests"})
+    public void buildItemsList_2() {
+        List<Integer> data = data(10);
+        IDataProvider<Integer> dataProvider = new ListDataProvider<Integer>(data);
+        QuickView<Integer> quickView = new QuickView<Integer>("quickview", dataProvider) {
+            @Override
+            protected void populate(Item item) {
+            }
+        };
+        Iterator<? extends Integer> dataIterator = dataProvider.iterator(5, 2);
+        List<Item<Integer>> items= quickView.buildItemsList(10, dataIterator);
+        Item<Integer> item1 = items.get(0);
+        Item<Integer> item2 = items.get(1);
+        Assert.assertEquals(item1.getIndex(), 10);
+        Assert.assertEquals(item1.getModelObject().intValue(), 5);
+        Assert.assertEquals(item2.getIndex(), 11);
+        Assert.assertEquals(item2.getModelObject().intValue(), 6);
+        Assert.assertTrue(Long.parseLong(item2.getId()) > Long.parseLong(item1.getId()));
+    }
 
     public AjaxRequestTarget mockTarget() {
         AjaxRequestTarget target = mock(AjaxRequestTarget.class);
