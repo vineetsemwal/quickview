@@ -14,15 +14,13 @@ Copyright 2012 Vineet Semwal
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.aplombee</groupId>
     <artifactId>wicket-quickview-parent</artifactId>
     <packaging>pom</packaging>
-    <version>6.0-SNAPSHOT</version>
+    <version>6.15.0</version>
     <name>quickview parent</name>
     <description>with quickview you can quickly add/remove new rows using ajax component without the need to re render
         the whole of it,it also works well with pagingnavigator/ajaxpagingnavigator
@@ -41,7 +39,7 @@ Copyright 2012 Vineet Semwal
     </licenses>
     <properties>
         <slf4j.version>1.6.4</slf4j.version>
-        <wicket.version>6.7.0</wicket.version>
+        <wicket.version>6.14.0</wicket.version>
         <jetty.version>7.6.3.v20120416</jetty.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -57,8 +55,10 @@ Copyright 2012 Vineet Semwal
     </developers>
 
     <scm>
-
-
+        <connection>scm:git:https://github.com/vineetsemwal/quickview.git</connection>
+        <developerConnection>scm:git:https://github.com/vineetsemwal/quickview.git</developerConnection>
+        <url>git@github.com/vineetsemwal/quickview.git</url>
+        <tag>wicket-quickview-parent-6.15.0</tag>
     </scm>
 
     <dependencyManagement>
