@@ -1,8 +1,10 @@
 package com.aplombee;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestHandler;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.mock.MockApplication;
 
 import java.util.ArrayList;
@@ -30,6 +32,11 @@ public class QuickMockApplication extends MockApplication {
         super.init();
         new RepeaterUtil(this);
         AjaxRequestTarget.IListener listener=new AjaxRequestTarget.IListener(){
+            @Override
+            public void updateAjaxAttributes(AbstractDefaultAjaxBehavior behavior, AjaxRequestAttributes attributes) {
+
+            }
+
             @Override
             public void onBeforeRespond(Map<String, Component> map, AjaxRequestTarget target) {
                 lastAjaxRequestTarget=target;

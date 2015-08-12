@@ -50,7 +50,7 @@ public class RepeaterUtil implements IRepeaterUtil {
      * {@inheritDoc}
      */
     public String prepend(String tag, String markupId, String parentMarkupId,String firstChildId ,String markId) {
-        String script = String.format("QuickView.prepend('%s','%s','%s' ,'%s' ,'%s');", tag,
+        String script = String.format("QuickView.prepend('%s','%s','%s','%s','%s');", tag,
                 markupId, parentMarkupId ,firstChildId,markId);
         return script;
     }
@@ -81,7 +81,7 @@ public class RepeaterUtil implements IRepeaterUtil {
      */
     @Override
     public String append(String tag, String markupId, String parentMarkupId,String startId ,String endId) {
-        String script = String.format("QuickView.append('%s','%s','%s' ,'%s' ,'%s');", tag, markupId,
+        String script = String.format("QuickView.append('%s','%s','%s','%s','%s');", tag, markupId,
                 parentMarkupId ,startId ,endId);
         return script;
     }

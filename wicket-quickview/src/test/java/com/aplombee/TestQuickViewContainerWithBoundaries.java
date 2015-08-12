@@ -18,36 +18,29 @@ package com.aplombee;
 
 import com.aplombee.navigator.AjaxItemsNavigator;
 import com.aplombee.navigator.ItemsNavigatorBase;
-import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
 import org.apache.wicket.markup.html.panel.PanelMarkupSourcingStrategy;
-import org.apache.wicket.util.resource.IResourceStream;
-import org.apache.wicket.util.resource.StringResourceStream;
 
 /**
  * @author Vineet Semwal
  */
-public abstract class TestQuickViewContainer extends WebMarkupContainer  {
+public abstract class TestQuickViewContainerWithBoundaries extends WebMarkupContainer  {
 
-    public static final String quickViewId="quickview",parentId="parent",ajaxLinkId="link",navigatorId="navigator",
+    public static final String quickViewId="quickview",ajaxLinkId="link",navigatorId="navigator",
     TAG_NAME="div";
     private AbstractLink link;
-    private QuickViewParent parent ;
     private ItemsNavigatorBase navigator;
+    private QuickViewBase view;
 
     public ItemsNavigatorBase getNavigator() {
         return navigator;
     }
 
-    public QuickViewParent getQuickViewParent() {
-        return parent;
-    }
 
-    public TestQuickViewContainer(String id){
+    public TestQuickViewContainerWithBoundaries(String id){
         super(id);
     }
 
@@ -55,12 +48,15 @@ public abstract class TestQuickViewContainer extends WebMarkupContainer  {
         return link;
     }
 
+    abstract public QuickViewBase newView();
+
     @Override
     protected void onInitialize() {
         super.onInitialize();
-        add(parent=newParent());
+        add(view=newView());
         add(navigator=newNavigator());
         add(link=newLink()) ;
+
     }
 
     public AbstractLink newLink() {
@@ -70,9 +66,8 @@ public abstract class TestQuickViewContainer extends WebMarkupContainer  {
             }
         };
     }
-    public abstract QuickViewParent newParent();
     public ItemsNavigatorBase newNavigator(){
-        AjaxItemsNavigator navigator=new AjaxItemsNavigator(navigatorId,parent.getChild());
+        AjaxItemsNavigator navigator=new AjaxItemsNavigator(navigatorId,view);
         return navigator;
     }
 
@@ -81,27 +76,5 @@ public abstract class TestQuickViewContainer extends WebMarkupContainer  {
     {
         return new PanelMarkupSourcingStrategy(false);
     }
-
-                    /*
-    @Override
-    public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
-    {
-        return new StringResourceStream("<wicket:panel> " +
-                "<div wicket:id=\""+ getQuickViewParent().getId()+ "\">" +
-
-                "<div wicket:id=\""+getQuickViewParent().getChild().getId()+"\"> </div>" +
-
-                "</div>"  +
-
-                " <div wicket:id=\""+ getNavigator().getId()+"\"></div>" +
-
-                "<a wicket:id= \""+ getLink().getId()  +"\" > </a>"+
-
-
-
-                "</wicket:panel>"
-
-        );
-    }             */
 
 }

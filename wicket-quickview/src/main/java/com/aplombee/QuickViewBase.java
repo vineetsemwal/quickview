@@ -17,7 +17,9 @@
 package com.aplombee;
 
 import org.apache.wicket.*;
+import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.repeater.IItemFactory;
@@ -800,6 +802,10 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
 
         @Override
         public void onAfterRespond(Map<String, Component> map, AjaxRequestTarget.IJavaScriptResponse response) {
+        }
+
+        @Override
+        public void updateAjaxAttributes(AbstractDefaultAjaxBehavior behavior, AjaxRequestAttributes attributes) {
         }
 
         /**

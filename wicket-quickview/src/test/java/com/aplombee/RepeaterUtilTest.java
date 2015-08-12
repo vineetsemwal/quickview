@@ -21,6 +21,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
@@ -46,17 +47,21 @@ public class RepeaterUtilTest {
        Assert.assertNotNull(util);
         Assert.assertTrue(util==util2);
     }
-      /*
+
     @Test(groups = {"utilTests"})
     public void prepend_1() {
-        final String child = "child", parent = "parent", tag = "div";
-        String actual = RepeaterUtil.get().prepend(tag, child, parent);
-        String expected = "QuickView.prepend('div','child','parent');";
+        WicketTester tester=new WicketTester(createMockApplication());
+        final String child = "child", parent = "parent", tag = "div",start="start",end="end";
+        String actual = RepeaterUtil.get().prepend(tag, child, parent,start,end);
+        String expected = "QuickView.prepend('div','child','parent','start','end');";
         Assert.assertEquals(actual.trim(), expected.trim());
     }
-    */
 
-    /*
+
+    /**
+     * test without boundaries
+     */
+
     @Test(groups = {"utilTests"})
     public void prepend_2() {
         QuickMockApplication app = new QuickMockApplication();
@@ -65,7 +70,7 @@ public class RepeaterUtilTest {
         List<Integer> list = new ArrayList<Integer>();
         list.add(100);
         IDataProvider<Integer> dataProvider = new ListDataProvider<Integer>(list);
-        final QuickView<Integer> quickView = new QuickView<Integer>("quickview", dataProvider, 2) {
+         final QuickView<Integer> quickView = new QuickView<Integer>("quickview", dataProvider, 2,null,null) {
             @Override
             protected void populate(Item<Integer> item) {
             }
@@ -83,12 +88,52 @@ public class RepeaterUtilTest {
         };
         tester.startComponentInPage(panel);
         final Item<Integer> item = (Item) quickView.get(0);
-        String expected = String.format("QuickView.prepend('%s','%s','%s');", TestQuickViewContainer.TAG_NAME, item.getMarkupId(), parent.getMarkupId());
-        String actual = RepeaterUtil.get().prepend(item, parent);
+        String expected = String.format("QuickView.prepend('%s','%s','%s','','');", TestQuickViewContainer.TAG_NAME,
+                item.getMarkupId(), parent.getMarkupId());
+        String actual = RepeaterUtil.get().prepend(item, parent,null,null);
         Assert.assertEquals(actual.trim(), expected.trim());
     }
 
-    */
+
+    /**
+     * test with boundaries
+     */
+    @Test(groups = {"utilTests"})
+    public void prepend_3() {
+        QuickMockApplication app = new QuickMockApplication();
+        WicketTester tester = new WicketTester(app);
+        List<Integer> list = new ArrayList<Integer>();
+        list.add(100);
+        IDataProvider<Integer> dataProvider = new ListDataProvider<Integer>(list);
+        EmptyPanel start=new EmptyPanel("start");
+        start.setMarkupId("start");
+        EmptyPanel end=new EmptyPanel("end");
+        end.setMarkupId("end");
+        final QuickView<Integer> quickView = new QuickView<Integer>("quickview", dataProvider, 2,start,end) {
+            @Override
+            protected void populate(Item<Integer> item) {
+            }
+        };
+        quickView.setReuseStrategy(new ItemsNavigationStrategy());
+
+
+        TestQuickViewContainerWithBoundaries panel = new TestQuickViewContainerWithBoundaries("panel") {
+            @Override
+            public QuickViewBase newView() {
+                return quickView;
+            }
+        };
+        panel.setOutputMarkupPlaceholderTag(true);
+        panel.add(start);
+        panel.add(end);
+        tester.startComponentInPage(panel);
+        final Item<Integer> item = (Item) quickView.get(0);
+        String expected = String.format("QuickView.prepend('%s','%s','%s','start','end');", TestQuickViewContainer.TAG_NAME,
+                item.getMarkupId(), panel.getMarkupId());
+        String actual = RepeaterUtil.get().prepend(item, panel,start,end);
+        Assert.assertEquals(actual.trim(), expected.trim());
+    }
+
     /**
      * check with testpanel
      */
@@ -166,18 +211,21 @@ public class RepeaterUtilTest {
         Assert.assertEquals(actual.getName(),TestQuickViewContainer.TAG_NAME);
     }
 
-    /*
+
 
     @Test(groups = {"utilTests"})
     public void append_1() {
-        final String child = "child", parent = "parent", tag = "div";
-        String call = RepeaterUtil.get().append(tag, child, parent);
-        String expected = "QuickView.append('div','child','parent');";
+        WicketTester tester=new WicketTester(createMockApplication());
+        final String child = "child", parent = "parent", tag = "div",start="start20",end="end30";
+        String call = RepeaterUtil.get().append(tag, child, parent,start,end);
+        String expected = "QuickView.append('div','child','parent','start20','end30');";
         Assert.assertEquals(call, expected);
     }
-        */
 
-    /*
+
+    /**
+     * test without boundaries
+     */
     @Test(groups = {"utilTests"})
     public void append_2() {
         QuickMockApplication app = new QuickMockApplication();
@@ -203,12 +251,49 @@ public class RepeaterUtilTest {
         };
         tester.startComponentInPage(panel);
         final Item<Integer> item = (Item) quickView.get(0);
-        String expected = String.format("QuickView.append('%s','%s','%s');", TestQuickViewContainer.TAG_NAME, item.getMarkupId(), parent.getMarkupId());
-        String actual = RepeaterUtil.get().append(item, parent);
+        String expected = String.format("QuickView.append('%s','%s','%s','','');", TestQuickViewContainer.TAG_NAME, item.getMarkupId(), parent.getMarkupId());
+        String actual = RepeaterUtil.get().append(item, parent,null,null);
         Assert.assertEquals(actual.trim(), expected.trim());
     }
 
-    */
+
+    /**
+     * test with boundaries
+     */
+    @Test(groups = {"utilTests"})
+    public void append_3() {
+        QuickMockApplication app = new QuickMockApplication();
+        WicketTester tester = new WicketTester(app);
+        List<Integer> list = new ArrayList<Integer>();
+        list.add(100);
+        IDataProvider<Integer> dataProvider = new ListDataProvider<Integer>(list);
+        EmptyPanel start=new EmptyPanel("start");
+        start.setMarkupId("start");
+        EmptyPanel end=new EmptyPanel("end");
+        end.setMarkupId("end");
+        final QuickView<Integer> quickView = new QuickView<Integer>("quickview", dataProvider, 2,start,end) {
+            @Override
+            protected void populate(Item<Integer> item) {
+            }
+        };
+        quickView.setReuseStrategy(new ItemsNavigationStrategy());
+
+        TestQuickViewContainerWithBoundaries panel = new TestQuickViewContainerWithBoundaries("panel"){
+            @Override
+            public QuickViewBase newView() {
+                return quickView;
+            }
+        };
+        panel.add(start);
+        panel.add(end);
+        panel.setOutputMarkupPlaceholderTag(true);
+        tester.startComponentInPage(panel);
+        final Item<Integer> item = (Item) quickView.get(0);
+        String expected = String.format("QuickView.append('%s','%s','%s','start','end');", TestQuickViewContainer.TAG_NAME, item.getMarkupId(),
+                panel.getMarkupId(),start.getMarkupId(),end.getMarkupId());
+        String actual = RepeaterUtil.get().append(item, panel,start,end);
+        Assert.assertEquals(actual.trim(), expected.trim());
+    }
 
     @Test(groups = {"utilTests"})
     public void removeItem_1() {

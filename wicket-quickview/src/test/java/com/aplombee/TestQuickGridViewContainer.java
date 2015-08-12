@@ -37,20 +37,4 @@ public abstract class TestQuickGridViewContainer extends TestQuickViewContainer 
         super(id);
     }
 
-    @Override
-    public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
-    {
-        return new StringResourceStream("<wicket:panel> " +
-                "<table wicket:id=\""+ getQuickViewParent().getId()+ "\">" +
-                "<tr wicket:id=\""+getQuickViewParent().getChild().getId()+"\"> " +
-                "<td wicket:id=\"cols\"> </td>"+
-                "</tr>" +
-                "</table>" +
-                " <div wicket:id=\""+ getNavigator().getId()+"\"></div>" +
-                "<a wicket:id= \""+ getLink().getId()  +"\" > </a>"+
-                "</wicket:panel>"
-
-        );
-    }
-
 }
