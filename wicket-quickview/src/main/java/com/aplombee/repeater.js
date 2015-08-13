@@ -72,13 +72,13 @@ var QuickView = {
     scrollToBottom: function(id)
     {
         var element = $("#" + id);
-        scrollTo(id, $(element).height());
+        this.scrollTo(id, $(element).height());
     },
     /**
      position the scrollbar to top
      */
     scrollToTop: function(id) {
-        scrollTo(id, 0);
+        this.scrollTo(id, 0);
     },
     /**
      position the scrollbar to provided height
