@@ -37,6 +37,7 @@ import java.util.List;
  *
  */
 public class RowsNavigatorPage extends WebPage {
+
     private List<Integer> list=new ArrayList<Integer>();
 
     public RowsNavigatorPage(){

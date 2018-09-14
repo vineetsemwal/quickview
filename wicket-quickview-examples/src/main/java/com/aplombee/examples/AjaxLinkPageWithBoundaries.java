@@ -59,12 +59,12 @@ public class AjaxLinkPageWithBoundaries extends WebPage {
             protected void populate(Item<Integer> item) {
                 item.add(new Label("display", item.getModel()));
             }
-        } ;
+        };
         numbers.add(number);
         add(numbers);
 
 
-        AjaxLink addLink = new AjaxLink("addLink") {
+        AjaxLink addLink = new AjaxLink<Void>("addLink") {
 
             @Override
             public void onClick(AjaxRequestTarget target) {
@@ -78,7 +78,7 @@ public class AjaxLinkPageWithBoundaries extends WebPage {
         add(addLink);
 
 
-        AjaxLink addAtStartLink = new AjaxLink("addAtStartLink") {
+        AjaxLink addAtStartLink = new AjaxLink<Void>("addAtStartLink") {
 
 
             @Override

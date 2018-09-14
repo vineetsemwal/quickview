@@ -66,7 +66,7 @@ public class AjaxLinkPage extends WebPage {
         add(numbers);
 
 
-        AjaxLink addLink = new AjaxLink("addLink") {
+        AjaxLink addLink = new AjaxLink<Void>("addLink") {
 
             @Override
             public void onClick(AjaxRequestTarget target) {
@@ -80,7 +80,7 @@ public class AjaxLinkPage extends WebPage {
         add(addLink);
 
 
-        AjaxLink addAtStartLink = new AjaxLink("addAtStartLink") {
+        AjaxLink addAtStartLink = new AjaxLink<Void>("addAtStartLink") {
 
             @Override
             public void onClick(AjaxRequestTarget target) {

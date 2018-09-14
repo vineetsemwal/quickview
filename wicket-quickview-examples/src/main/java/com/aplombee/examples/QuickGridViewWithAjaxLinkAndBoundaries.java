@@ -1,18 +1,17 @@
 /**
- *
- Copyright 2012 Vineet Semwal
-
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
-
- http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
+ * Copyright 2012 Vineet Semwal
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.aplombee.examples;
@@ -27,7 +26,6 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,15 +47,14 @@ public class QuickGridViewWithAjaxLinkAndBoundaries extends WebPage {
     @Override
     protected void onInitialize() {
         super.onInitialize();
-
         IDataProvider<Integer> data = new ListDataProvider<Integer>(list);
         WebMarkupContainer numbers = new WebMarkupContainer("numbers");   //parent for quickview
         numbers.setOutputMarkupId(true);  //needed for ajax
-        Component start,end;
-        numbers.add(start=new Label("start").setOutputMarkupPlaceholderTag(true));
-        numbers.add(end=new Label("end").setOutputMarkupPlaceholderTag(true)) ;
+        Component start, end;
+        numbers.add(start = new Label("start").setOutputMarkupPlaceholderTag(true));
+        numbers.add(end = new Label("end").setOutputMarkupPlaceholderTag(true));
 
-        final QuickGridView<Integer> number = new QuickGridView<Integer>("number", data,new ItemsNavigationStrategy() ,start,end) {
+        final QuickGridView<Integer> number = new QuickGridView<Integer>("number", data, new ItemsNavigationStrategy(), start, end) {
             @Override
             protected void populate(CellItem<Integer> item) {
                 item.add(new Label("display", item.getModel()));
@@ -72,18 +69,17 @@ public class QuickGridViewWithAjaxLinkAndBoundaries extends WebPage {
         numbers.add(number);
         add(numbers);
 
-        AjaxLink addLink = new AjaxLink("addLink") {
+        AjaxLink addLink = new AjaxLink<Void>("addLink") {
 
             @Override
             public void onClick(AjaxRequestTarget target) {
-                int newObject=list.get(list.size()-1) +1;
-                list.add( newObject);
-                int newObject2=list.get(list.size()-1) +1;
-                list.add( newObject2);
-                List<Integer>newOnes=new ArrayList<Integer>();
+                int newObject = list.get(list.size() - 1) + 1;
+                list.add(newObject);
+                int newObject2 = list.get(list.size() - 1) + 1;
+                list.add(newObject2);
+                List<Integer> newOnes = new ArrayList<Integer>();
                 newOnes.add(newObject);
                 newOnes.add(newObject2);
-
                 number.addRows(newOnes.iterator());//just enough to add new rows and corresponding cells
 
             }
@@ -93,19 +89,18 @@ public class QuickGridViewWithAjaxLinkAndBoundaries extends WebPage {
         add(addLink);
 
 
-        AjaxLink addAtStartLink = new AjaxLink("addAtStartLink") {
+        AjaxLink addAtStartLink = new AjaxLink<Void>("addAtStartLink") {
 
             @Override
             public void onClick(AjaxRequestTarget target) {
-                int newObject=list.get(0) -1;
+                int newObject = list.get(0) - 1;
                 list.add(0, newObject);
-                int newObject2=newObject -1;
+                int newObject2 = newObject - 1;
                 list.add(0, newObject2);
-                List<Integer>newOnes=new ArrayList<Integer>();
+                List<Integer> newOnes = new ArrayList<Integer>();
                 newOnes.add(newObject2);
                 newOnes.add(newObject);
-
-                 number.addRowsAtStart(newOnes.iterator());//just enough to add new rows  and corresponding cells
+                number.addRowsAtStart(newOnes.iterator());//just enough to add new rows  and corresponding cells
 
             }
 

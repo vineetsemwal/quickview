@@ -73,7 +73,7 @@ public class QuickGridViewWithAjaxLink extends WebPage {
         numbers.add(number);
         add(numbers);
 
-        AjaxLink addLink = new AjaxLink("addLink") {
+        AjaxLink addLink = new AjaxLink<Void>("addLink") {
 
             @Override
             public void onClick(AjaxRequestTarget target) {
@@ -84,8 +84,7 @@ public class QuickGridViewWithAjaxLink extends WebPage {
                 List<Integer>newOnes=new ArrayList<Integer>();
                 newOnes.add(newObject);
                 newOnes.add(newObject2);
-
-                number.addRows(newOnes.iterator());//just enough to add new rows and corresponding cells
+                number.addRows(newOnes.iterator());//just enough to add new rows and respective cells
 
             }
 
@@ -94,7 +93,7 @@ public class QuickGridViewWithAjaxLink extends WebPage {
         add(addLink);
 
 
-        AjaxLink addAtStartLink = new AjaxLink("addAtStartLink") {
+        AjaxLink addAtStartLink = new AjaxLink<Void>("addAtStartLink") {
 
             @Override
             public void onClick(AjaxRequestTarget target) {
