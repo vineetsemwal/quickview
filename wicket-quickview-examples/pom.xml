@@ -106,6 +106,14 @@ Copyright 2012 Vineet Semwal
             <artifactId>jetty-jmx</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-core</artifactId>
+            <scope>compile</scope>
+            <version>${wicket.version}</version>
+        </dependency>
+
     </dependencies>
     <build>
         <resources>

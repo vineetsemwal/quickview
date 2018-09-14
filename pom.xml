@@ -68,6 +68,7 @@ Copyright 2012 Vineet Semwal
             <dependency>
                 <groupId>org.apache.wicket</groupId>
                 <artifactId>wicket-core</artifactId>
+                <scope>provided</scope>
                 <version>${wicket.version}</version>
             </dependency>
 
