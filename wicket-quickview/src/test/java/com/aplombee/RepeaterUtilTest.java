@@ -25,6 +25,7 @@ import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.WicketTester;
 import org.mockito.Mockito;
@@ -87,10 +88,11 @@ public class RepeaterUtilTest {
             }
         };
         tester.startComponentInPage(panel);
-        final Item<Integer> item = (Item) quickView.get(0);
+        Item newItemAtStart=new Item("363",37,new Model());
+        quickView.simpleAdd(newItemAtStart);
         String expected = String.format("QuickView.prepend('%s','%s','%s','','');", TestQuickViewContainer.TAG_NAME,
-                item.getMarkupId(), parent.getMarkupId());
-        String actual = RepeaterUtil.get().prepend(item, parent,null,null);
+                newItemAtStart.getMarkupId(), parent.getMarkupId());
+        String actual = RepeaterUtil.get().prepend(newItemAtStart, parent,null,null);
         Assert.assertEquals(actual.trim(), expected.trim());
     }
 
@@ -127,10 +129,11 @@ public class RepeaterUtilTest {
         panel.add(start);
         panel.add(end);
         tester.startComponentInPage(panel);
-        final Item<Integer> item = (Item) quickView.get(0);
+        Item newItemAtStart=new Item("363",37,new Model());
+        quickView.simpleAdd(newItemAtStart);
         String expected = String.format("QuickView.prepend('%s','%s','%s','start','end');", TestQuickViewContainer.TAG_NAME,
-                item.getMarkupId(), panel.getMarkupId());
-        String actual = RepeaterUtil.get().prepend(item, panel,start,end);
+                newItemAtStart.getMarkupId(), panel.getMarkupId());
+        String actual = RepeaterUtil.get().prepend(newItemAtStart, panel,start,end);
         Assert.assertEquals(actual.trim(), expected.trim());
     }
 
@@ -171,7 +174,7 @@ public class RepeaterUtilTest {
             }
         };
         tester.startComponentInPage(panel);
-        final Item<Integer> item = (Item) quickView.getRow(0);
+        final Item<Integer> item = (Item) quickView._firstRenderedItem();
         ComponentTag actual=   RepeaterUtil.get().getComponentTag(item);
         Assert.assertEquals(actual.getName(),"tr");
     }
@@ -206,8 +209,9 @@ public class RepeaterUtilTest {
             }
         };
         tester.startComponentInPage(panel);
-        final Item<Integer> item = (Item) quickView.get(0);
-      ComponentTag actual=   RepeaterUtil.get().getComponentTag(item);
+        Item newItem=new Item("363",37,new Model());
+        quickView.add(newItem);
+      ComponentTag actual=   RepeaterUtil.get().getComponentTag(newItem);
         Assert.assertEquals(actual.getName(),TestQuickViewContainer.TAG_NAME);
     }
 
@@ -250,9 +254,11 @@ public class RepeaterUtilTest {
             }
         };
         tester.startComponentInPage(panel);
-        final Item<Integer> item = (Item) quickView.get(0);
-        String expected = String.format("QuickView.append('%s','%s','%s','','');", TestQuickViewContainer.TAG_NAME, item.getMarkupId(), parent.getMarkupId());
-        String actual = RepeaterUtil.get().append(item, parent,null,null);
+        Item newItem=new Item("363",37,new Model());
+        quickView.simpleAdd(newItem);
+        String expected = String.format("QuickView.append('%s','%s','%s','','');",
+                TestQuickViewContainer.TAG_NAME, newItem.getMarkupId(), parent.getMarkupId());
+        String actual = RepeaterUtil.get().append(newItem, parent,null,null);
         Assert.assertEquals(actual.trim(), expected.trim());
     }
 
@@ -288,10 +294,12 @@ public class RepeaterUtilTest {
         panel.add(end);
         panel.setOutputMarkupPlaceholderTag(true);
         tester.startComponentInPage(panel);
-        final Item<Integer> item = (Item) quickView.get(0);
-        String expected = String.format("QuickView.append('%s','%s','%s','start','end');", TestQuickViewContainer.TAG_NAME, item.getMarkupId(),
+        Item newItem=new Item("363",37,new Model());
+        quickView.simpleAdd(newItem);
+        String expected = String.format("QuickView.append('%s','%s','%s','start','end');",
+                TestQuickViewContainer.TAG_NAME, newItem.getMarkupId(),
                 panel.getMarkupId(),start.getMarkupId(),end.getMarkupId());
-        String actual = RepeaterUtil.get().append(item, panel,start,end);
+        String actual = RepeaterUtil.get().append(newItem, panel,start,end);
         Assert.assertEquals(actual.trim(), expected.trim());
     }
 

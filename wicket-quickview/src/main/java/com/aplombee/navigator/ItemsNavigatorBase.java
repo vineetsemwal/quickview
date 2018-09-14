@@ -29,6 +29,7 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * base navigator which is inherited by {@link  AjaxItemsNavigator}
@@ -133,7 +134,11 @@ public abstract class ItemsNavigatorBase extends Panel {
     }
 
     public AjaxRequestTarget getAjaxRequestTarget() {
-        return getRequestCycle().find(AjaxRequestTarget.class);
+        Optional<AjaxRequestTarget>target= getRequestCycle().find(AjaxRequestTarget.class);
+       if(target.isPresent()){
+           return target.get();
+       }
+       return null;
     }
 
 }

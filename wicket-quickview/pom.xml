@@ -21,7 +21,7 @@ Copyright 2012 Vineet Semwal
     <parent>
         <groupId>com.aplombee</groupId>
         <artifactId>wicket-quickview-parent</artifactId>
-        <version>7.1.0</version>
+        <version>8-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>

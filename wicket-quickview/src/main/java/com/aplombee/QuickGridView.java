@@ -29,6 +29,7 @@ import org.apache.wicket.util.lang.Args;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -163,7 +164,7 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
 
     public QuickGridView<T> addRowAtStart(RowItem<T> rowItem) {
         Args.notNull(rowItem, "rowItem can't be null");
-        simpleAdd(rowItem);
+        simpleAddRow(rowItem);
         if (!isAjax()) {
             return this;
         }
@@ -176,7 +177,7 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
 
     public QuickGridView<T> addRow(RowItem<T> rowItem) {
         Args.notNull(rowItem, "rowItem can't be null");
-        simpleAdd(rowItem);
+        simpleAddRow(rowItem);
         if (!isAjax()) {
             return this;
         }
@@ -215,40 +216,91 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
             String call = getRepeaterUtil().removeItem(rowItem,_getParent());
             getSynchronizer().getPrependScripts().add(call);
         }
-        simpleRemove(rowItem);
+        simpleRemoveRow(rowItem);
     }
 
-    public void removeRow(int row) {
-        removeRow(getRow(row));
+
+    /**
+     * component ids kept only for partial update use only
+     * ie. when {@link IQuickReuseStrategy#isPartialUpdatesSupported()} is true
+     */
+    private LinkedList<String> componentIds = new LinkedList<>();
+
+    private LinkedList<String> _getComponentIds() {
+        return componentIds;
     }
 
     /**
-     * retrieves RowItem corresponding to the  passed row argument
+     * last rendered item kept at server
      *
-     * @param row starts from 0
-     * @return rowitem retrieved
+     * ie. when {@link IQuickReuseStrategy#isPartialUpdatesSupported()} is true
      */
-    public RowItem<T> getRow(int row) {
-        if (row < 0) {
-            throw new IllegalArgumentException("row <0");
+    public Component _lastRenderedItem() {
+        if (!getReuseStrategy().isPartialUpdatesSupported()) {
+            throw new UnsupportedOperationException("only supported when reusestrategy supports partial updates");
         }
-        int last = size() - 1;
-        if (row > last) {
-            throw new IndexOutOfBoundsException("row >size");
-        }
-        RowItem<T> rowItem = (RowItem<T>) get(row);
-        return rowItem;
+        String lastComponentId = _getComponentIds().getLast();
+        return get(lastComponentId);
     }
+
+
+    /**
+     * first rendered item kept at server
+     *
+     * ie. when {@link IQuickReuseStrategy#isPartialUpdatesSupported()} is true
+     */
+    public Component _firstRenderedItem() {
+        if (!getReuseStrategy().isPartialUpdatesSupported()) {
+            throw new UnsupportedOperationException("only supported when reusestrategy supports partial updates");
+        }
+        String firstComponentId = _getComponentIds().getFirst();
+        return get(firstComponentId);
+    }
+
 
     public RowItem<T> getLastRowItem() {
-        int size = size();
-        if (size < 1) {
-            return null;
-        }
-        RowItem<T> rowItem = getRow(size - 1);
+        Component lastItem= _lastRenderedItem();
+        RowItem<T> rowItem =(RowItem<T>) lastItem;
         return rowItem;
     }
 
+    /**
+     * it's a simple add,new item is not drawn just added,no js fired
+     *
+     * @param components component to be added
+     * @return this
+     */
+    public MarkupContainer simpleAddRow(Component... components) {
+        simpleAdd(components);
+        if (getReuseStrategy().isPartialUpdatesSupported()) {
+            for (Component c : components) {
+                _getComponentIds().add(c.getId());
+            }
+        }
+        return this;
+    }
+
+
+    /**
+     * it's a simple remove,the item is just removed from quickview ,no js fired
+     *
+     * @param c
+     * @return this
+     */
+    public MarkupContainer simpleRemoveRow(Component c) {
+        if (getReuseStrategy().isPartialUpdatesSupported()) {
+            _getComponentIds().remove(c.getId());
+        }
+        simpleRemove(c);
+        return this;
+    }
+
+    public MarkupContainer simpleRemoveAllRows() {
+        if (getReuseStrategy().isPartialUpdatesSupported()) {
+            _getComponentIds().clear();
+        }
+        return simpleRemoveAll();
+    }
 
     /**
      * @param index    cellindex from where new cell items should be added
@@ -276,7 +328,7 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
     public void createChildren(Iterator<Item<T>>itemIterator){
            Iterator<RowItem<T>>rows= buildRows(0,(Iterator)itemIterator);
             while (rows.hasNext()){
-                simpleAdd(rows.next()) ;
+                simpleAddRow(rows.next()) ;
             }
     }
 
@@ -415,7 +467,7 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
 
     public CellItem<T> findFirstEmptyCell() {
         CellItem<T> emptyCell = null;
-        Iterator<CellItem> iterator = getLastRowItem().cellItemItems();
+        Iterator<CellItem> iterator = getLastRowItem().cellItems();
         while (iterator.hasNext()) {
             CellItem<T> cellItem = iterator.next();
             if (cellItem.isEmpty()) {
@@ -482,18 +534,8 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
         /**
          * @return cells iterator
          */
-        public Iterator cellItemItems() {
+        public Iterator cellItems() {
             return getRepeater().iterator();
-        }
-
-        /**
-         * retrieves item corresponding to a particular column in a row
-         *
-         * @param column
-         * @return CellItem
-         */
-        public CellItem<T> getCellItem(int column) {
-            return (CellItem) getRepeater().get(column);
         }
 
     }

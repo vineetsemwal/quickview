@@ -1,18 +1,17 @@
 /**
- *
- Copyright 2012 Vineet Semwal
-
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
-
- http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
+ * Copyright 2012 Vineet Semwal
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.aplombee;
 
@@ -40,22 +39,23 @@ import java.util.*;
  * @author Vineet Semwal
  */
 public abstract class QuickViewBase<T> extends RepeatingView implements IQuickView {
-    private IQuickReuseStrategy reuseStrategy;
+    private IQuickReuseStrategy reuseStrategy7;
 
-    public void setReuseStrategy(IQuickReuseStrategy reuseStrategy) {
+    public void setReuseStrategy(final IQuickReuseStrategy reuseStrategy) {
         Args.notNull(reuseStrategy, "reuseStrategy");
-        this.reuseStrategy = reuseStrategy;
+        this.reuseStrategy7 = reuseStrategy;
     }
 
+
     public IQuickReuseStrategy getReuseStrategy() {
-        return reuseStrategy;
+        return reuseStrategy7;
     }
 
     //items created per request ,if used with PagingNavigator/AjaxPagingNavigator then it's the items per page
-    private long itemsPerRequest = Integer.MAX_VALUE;
+    private long itemsPerRequest7 = Integer.MAX_VALUE;
 
     public long getItemsPerRequest() {
-        return itemsPerRequest;
+        return itemsPerRequest7;
     }
 
     private long childId = 0;
@@ -71,11 +71,11 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
             throw new IllegalArgumentException("itemsPerRequest cannot be less than 1");
         }
 
-        if (this.itemsPerRequest != items) {
+        if (this.itemsPerRequest7 != items) {
             if (isVersioned()) {
                 addStateChange();
             }
-            this.itemsPerRequest = items;
+            this.itemsPerRequest7 = items;
 
             // because items per page can effect the total number of pages we always
             // reset the current page back to zero
@@ -127,32 +127,31 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     }
 
     /**
-     * @param id           component id
-     * @param dataProvider dataprovider of objects
-     * @param reuse        children are created again on render
+     * @param id            component id
+     * @param dataProvider  dataprovider of objects
+     * @param reuseStrategy children are created again on render
      */
     public QuickViewBase(String id, IDataProvider<T> dataProvider, IQuickReuseStrategy reuseStrategy) {
         super(id);
         Args.notNull(dataProvider, "dataProvider");
         Args.notNull(reuseStrategy, "reuseStrategy");
         this.dataProvider = dataProvider;
-        this.reuseStrategy = reuseStrategy;
+        setReuseStrategy(reuseStrategy);
     }
 
 
     /**
-     * @param id           component id
-     * @param dataProvider dataprovider of objects
-     * @param reuse        children are created again on render
-     * @param start        start of view
-     * @param end          end of view
+     * @param id            component id
+     * @param dataProvider  dataprovider of objects
+     * @param reuseStrategy children are created again on render
+     * @param start         start of view
+     * @param end           end of view
      */
     public QuickViewBase(String id, IDataProvider<T> dataProvider, IQuickReuseStrategy reuseStrategy, Component start, Component end) {
         super(id);
         Args.notNull(dataProvider, "dataProvider");
         Args.notNull(reuseStrategy, "reuseStrategy");
         this.dataProvider = dataProvider;
-        this.reuseStrategy = reuseStrategy;
         this.start = start;
         if (start != null) {
             start.setOutputMarkupPlaceholderTag(true);
@@ -161,6 +160,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         if (end != null) {
             end.setOutputMarkupPlaceholderTag(true);
         }
+        setReuseStrategy(reuseStrategy);
 
     }
 
@@ -209,14 +209,15 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         return getWebRequest().isAjax();
     }
 
+
     /**
      * it's a simple add,new item is not drawn just added,no js fired
      *
-     * @param c component to be added
+     * @param components component to be added
      * @return this
      */
-    public MarkupContainer simpleAdd(Component... c) {
-        super.add(c);
+    public MarkupContainer simpleAdd(Component... components) {
+        super.add(components);
         return this;
     }
 
@@ -244,7 +245,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     protected void onPopulate() {
         super.onPopulate();
         clearCachedItemCount();
-        long pageToBeCreated = reuseStrategy.getPageCreatedOnRender();
+        long pageToBeCreated = getReuseStrategy().getPageCreatedOnRender();
         //
         // if page to be created is different then the last current page rendered
         //
@@ -260,7 +261,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         //this is useful for ReuseAllSStrategy
         //
         Iterator<IModel<T>> newModels;
-        if (reuseStrategy.isPartialUpdatesSupported() && pageToBeCreated < 0) {
+        if (getReuseStrategy().isPartialUpdatesSupported() && pageToBeCreated < 0) {
             long modelsCount = (page + 1) * getItemsPerRequest();
             newModels = newModels(0, modelsCount);
         } else {
@@ -268,9 +269,9 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
             //create models only for the desired page
             //
             long offset = page * getItemsPerRequest();
-            newModels = newModels(offset, itemsPerRequest);
+            newModels = newModels(offset, getItemsPerRequest());
         }
-        Iterator<Item<T>> newIterator = reuseStrategy.getItems(factory(), newModels, existing);
+        Iterator<Item<T>> newIterator = getReuseStrategy().getItems(factory(), newModels, existing);
         simpleRemoveAll();
 
         createChildren(newIterator);
@@ -290,8 +291,8 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     @Override
     public List<Item<T>> addItemsForPage(final long page) {
         long offset = page * getItemsPerRequest();
-        Iterator<IModel<T>> newModels = newModels(offset, itemsPerRequest);
-        Iterator<Item<T>> newIterator = reuseStrategy.addItems(getRepeaterUtil().safeLongToInt(offset), factory(), newModels);
+        Iterator<IModel<T>> newModels = newModels(offset, getItemsPerRequest());
+        Iterator<Item<T>> newIterator = getReuseStrategy().addItems(getRepeaterUtil().safeLongToInt(offset), factory(), newModels);
         List<Item<T>> components = new ArrayList<Item<T>>();
         while (newIterator.hasNext()) {
             Item<T> temp = newIterator.next();
@@ -356,11 +357,6 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
 
     protected Iterator<IModel<T>> newModels(long offset, long count) {
         return new ModelIterator<T>(dataProvider, offset, count);
-
-    }
-
-    public Item<T> getItem(long index) {
-        return (Item) get(getRepeaterUtil().safeLongToInt(index));
     }
 
 
@@ -373,7 +369,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     }
 
     protected Iterator<Item<T>> buildItems(final long index, Iterator<? extends T> iterator) {
-     return buildItemsList(index, iterator).iterator();
+        return buildItemsList(index, iterator).iterator();
     }
 
 
@@ -468,8 +464,8 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     protected long _getPageCount() {
         long total = getRowsCount();
 
-        long count = total / itemsPerRequest;
-        if ((itemsPerRequest * count) < total) {
+        long count = total / getItemsPerRequest();
+        if ((getItemsPerRequest() * count) < total) {
             count++;
         }
         return count;
@@ -493,9 +489,9 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         long page = currentPage;
 
         /*
-        * trim current page if its out of bounds this can happen if items are added/deleted between
-        * requests
-        */
+         * trim current page if its out of bounds this can happen if items are added/deleted between
+         * requests
+         */
 
         final long count = _getPageCount();
         if (page > 0 && page >= count) {
@@ -528,7 +524,11 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     }
 
     public AjaxRequestTarget getAjaxRequestTarget() {
-        return RequestCycle.get().find(AjaxRequestTarget.class);
+        Optional<AjaxRequestTarget> target = RequestCycle.get().find(AjaxRequestTarget.class);
+        if (target.isPresent()) {
+            return target.get();
+        }
+        return null;
     }
 
 
@@ -604,9 +604,8 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      * <p/>
      * 1)creates children ,children will get the model object after iterating over objects passed as argument
      * 2)adds children to View using {@link this#addAtStart(org.apache.wicket.Component...)}
-     *
+     * <p>
      * the respective items for objects will be displayed at start of the view in the order of passed objects
-     *
      *
      * @param objects iterator of model objects for children
      * @return this
@@ -614,8 +613,8 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
 
     public MarkupContainer addNewItemsAtStart(T... objects) {
         List<T> list = new ArrayList<T>();
-        for(T object:objects){
-         list.add(object);
+        for (T object : objects) {
+            list.add(object);
         }
         List<Item<T>> items = buildItemsList(list.iterator());
         addAtStart(items.toArray(new Item[0]));
@@ -648,6 +647,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
             getSynchronizer().getPrependScripts().add(removeScript);
         }
         return simpleRemove(component);
+
     }
 
 
@@ -660,10 +660,10 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     /**
      * draws a new element at start but actually the element is added at last in repeater,
      * this should not pose problem when whole repeater is re-rendered and if data is sorted
-     *
+     * <p>
      * the item will be displayed at start of the view in the passed order
-     *
-     *
+     * <p>
+     * <p>
      * <p/>
      * actually it can be handled properly which means new item(s) created at start  using addAtStart
      * it is mentioned in issue quickview#15 (https://github.com/vineetsemwal/quickview/issues/15)
@@ -677,7 +677,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
             return this;
         }
 
-        for (int i = components.length-1; i >=0; i--) {
+        for (int i = components.length - 1; i >= 0; i--) {
             MarkupContainer parent = _getParent();
             String updateBeforeScript = getRepeaterUtil().prepend((Item) components[i], parent, start, end);
             getSynchronizer().getPrependScripts().add(updateBeforeScript);

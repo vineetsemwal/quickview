@@ -64,7 +64,7 @@ public abstract class TestQuickViewContainer extends WebMarkupContainer  {
     }
 
     public AbstractLink newLink() {
-        return new Link("link"){
+        return new Link<Void>("link"){
             @Override
             public void onClick() {
             }

@@ -70,7 +70,7 @@ public class MoreLabel extends Label {
 
     public class OnClickBehavior extends AjaxEventBehavior{
         public OnClickBehavior() {
-           super("onclick");
+           super("click");
         }
             @Override
             protected void onEvent(AjaxRequestTarget target) {

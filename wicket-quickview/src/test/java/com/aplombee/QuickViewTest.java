@@ -1,21 +1,19 @@
 /**
- *
- Copyright 2012 Vineet Semwal
-
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
-
- http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
+ * Copyright 2012 Vineet Semwal
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.aplombee;
-
 
 
 import org.apache.wicket.Component;
@@ -59,7 +57,7 @@ public class QuickViewTest {
     }
 
     private static WebApplication createMockApplication() {
-       return new MockApplication();
+        return new MockApplication();
     }
 
     /**
@@ -67,7 +65,7 @@ public class QuickViewTest {
      */
     @Test(groups = {"wicketTests"})
     public void constructor_1() {
-         int oneBlock = 2;
+        int oneBlock = 2;
         final String repeaterId = "repeater";
         IDataProvider<TestObj> provider = mockProvider(oneBlock);
         IQuickReuseStrategy reuse = Mockito.mock(IQuickReuseStrategy.class);
@@ -222,7 +220,7 @@ public class QuickViewTest {
 
         };
         final String script = "script..";
-        Mockito.when(util.append(c, parent,null,null)).thenReturn(script);
+        Mockito.when(util.append(c, parent, null, null)).thenReturn(script);
         QuickView<TestObj> sparc = Mockito.spy(quickView);
         sparc.add(c);
 
@@ -247,9 +245,9 @@ public class QuickViewTest {
         final QuickViewBase.Synchronizer synchronizer = Mockito.mock(QuickViewBase.Synchronizer.class);
         Mockito.when(synchronizer.getPrependScripts()).thenReturn(scripts);
         final Item c = Mockito.mock(Item.class);
-      Component start=new Label("start");
-       Component end=new Label("end");
-        QuickView<TestObj> quickView = new QuickView<TestObj>("repeater", dataProvider, itemsPerRequest,start,end) {
+        Component start = new Label("start");
+        Component end = new Label("end");
+        QuickView<TestObj> quickView = new QuickView<TestObj>("repeater", dataProvider, itemsPerRequest, start, end) {
 
             public void populate(Item<TestObj> item) {
             }
@@ -279,7 +277,7 @@ public class QuickViewTest {
 
         };
         final String script = "script..";
-        Mockito.when(util.append(c, parent,start,end)).thenReturn(script);
+        Mockito.when(util.append(c, parent, start, end)).thenReturn(script);
         QuickView<TestObj> sparc = Mockito.spy(quickView);
         sparc.add(c);
 
@@ -335,8 +333,8 @@ public class QuickViewTest {
             }
         };
         final String script = "script..", script2 = "script2!";
-        Mockito.when(util.append(c, parent,null,null)).thenReturn(script);
-        Mockito.when(util.append(c2, parent,null,null)).thenReturn(script2);
+        Mockito.when(util.append(c, parent, null, null)).thenReturn(script);
+        Mockito.when(util.append(c2, parent, null, null)).thenReturn(script2);
         QuickView sparc = Mockito.spy(arc);
         sparc.add(c, c2);
         Mockito.verify(sparc, Mockito.times(1)).simpleAdd(c, c2);
@@ -362,9 +360,9 @@ public class QuickViewTest {
         final TestObj to = Mockito.mock(TestObj.class);
         final Item c = Mockito.mock(Item.class);
         final Item c2 = Mockito.mock(Item.class);
-        Component start=new Label("start") ;
-        Component end=new Label("end");
-        QuickView<TestObj> arc = new QuickView<TestObj>("repeater", dataProvider, oneBlock,start,end) {
+        Component start = new Label("start");
+        Component end = new Label("end");
+        QuickView<TestObj> arc = new QuickView<TestObj>("repeater", dataProvider, oneBlock, start, end) {
 
             public void populate(Item<TestObj> item) {
             }
@@ -394,8 +392,8 @@ public class QuickViewTest {
             }
         };
         final String script = "script..", script2 = "script2!";
-        Mockito.when(util.append(c, parent,start,end)).thenReturn(script);
-        Mockito.when(util.append(c2, parent,start,end)).thenReturn(script2);
+        Mockito.when(util.append(c, parent, start, end)).thenReturn(script);
+        Mockito.when(util.append(c2, parent, start, end)).thenReturn(script2);
         QuickView sparc = Mockito.spy(arc);
         sparc.add(c, c2);
         Mockito.verify(sparc, Mockito.times(1)).simpleAdd(c, c2);
@@ -404,8 +402,6 @@ public class QuickViewTest {
         Mockito.verify(scripts, Mockito.times(1)).add(script2);
 
     }
-
-
 
 
     /**
@@ -447,7 +443,7 @@ public class QuickViewTest {
 
         };
         final String script = "script..";
-        Mockito.when(util.append(c, parent,null,null)).thenReturn(script);
+        Mockito.when(util.append(c, parent, null, null)).thenReturn(script);
         QuickView<TestObj> sparc = Mockito.spy(arc);
         sparc.add(c);
 
@@ -456,7 +452,6 @@ public class QuickViewTest {
         Mockito.verify(target, Mockito.never()).prependJavaScript(script);
 
     }
-
 
 
     /**
@@ -471,9 +466,9 @@ public class QuickViewTest {
         TestObj obj1 = Mockito.mock(TestObj.class);
         TestObj obj2 = Mockito.mock(TestObj.class);
         final Iterator<Item<TestObj>> newItems = Mockito.mock(Iterator.class);
-        final int size=12;
-        final int index1=size;
-        final int index2=size+1;
+        final int size = 12;
+        final int index1 = size;
+        final int index2 = size + 1;
         final Item<TestObj> item1 = new Item<TestObj>("123", index1, new Model<TestObj>(obj1));
         final Item<TestObj> item2 = new Item<TestObj>("124", index2, new Model<TestObj>(obj2));
         Mockito.when(newItems.next()).thenReturn(item1).thenReturn(item2);
@@ -516,11 +511,11 @@ public class QuickViewTest {
         };
 
         QuickView<TestObj> sparc = Mockito.spy(arc);
-        Mockito.when(sparc.buildItem(index1,obj1)).thenReturn(item1) ;
-        Mockito.when(sparc.buildItem(index2,obj2)).thenReturn(item2);
+        Mockito.when(sparc.buildItem(index1, obj1)).thenReturn(item1);
+        Mockito.when(sparc.buildItem(index2, obj2)).thenReturn(item2);
         sparc.addNewItems(obj1, obj2);
-        Mockito.verify(sparc,Mockito.times(1)).buildItem(index1, obj1);
-        Mockito.verify(sparc,Mockito.times(1)).buildItem(index2, obj2);
+        Mockito.verify(sparc, Mockito.times(1)).buildItem(index1, obj1);
+        Mockito.verify(sparc, Mockito.times(1)).buildItem(index2, obj2);
         Mockito.verify(sparc, Mockito.times(1)).add(item1);
         Mockito.verify(sparc, Mockito.times(1)).add(item2);
 
@@ -539,9 +534,9 @@ public class QuickViewTest {
         TestObj obj1 = Mockito.mock(TestObj.class);
         TestObj obj2 = Mockito.mock(TestObj.class);
         final Iterator<Item<TestObj>> newItems = Mockito.mock(Iterator.class);
-        final int size=12;
-        final int index1=size;
-        final int index2=size+1;
+        final int size = 12;
+        final int index1 = size;
+        final int index2 = size + 1;
         final Item<TestObj> item1 = new Item<TestObj>("123", index1, new Model<TestObj>(obj1));
         final Item<TestObj> item2 = new Item<TestObj>("124", index2, new Model<TestObj>(obj2));
         Mockito.when(newItems.next()).thenReturn(item1).thenReturn(item2);
@@ -584,12 +579,12 @@ public class QuickViewTest {
         };
 
         QuickView<TestObj> sparc = Mockito.spy(arc);
-        Mockito.when(sparc.buildItem(index1,obj1)).thenReturn(item1) ;
-        Mockito.when(sparc.buildItem(index2,obj2)).thenReturn(item2);
+        Mockito.when(sparc.buildItem(index1, obj1)).thenReturn(item1);
+        Mockito.when(sparc.buildItem(index2, obj2)).thenReturn(item2);
         sparc.addNewItemsAtStart(obj1, obj2);
-        Mockito.verify(sparc,Mockito.times(1)).buildItem(index1, obj1);
-        Mockito.verify(sparc,Mockito.times(1)).buildItem(index2, obj2);
-        Mockito.verify(sparc, Mockito.times(1)).addAtStart(item1,item2);
+        Mockito.verify(sparc, Mockito.times(1)).buildItem(index1, obj1);
+        Mockito.verify(sparc, Mockito.times(1)).buildItem(index2, obj2);
+        Mockito.verify(sparc, Mockito.times(1)).addAtStart(item1, item2);
 
     }
 
@@ -638,7 +633,7 @@ public class QuickViewTest {
 
         };
         final String script = "script..";
-        Mockito.when(util.removeItem(c,parent)).thenReturn(script);
+        Mockito.when(util.removeItem(c, parent)).thenReturn(script);
         QuickView spy = Mockito.spy(arc);
         spy.remove(c);
         Mockito.verify(spy, Mockito.times(1)).simpleRemove(c);
@@ -691,7 +686,7 @@ public class QuickViewTest {
 
         };
         final String script = "script..";
-        Mockito.when(util.prepend(c, parent,null,null)).thenReturn(script);
+        Mockito.when(util.prepend(c, parent, null, null)).thenReturn(script);
         QuickView sparc = Mockito.spy(quickView);
         sparc.addAtStart(c);
         Mockito.verify(sparc, Mockito.times(1)).simpleAdd(c);
@@ -715,9 +710,9 @@ public class QuickViewTest {
         final QuickViewBase.Synchronizer synchronizer = Mockito.mock(QuickViewBase.Synchronizer.class);
         Mockito.when(synchronizer.getPrependScripts()).thenReturn(scripts);
         final Item c = Mockito.mock(Item.class);
-        Component start=new Label("start");
-        Component end=new Label("end");
-        QuickView<TestObj> quickView = new QuickView<TestObj>("repeater", dataProvider, itemsPerRequest,start,end) {
+        Component start = new Label("start");
+        Component end = new Label("end");
+        QuickView<TestObj> quickView = new QuickView<TestObj>("repeater", dataProvider, itemsPerRequest, start, end) {
 
             public void populate(Item<TestObj> item) {
             }
@@ -746,7 +741,7 @@ public class QuickViewTest {
 
         };
         final String script = "script..";
-        Mockito.when(util.prepend(c, parent,start,end)).thenReturn(script);
+        Mockito.when(util.prepend(c, parent, start, end)).thenReturn(script);
         QuickView sparc = Mockito.spy(quickView);
         sparc.addAtStart(c);
         Mockito.verify(sparc, Mockito.times(1)).simpleAdd(c);
@@ -801,8 +796,8 @@ public class QuickViewTest {
             }
         };
         final String script = "script..", script2 = "script2!";
-        Mockito.when(util.prepend(c, parent,null,null)).thenReturn(script);
-        Mockito.when(util.prepend(c2, parent,null,null)).thenReturn(script2);
+        Mockito.when(util.prepend(c, parent, null, null)).thenReturn(script);
+        Mockito.when(util.prepend(c2, parent, null, null)).thenReturn(script2);
         QuickView sparc = Mockito.spy(arc);
         sparc.addAtStart(c, c2);
         Mockito.verify(sparc, Mockito.times(1)).simpleAdd(c, c2);
@@ -813,9 +808,9 @@ public class QuickViewTest {
         // so the script for first elemnt should be added later
         //
         //
-         InOrder order=Mockito.inOrder(scripts);
-         order.verify(scripts).add(script2) ;
-         order.verify(scripts).add(script);
+        InOrder order = Mockito.inOrder(scripts);
+        order.verify(scripts).add(script2);
+        order.verify(scripts).add(script);
     }
 
 
@@ -834,9 +829,9 @@ public class QuickViewTest {
         final TestObj to = Mockito.mock(TestObj.class);
         final Item c = Mockito.mock(Item.class);
         final Item c2 = Mockito.mock(Item.class);
-         Component start=new Label("start");
-         Component end=new Label("end");
-        QuickView<TestObj> arc = new QuickView<TestObj>("repeater", dataProvider, oneBlock,start,end ) {
+        Component start = new Label("start");
+        Component end = new Label("end");
+        QuickView<TestObj> arc = new QuickView<TestObj>("repeater", dataProvider, oneBlock, start, end) {
 
             public void populate(Item<TestObj> item) {
             }
@@ -865,8 +860,8 @@ public class QuickViewTest {
             }
         };
         final String script = "script..", script2 = "script2!";
-        Mockito.when(util.prepend(c, parent,start,end)).thenReturn(script);
-        Mockito.when(util.prepend(c2, parent,start,end)).thenReturn(script2);
+        Mockito.when(util.prepend(c, parent, start, end)).thenReturn(script);
+        Mockito.when(util.prepend(c2, parent, start, end)).thenReturn(script2);
         QuickView sparc = Mockito.spy(arc);
         sparc.addAtStart(c, c2);
         Mockito.verify(sparc, Mockito.times(1)).simpleAdd(c, c2);
@@ -903,7 +898,7 @@ public class QuickViewTest {
         Iterator data = Mockito.mock(Iterator.class);
         final int itemsPerRequest = 2;
         final int offset = currentPage * itemsPerRequest;
-        Mockito.when(reuse.getItems( factory, newModels, existing)).thenReturn(newItems);
+        Mockito.when(reuse.getItems(factory, newModels, existing)).thenReturn(newItems);
         QuickView repeater = new QuickView("repeater", provider, reuse, itemsPerRequest) {
 
             @Override
@@ -941,7 +936,7 @@ public class QuickViewTest {
             }
         };
         QuickView spy = Mockito.spy(repeater);
-        Mockito.doReturn(newModels).when(spy).newModels(0,itemsPerRequest);
+        Mockito.doReturn(newModels).when(spy).newModels(0, itemsPerRequest);
         spy.onPopulate();
 
         InOrder order = Mockito.inOrder(reuse, spy, provider);
@@ -978,8 +973,8 @@ public class QuickViewTest {
         final Iterator newItems = Mockito.mock(Iterator.class);
         Iterator data = Mockito.mock(Iterator.class);
         final int itemsPerRequest = 2;
-       // final int offset = currentPage * itemsPerRequest;
-        Mockito.when(reuse.getItems( factory, newModels, existing)).thenReturn(newItems);
+        // final int offset = currentPage * itemsPerRequest;
+        Mockito.when(reuse.getItems(factory, newModels, existing)).thenReturn(newItems);
 
         QuickView repeater = new QuickView("repeater", provider, reuse, itemsPerRequest) {
 
@@ -1018,7 +1013,7 @@ public class QuickViewTest {
             }
         };
         QuickView spy = Mockito.spy(repeater);
-        Mockito.doReturn(newModels).when(spy).newModels((currentPage*itemsPerRequest),itemsPerRequest);
+        Mockito.doReturn(newModels).when(spy).newModels((currentPage * itemsPerRequest), itemsPerRequest);
         Mockito.doReturn(currentPage).when(spy)._getCurrentPage();
         spy.onPopulate();
 
@@ -1027,10 +1022,8 @@ public class QuickViewTest {
         order.verify(reuse).getItems(factory, newModels, existing);
         order.verify(spy).simpleRemoveAll();
         order.verify(spy).createChildren(newItems);
-        Mockito.verify(spy,Mockito.never())._setCurrentPage(Mockito.anyLong());
+        Mockito.verify(spy, Mockito.never())._setCurrentPage(Mockito.anyLong());
     }
-
-
 
 
     /**
@@ -1057,7 +1050,7 @@ public class QuickViewTest {
         final Iterator newItems = Mockito.mock(Iterator.class);
         Iterator data = Mockito.mock(Iterator.class);
         final int itemsPerRequest = 2;
-        Mockito.when(reuse.getItems( factory, newModels, existing)).thenReturn(newItems);
+        Mockito.when(reuse.getItems(factory, newModels, existing)).thenReturn(newItems);
 
         QuickView repeater = new QuickView("repeater", provider, reuse, itemsPerRequest) {
 
@@ -1096,16 +1089,16 @@ public class QuickViewTest {
             }
         };
         QuickView spy = Mockito.spy(repeater);
-        Mockito.doReturn(newModels).when(spy).newModels(0,(currentPage+1)*itemsPerRequest);
+        Mockito.doReturn(newModels).when(spy).newModels(0, (currentPage + 1) * itemsPerRequest);
         Mockito.doReturn(currentPage).when(spy)._getCurrentPage();
         spy.onPopulate();
 
         InOrder order = Mockito.inOrder(reuse, spy, provider);
-        order.verify(spy).newModels(0,(currentPage+1)*itemsPerRequest );
-        order.verify(reuse).getItems( factory, newModels, existing);
+        order.verify(spy).newModels(0, (currentPage + 1) * itemsPerRequest);
+        order.verify(reuse).getItems(factory, newModels, existing);
         order.verify(spy).simpleRemoveAll();
         order.verify(spy).createChildren(newItems);
-        Mockito.verify(spy,Mockito.never())._setCurrentPage(Mockito.anyLong());
+        Mockito.verify(spy, Mockito.never())._setCurrentPage(Mockito.anyLong());
 
     }
 
@@ -1223,8 +1216,8 @@ public class QuickViewTest {
     }
 
     /*
-    * when repeater is  visible in hierarchy
-    */
+     * when repeater is  visible in hierarchy
+     */
     @Test(groups = {"wicketTests"})
     public void getRowsCount_2() {
         final int itemsPerRequest = 3;
@@ -1537,7 +1530,7 @@ public class QuickViewTest {
         Item two = quickView.buildItem(index2, 68);
         quickView.simpleAdd(one, two);
         quickView.simpleRemoveAll();
-       Assert.assertEquals(quickView.size(), 0);
+        Assert.assertEquals(quickView.size(), 0);
     }
 
     @Test(groups = {"wicketTests"})
@@ -1579,14 +1572,13 @@ public class QuickViewTest {
     }
 
 
-
     /**
-     * test for  {@link QuickViewBase#buildItem(id, index, object)}
+     * test for  {@link QuickViewBase#buildItem(String, long, IModel)} )}
      */
     @Test(groups = {"wicketTests"})
     public void buildItem_1() {
         IDataProvider data = Mockito.mock(IDataProvider.class);
-        IModel model=Mockito.mock(IModel.class);
+        IModel model = Mockito.mock(IModel.class);
 
         final Item item = Mockito.mock(Item.class);
         QuickView<TestObj> quickView = new QuickView<TestObj>("id", data) {
@@ -1613,12 +1605,12 @@ public class QuickViewTest {
     }
 
     /**
-     * test for  {@link QuickViewBase#buildItem(id, index, model)}
+     * test for  {@link QuickViewBase#buildItem(String, long, IModel)} )}
      */
     @Test(groups = {"wicketTests"})
     public void buildItem_2() {
         IDataProvider data = Mockito.mock(IDataProvider.class);
-        IModel model=Mockito.mock(IModel.class);
+        IModel model = Mockito.mock(IModel.class);
 
         final Item item = Mockito.mock(Item.class);
         QuickView<TestObj> quickView = new QuickView<TestObj>("id", data) {
@@ -1646,7 +1638,7 @@ public class QuickViewTest {
 
 
     /**
-     * test for  {@link QuickViewBase#buildItem(index,object)}
+     * test for  {@link QuickViewBase#buildItem(long, Object)}
      */
     @Test(groups = {"wicketTests"})
     public void buildItem_3() {
@@ -1874,7 +1866,7 @@ public class QuickViewTest {
 
 
     /*
-      *start index=0
+     *start index=0
      */
     @Test(groups = {"wicketTests"})
     public void buildItems_1() {
@@ -1898,7 +1890,7 @@ public class QuickViewTest {
 
     /*
      *start index=10
-    */
+     */
     @Test(groups = {"wicketTests"})
     public void buildItems_2() {
         List<Integer> data = data(10);
@@ -1920,7 +1912,7 @@ public class QuickViewTest {
     }
 
     /*
-      *start index=0
+     *start index=0
      */
     @Test(groups = {"wicketTests"})
     public void buildItemsList_1() {
@@ -1945,7 +1937,7 @@ public class QuickViewTest {
 
     /*
      *start index=10
-    */
+     */
     @Test(groups = {"wicketTests"})
     public void buildItemsList_2() {
         List<Integer> data = data(10);
@@ -1956,7 +1948,7 @@ public class QuickViewTest {
             }
         };
         Iterator<? extends Integer> dataIterator = dataProvider.iterator(5, 2);
-        List<Item<Integer>> items= quickView.buildItemsList(10, dataIterator);
+        List<Item<Integer>> items = quickView.buildItemsList(10, dataIterator);
         Item<Integer> item1 = items.get(0);
         Item<Integer> item2 = items.get(1);
         Assert.assertEquals(item1.getIndex(), 10);
