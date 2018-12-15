@@ -40,9 +40,8 @@ public abstract class QuickView<T> extends QuickViewBase<T> {
 
     /**
      *
-     *
-     * @param id
-     * @param dataProvider
+     * @param id component id
+     * @param dataProvider data provider
      *  @param itemsPerRequest items to be constructed per Page or request
      */
     public QuickView(String id, IDataProvider<T> dataProvider, IQuickReuseStrategy reuseStrategy, int itemsPerRequest) {
@@ -53,9 +52,9 @@ public abstract class QuickView<T> extends QuickViewBase<T> {
 
     /**
      *
-     * @param id
-     * @param dataProvider
-     *
+     * @param id component id
+     * @param dataProvider data provider
+     * @param reuseStrategy strategy that tells how to reuse elements
      */
     public QuickView(String id, IDataProvider<T> dataProvider,IQuickReuseStrategy reuseStrategy) {
         super(id, dataProvider, reuseStrategy);
@@ -63,14 +62,21 @@ public abstract class QuickView<T> extends QuickViewBase<T> {
 
     /**
      *
-     * @param id
-     * @param dataProvider
+     * @param id component id
+     * @param dataProvider data provider
      *
      */
     public QuickView(String id, IDataProvider<T> dataProvider) {
         super(id, dataProvider,new DefaultQuickReuseStrategy());
     }
 
+    /**
+     *
+     * @param id component id
+     * @param dataProvider data provider
+     * @param itemsPerRequest items created per request ,if used with PagingNavigator/AjaxPagingNavigator then it's the items per page
+     *
+     */
     public QuickView(String id, IDataProvider<T> dataProvider, int itemsPerRequest) {
         super(id, dataProvider, new DefaultQuickReuseStrategy());
         setItemsPerRequest(itemsPerRequest);
@@ -80,7 +86,7 @@ public abstract class QuickView<T> extends QuickViewBase<T> {
      *
      * @param id
      * @param dataProvider
-     *  @param itemsPerRequest items to be constructed per Page or request
+     * @param itemsPerRequest items created per request ,if used with PagingNavigator/AjaxPagingNavigator then it's the items per page
      */
     public QuickView(String id, IDataProvider<T> dataProvider, IQuickReuseStrategy reuseStrategy, int itemsPerRequest,Component start ,Component end) {
         super(id, dataProvider, reuseStrategy,start,end);
@@ -92,6 +98,8 @@ public abstract class QuickView<T> extends QuickViewBase<T> {
      *
      * @param id
      * @param dataProvider
+     * @param start start of the boundary where elements will be placed
+     * @end end of the boundary,beyond which elements will not be placed
      *
      */
     public QuickView(String id, IDataProvider<T> dataProvider,IQuickReuseStrategy reuseStrategy,Component start ,Component end) {
@@ -102,12 +110,23 @@ public abstract class QuickView<T> extends QuickViewBase<T> {
      *
      * @param id
      * @param dataProvider
+     * @param start start of the boundary where elements will be placed
+     * @end end of the boundary,beyond which elements will not be placed
      *
      */
     public QuickView(String id, IDataProvider<T> dataProvider,Component start,Component end) {
         super(id, dataProvider,new DefaultQuickReuseStrategy(),start,end);
     }
 
+    /**
+     *
+     * @param id component id
+     * @param dataProvider data provider
+     * @param itemsPerRequest items created per request ,if used with PagingNavigator/AjaxPagingNavigator then it's the items per page
+     * @param start start of the boundary where elements will be placed
+     * @end end of the boundary,beyond which elements will not be placed
+     *
+     */
     public QuickView(String id, IDataProvider<T> dataProvider, int itemsPerRequest,Component start ,Component end) {
         super(id, dataProvider, new DefaultQuickReuseStrategy(),start,end);
         setItemsPerRequest(itemsPerRequest);

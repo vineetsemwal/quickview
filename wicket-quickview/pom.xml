@@ -45,7 +45,7 @@ Copyright 2012 Vineet Semwal
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-core</artifactId>
-
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -76,6 +76,7 @@ Copyright 2012 Vineet Semwal
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>

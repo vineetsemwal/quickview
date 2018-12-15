@@ -16,9 +16,8 @@
 package com.aplombee;
 
 import org.apache.wicket.*;
-import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.repeater.IItemFactory;
@@ -28,8 +27,6 @@ import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.visit.IVisit;
-import org.apache.wicket.util.visit.IVisitor;
 
 import java.util.*;
 
@@ -523,6 +520,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         currentPage = page;
     }
 
+
     public AjaxRequestTarget getAjaxRequestTarget() {
         Optional<AjaxRequestTarget> target = RequestCycle.get().find(AjaxRequestTarget.class);
         if (target.isPresent()) {
@@ -531,24 +529,17 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         return null;
     }
 
+    public IPartialPageRequestHandler findPartialPageRequestHandler(final Class<? extends IPartialPageRequestHandler> requestHandlerClass) {
+        Optional<? extends IPartialPageRequestHandler> requestHandlerOptional = RequestCycle.get().find(requestHandlerClass);
+        if (requestHandlerOptional.isPresent()) {
+            return requestHandlerOptional.get();
+        }
+        return null;
+    }
+
 
     protected abstract void populate(Item<T> item);
 
-
-    public static class ChildVisitor implements IVisitor<Component, Boolean> {
-
-        private Component searchFor;
-
-        public ChildVisitor(Component searchFor) {
-            this.searchFor = searchFor;
-        }
-
-        public void component(Component c, IVisit<Boolean> visit) {
-            if (searchFor.getPageRelativePath().equals(c.getPageRelativePath())) {
-                visit.stop(true);
-            }
-        }
-    }
 
     /**
      * don't override,it's for internal use
@@ -561,18 +552,32 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     @Override
     public MarkupContainer add(final Component... components) {
         simpleAdd(components);
-        if (!isAjax()) {
+        Synchronizer synchronizer = getSynchronizer();
+        if (synchronizer == null) {
             return this;
         }
 
+        _contributeAddAtEndScripts(components);
+
+        synchronizer.add(components);
+        //
+        //submit manually since request handler not for AjaxRequestTarget
+        //
+        if (!synchronizer.isRequestHandlerAjaxRequestTarget()) {
+            synchronizer.submit();
+        }
+        return this;
+    }
+
+
+    protected void _contributeAddAtEndScripts(final Component... components) {
+        Synchronizer synchronizer = getSynchronizer();
         for (int i = 0; i < components.length; i++) {
             MarkupContainer parent = _getParent();
-            String script = getRepeaterUtil().append((Item) components[i], parent, start, end);
-            getSynchronizer().getPrependScripts().add(script);
+            String script = getRepeaterUtil().append((Item) components[i], parent, getStart(), getEnd());
+            synchronizer.prependScript(script);
         }
-        getSynchronizer().add(components);
 
-        return this;
     }
 
     /**
@@ -642,10 +647,18 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     @Override
     public MarkupContainer remove(final Component component) {
         Args.notNull(component, "component can't be null");
-        if (isAjax()) {
+        Synchronizer synchronizer = getSynchronizer();
+        if (synchronizer != null) {
             String removeScript = getRepeaterUtil().removeItem(component, _getParent());
-            getSynchronizer().getPrependScripts().add(removeScript);
+            synchronizer.prependScript(removeScript);
+            //
+            //if request handler is not for AjaxRequestTarget then manual submit
+            //
+            if (!synchronizer.isRequestHandlerAjaxRequestTarget()) {
+                synchronizer.submit();
+            }
         }
+
         return simpleRemove(component);
 
     }
@@ -676,14 +689,30 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         if (!isAjax()) {
             return this;
         }
+        Synchronizer synchronizer = getSynchronizer();
+        if (synchronizer == null) {
+            return this;
+        }
+        _contributeAddAtStartScripts(components);
+        synchronizer.add(components);
+        //
+        //submit manually if request handler is not AjaxRequestTarget
+        //
+        if (!synchronizer.isRequestHandlerAjaxRequestTarget()) {
+            synchronizer.submit();
+        }
+        return this;
+    }
 
+    protected void _contributeAddAtStartScripts(final Component... components) {
+        Synchronizer synchronizer = getSynchronizer();
         for (int i = components.length - 1; i >= 0; i--) {
             MarkupContainer parent = _getParent();
-            String updateBeforeScript = getRepeaterUtil().prepend((Item) components[i], parent, start, end);
-            getSynchronizer().getPrependScripts().add(updateBeforeScript);
+            String updateBeforeScript = getRepeaterUtil().prepend((Item) components[i], parent,
+                    getStart(), getEnd());
+            synchronizer.prependScript(updateBeforeScript);
         }
-        getSynchronizer().add(components);
-        return this;
+
     }
 
 
@@ -693,8 +722,11 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      */
     public void scrollToBottom() {
         if (isAjax()) {
-            AjaxRequestTarget target = this.getAjaxRequestTarget();
-            target.appendJavaScript(getRepeaterUtil().scrollToBottom(this));
+            Synchronizer synchronizer = getSynchronizer();
+            if (synchronizer == null) {
+                return;
+            }
+            synchronizer.appendScript(getRepeaterUtil().scrollToBottom(this));
         }
     }
 
@@ -704,8 +736,11 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      */
     public void scrollToTop() {
         if (isAjax()) {
-            AjaxRequestTarget target = this.getAjaxRequestTarget();
-            target.appendJavaScript(getRepeaterUtil().scrollToTop(this));
+            Synchronizer synchronizer = getSynchronizer();
+            if (synchronizer == null) {
+                return;
+            }
+            synchronizer.appendScript(getRepeaterUtil().scrollToTop(this));
         }
     }
 
@@ -714,10 +749,29 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      * this works when parent has scroll specified in css by defining overflow-y property
      */
     public void scrollTo(int height) {
-        if (isAjax()) {
-            AjaxRequestTarget target = this.getAjaxRequestTarget();
-            target.appendJavaScript(getRepeaterUtil().scrollTo(this, height));
+        Synchronizer synchronizer = getSynchronizer();
+        if (synchronizer != null) {
+            synchronizer.appendScript(getRepeaterUtil().scrollTo(this, height));
         }
+    }
+
+    /**
+     * register partial page request handler class,for eg. for websocket
+     * register(IWebSocketRequestHandler.class) ,
+     *
+     * NO need to register {@link AjaxRequestTarget}
+     * quickview is already aware of that
+     *
+     * @param requestHandler
+     */
+    public void register(final Class<? extends IPartialPageRequestHandler> requestHandler) {
+        //
+        //request handler is for AjaxRequestTarget then don't register
+        //
+        if (AjaxRequestTarget.class.isAssignableFrom(requestHandler)) {
+            return;
+        }
+        getPartialRequestHandlers().add(requestHandler);
     }
 
     /**
@@ -727,135 +781,63 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      *
      * @return Synchronizer
      */
-
     public Synchronizer getSynchronizer() {
-        AjaxRequestTarget target = getAjaxRequestTarget();
-        if (target == null) {
+        if (!isAjax()) {
             return null;
         }
-        Synchronizer listener = (Synchronizer) getRequestCycle().getMetaData(synchronizerKey);
-        if (listener == null) {
-            listener = new Synchronizer(_getParent());
-            getRequestCycle().setMetaData(synchronizerKey, listener);
-            target.addListener(listener);
+        Synchronizer synchronizer = getRequestCycle().getMetaData(SYNCHRONIZER_KEY);
+        if (synchronizer != null) {
+            return synchronizer;
         }
 
-        return listener;
+        AjaxRequestTarget target = getAjaxRequestTarget();
+        if (target != null) {
+            DefaultSynchronizer defaultSynchronizer = newDefaultSynchronizer();
+            synchronizer=defaultSynchronizer;
+            target.addListener(defaultSynchronizer);
+            getRequestCycle().setMetaData(SYNCHRONIZER_KEY, synchronizer);
+            return synchronizer;
+        }
+        synchronizer = nonARTSynchronizer();
+        getRequestCycle().setMetaData(SYNCHRONIZER_KEY, synchronizer);
+        return synchronizer;
     }
 
-    /**
-     * Synchronizer basically adds components(repeater's items) and scripts to the the AjaxRequestTarget after
-     * checking parent is not added to AjaxRequestTarget .If parent is added scripts and
-     * items are not added to the AjaxRequestTarget
-     *
-     * @author Vineet Semwal
-     */
-    public static class Synchronizer implements AjaxRequestTarget.IListener {
-        private List<String> prependScripts = new ArrayList<String>();
-        /**
-         * mostly contains items od repeater that will be added to AjaxRequestTarget
-         */
-        private List<Component> components = new ArrayList<Component>();
-
-        public List<String> getPrependScripts() {
-            return prependScripts;
-        }
-
-        private List<String> appendScripts = new ArrayList<String>();
-
-        public List<String> getAppendScripts() {
-            return appendScripts;
-        }
-
-        public List<Component> getComponents() {
-            return components;
-        }
-
-        private MarkupContainer searchFor;
-
-        public Synchronizer(MarkupContainer searchFor) {
-            Args.notNull(searchFor, "searchFor");
-            this.searchFor = searchFor;
-        }
-
-        @Override
-        public void onBeforeRespond(Map<String, Component> map, AjaxRequestTarget target) {
-            if (!isParentAddedInAjaxRequestTarget(target)) {
-                for (String script : prependScripts) {
-                    target.prependJavaScript(script);
-                }
-
-                for (String script : appendScripts) {
-                    target.appendJavaScript(script);
-                }
-
-                target.add(components.toArray(new Component[0]));
-            }
-        }
-
-        public void add(Component... cs) {
-            for (final Component component : cs) {
-                Args.notNull(component, "component");
-                components.add(component);
-            }
-        }
-
-        @Override
-        public void onAfterRespond(Map<String, Component> map, AjaxRequestTarget.IJavaScriptResponse response) {
-        }
-
-        @Override
-        public void updateAjaxAttributes(AbstractDefaultAjaxBehavior behavior, AjaxRequestAttributes attributes) {
-        }
-
-        /**
-         * checks if parent of repeater is added to the components added to
-         * A.R.T(ajaxrequesttarget)
-         *
-         * @return true if parent of repeatingview is added to A.R.T
-         */
-        public boolean isParentAddedInAjaxRequestTarget(AjaxRequestTarget target) {
-            Collection<? extends Component> cs = target.getComponents();
-            if (cs == null) {
-                return false;
-            }
-            if (cs.isEmpty()) {
-                return false;
-            }
-            //if repeater's parent is added to component return true
-            if (cs.contains(searchFor)) {
-                return true;
-            }
-            //search repeater's parent in children of components added in A.R.T
-            boolean found = false;
-            for (Component c : cs) {
-                if (c instanceof MarkupContainer) {
-                    MarkupContainer mc = (MarkupContainer) c;
-                    Boolean result = addNewChildVisitor(mc, searchFor);
-                    if (Boolean.TRUE.equals(result)) {
-                        found = true;
-                        break;
-                    }
-                }
-            }
-            return found;
-        }
-
-        /**
-         * @param parent    parent on which ChildVisitor is added
-         * @param searchFor ,searchFor is the component which visitor search for
-         * @return true if searchFor is found
-         */
-        protected Boolean addNewChildVisitor(MarkupContainer parent, Component searchFor) {
-            return parent.visitChildren(new ChildVisitor(searchFor));
-        }
-
+    protected DefaultSynchronizer newDefaultSynchronizer(){
+        return new DefaultSynchronizer(_getParent(),getAjaxRequestTarget());
     }
 
+    public Synchronizer nonARTSynchronizer() {
+        for (Class<? extends IPartialPageRequestHandler> requestHandlerClass : getPartialRequestHandlers()) {
+            Optional<? extends IPartialPageRequestHandler> requestHandlerOptional = getRequestCycle().find(requestHandlerClass);
+            if (requestHandlerOptional.isPresent()) {
+                Synchronizer wrap = new Synchronizer(_getParent(), requestHandlerOptional.get());
+                return wrap;
+            }
+        }
+        return null;
+    }
+
+    private Set<Class<? extends IPartialPageRequestHandler>> partialRequestHandlers = new HashSet<>();
+
+    public Set<Class<? extends IPartialPageRequestHandler>> getPartialRequestHandlers() {
+        return partialRequestHandlers;
+    }
+
+
     /**
-     * key corresponding to AjaxRequestTarget.IListener in request metadata
+     * key for {@link Synchronizer} in request metadata
      */
-    private MetaDataKey<AjaxRequestTarget.IListener> synchronizerKey = new MetaDataKey<AjaxRequestTarget.IListener>() {
+    protected final MetaDataKey<Synchronizer> SYNCHRONIZER_KEY = new MetaDataKey<Synchronizer>() {
+        @Override
+        public int hashCode() {
+            return QuickViewBase.this.getId().hashCode();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return obj==this;
+        }
     };
 
     @Override
