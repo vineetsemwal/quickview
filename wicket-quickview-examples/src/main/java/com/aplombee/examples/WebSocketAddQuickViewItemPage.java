@@ -16,12 +16,9 @@
  */
 package com.aplombee.examples;
 
-import com.aplombee.ItemsNavigationStrategy;
 import com.aplombee.QuickView;
 import com.aplombee.ReuseAllStrategy;
 import org.apache.wicket.Component;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -29,6 +26,11 @@ import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
+import org.apache.wicket.protocol.ws.api.IWebSocketRequestHandler;
+import org.apache.wicket.protocol.ws.api.WebSocketBehavior;
+import org.apache.wicket.protocol.ws.api.WebSocketRequestHandler;
+import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
+import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,15 +38,12 @@ import java.util.List;
 /**
  * @author Vineet Semwal
  */
-public class AjaxLinkPage extends WebPage {
+public class WebSocketAddQuickViewItemPage extends WebPage {
     private List<Integer> list = new ArrayList<Integer>();
 
-    public AjaxLinkPage() {
-        for (int i = 0; i < 4; i++) {
-            list.add(i);
-        }
-    }
+    public WebSocketAddQuickViewItemPage() {
 
+    }
 
     @Override
     protected void onInitialize() {
@@ -52,12 +51,6 @@ public class AjaxLinkPage extends WebPage {
         IDataProvider<Integer> data = new ListDataProvider<Integer>(list);
         WebMarkupContainer numbers = new WebMarkupContainer("numbers");   //parent for quickview
         numbers.setOutputMarkupId(true);  //needed for ajax
-        //
-        //boundaries that you may or may not create for quickview but creating it
-        //gives the benefit that quickview will only work inside boundaries
-        //and you can add markup or other components outside boundaries ,without it
-        //quickview can be the only child of parent
-        //
         Component start,end;
         numbers.add(start=new EmptyPanel("start").setOutputMarkupPlaceholderTag(true));
         numbers.add(end=new EmptyPanel("end").setOutputMarkupPlaceholderTag(true)) ;
@@ -68,36 +61,31 @@ public class AjaxLinkPage extends WebPage {
                 item.add(new Label("display", item.getModel()));
             }
         } ;
+        //
+        //register request handler that quickview should be aware of
+        //
+        number.register(IWebSocketRequestHandler.class);
         numbers.add(number);
         add(numbers);
 
-
-        AjaxLink addLink = new AjaxLink<Void>("addLink") {
-
+        add(new WebSocketBehavior() {
             @Override
-            public void onClick(AjaxRequestTarget target) {
-                int newObject=list.get(list.size()-1) +1;
-                list.add(newObject);
-                number.addNewItems(newObject);  //just enough to create a new row at last
-                 }
+            protected void onConnect(ConnectedMessage message) {
+                super.onConnect(message);
+                WicketApplication.get().addIncrementConnectMessage(message);
 
-        };
-        addLink.setOutputMarkupPlaceholderTag(true);
-        add(addLink);
-
-
-        AjaxLink addAtStartLink = new AjaxLink<Void>("addAtStartLink") {
-
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                int newObject=list.get(0)-1;
-                list.add(0,newObject);
-                number.addNewItemsAtStart(newObject);  //just enough to create a new row at start
             }
 
-        };
-        addAtStartLink.setOutputMarkupPlaceholderTag(true);
-        add(addAtStartLink);
+            @Override
+            protected void onPush(WebSocketRequestHandler handler, IWebSocketPushMessage message) {
+                super.onPush(handler, message);
+                if(message instanceof CounterMessage){
+                    CounterMessage counterMessage=(CounterMessage)message;
+                    number.addNewItems(counterMessage.getCounter());
+                }
+            }
+        });
+
 
     }
 

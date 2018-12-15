@@ -53,6 +53,15 @@ Copyright 2012 Vineet Semwal
             <artifactId>wicket-quickview</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-native-websocket-javax</artifactId>
+        </dependency>
+
+
+
+
         <!--  WICKET DEPENDENCIES -->
 
         <!-- OPTIONAL DEPENDENCY
@@ -83,36 +92,34 @@ Copyright 2012 Vineet Semwal
             <scope>test</scope>
         </dependency>
 
-        <!--  JETTY DEPENDENCIES FOR TESTING  -->
 
-        <!--  JETTY DEPENDENCIES FOR TESTING  -->
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-webapp</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-util</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-jmx</artifactId>
-            <scope>test</scope>
+            <version>${jetty9.version}</version>
+            <scope>runtime</scope>
         </dependency>
 
         <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-core</artifactId>
-            <scope>compile</scope>
-            <version>${wicket.version}</version>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-webapp</artifactId>
+            <version>${jetty9.version}</version>
+            <scope>runtime</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <version>${jetty9.version}</version>
+            <artifactId>jetty-jmx</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jetty.websocket</groupId>
+            <version>${jetty9.version}</version>
+            <artifactId>javax-websocket-server-impl</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
 
     </dependencies>
     <build>

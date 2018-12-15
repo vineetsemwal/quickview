@@ -55,6 +55,13 @@ public class HomePage extends WebPage {
         BookmarkablePageLink gvAjaxLink=new BookmarkablePageLink("gvAjaxLink",QuickGridViewWithAjaxLink.class);
         add(gvAjaxLink);
 
+        BookmarkablePageLink addItemSocketExampleLink=new BookmarkablePageLink("addItemSocket", WebSocketAddQuickViewItemPage.class);
+        add(addItemSocketExampleLink);
 
+        BookmarkablePageLink removeItemSocketLink=new BookmarkablePageLink("removeItemSocket",WebSocketRemoveQuickViewItemPage.class);
+        add(removeItemSocketLink);
+
+        BookmarkablePageLink addGridItemSocketLink=new BookmarkablePageLink("addGridItemSocket",WebSocketAddQuickGridViewItemPage.class);
+        add(addGridItemSocketLink);
     }
 }

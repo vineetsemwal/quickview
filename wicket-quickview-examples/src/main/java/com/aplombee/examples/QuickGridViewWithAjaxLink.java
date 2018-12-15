@@ -80,7 +80,7 @@ public class QuickGridViewWithAjaxLink extends WebPage {
                 int newObject=list.get(list.size()-1) +1;
                 list.add( newObject);
                 int newObject2=list.get(list.size()-1) +1;
-                list.add( newObject2);
+                list.add(newObject2);
                 List<Integer>newOnes=new ArrayList<Integer>();
                 newOnes.add(newObject);
                 newOnes.add(newObject2);
