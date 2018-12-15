@@ -60,16 +60,32 @@ Copyright 2012 Vineet Semwal
             <scope>test</scope>
         </dependency>
 
+
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <scope>provided</scope>
+            <artifactId>log4j-over-slf4j</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <scope>provided</scope>
+            <scope>test</scope>
+        </dependency>
+
+
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <scope>test</scope>
         </dependency>
 
 
@@ -77,7 +93,7 @@ Copyright 2012 Vineet Semwal
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <scope>provided</scope>
+            <scope>test</scope>
         </dependency>
 
         <dependency>

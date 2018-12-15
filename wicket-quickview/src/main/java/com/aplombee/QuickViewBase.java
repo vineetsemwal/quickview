@@ -758,7 +758,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     /**
      * register partial page request handler class,for eg. for websocket
      * register(IWebSocketRequestHandler.class) ,
-     *
+     * <p>
      * NO need to register {@link AjaxRequestTarget}
      * quickview is already aware of that
      *
@@ -785,7 +785,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         if (!isAjax()) {
             return null;
         }
-        Synchronizer synchronizer = getRequestCycle().getMetaData(SYNCHRONIZER_KEY);
+        Synchronizer synchronizer = _getRequestMetaData(SYNCHRONIZER_KEY);
         if (synchronizer != null) {
             return synchronizer;
         }
@@ -793,18 +793,26 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         AjaxRequestTarget target = getAjaxRequestTarget();
         if (target != null) {
             DefaultSynchronizer defaultSynchronizer = newDefaultSynchronizer();
-            synchronizer=defaultSynchronizer;
+            synchronizer = defaultSynchronizer;
             target.addListener(defaultSynchronizer);
-            getRequestCycle().setMetaData(SYNCHRONIZER_KEY, synchronizer);
+            _setRequestMetaData(SYNCHRONIZER_KEY, synchronizer);
             return synchronizer;
         }
         synchronizer = nonARTSynchronizer();
-        getRequestCycle().setMetaData(SYNCHRONIZER_KEY, synchronizer);
+        _setRequestMetaData(SYNCHRONIZER_KEY, synchronizer);
         return synchronizer;
     }
 
-    protected DefaultSynchronizer newDefaultSynchronizer(){
-        return new DefaultSynchronizer(_getParent(),getAjaxRequestTarget());
+    protected<T> void _setRequestMetaData(final MetaDataKey<T>key,T value){
+        getRequestCycle().setMetaData(key,value);
+    }
+
+    protected  <T> T _getRequestMetaData(final MetaDataKey<T> key) {
+        return getRequestCycle().getMetaData(key);
+    }
+
+    protected DefaultSynchronizer newDefaultSynchronizer() {
+        return new DefaultSynchronizer(_getParent(), getAjaxRequestTarget());
     }
 
     public Synchronizer nonARTSynchronizer() {
@@ -836,7 +844,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
 
         @Override
         public boolean equals(Object obj) {
-            return obj==this;
+            return obj == this;
         }
     };
 

@@ -1525,7 +1525,7 @@ public class QuickViewTest {
         Component start = Mockito.mock(Component.class);
         Component end = Mockito.mock(Component.class);
         QuickView<Integer> quickView = new QuickView<Integer>(
-                "quickview",dataProvider,start,end) {
+                "quickview", dataProvider, start, end) {
             @Override
             protected void populate(Item item) {
             }
@@ -1535,7 +1535,7 @@ public class QuickViewTest {
         Item component1 = Mockito.mock(Item.class);
         Item component2 = Mockito.mock(Item.class);
         Item component3 = Mockito.mock(Item.class);
-         MarkupContainer parent = Mockito.mock(MarkupContainer.class);
+        MarkupContainer parent = Mockito.mock(MarkupContainer.class);
         Mockito.doReturn(parent).when(spy)._getParent();
         Component[] components = {component1, component2, component3};
         String script1 = "script1", script2 = "script2", script3 = "script3";
@@ -1560,7 +1560,6 @@ public class QuickViewTest {
     }
 
 
-
     @Test(groups = {"wicketTests"})
     public void testContributeAddAtStartScripts_1() {
         List<Integer> data = data(10);
@@ -1568,7 +1567,7 @@ public class QuickViewTest {
         Component start = Mockito.mock(Component.class);
         Component end = Mockito.mock(Component.class);
         QuickView<Integer> quickView = new QuickView<Integer>(
-                "quickview",dataProvider,start,end) {
+                "quickview", dataProvider, start, end) {
             @Override
             protected void populate(Item item) {
             }
@@ -1606,24 +1605,24 @@ public class QuickViewTest {
      * synchronizer exists in requestcycle
      */
     @Test(groups = {"wicketTests"})
-    public void testGetSynchronizer_1(){
+    public void testGetSynchronizer_1() {
+
         List<Integer> data = data(10);
         IDataProvider<Integer> dataProvider = new ListDataProvider<Integer>(data);
         Component start = Mockito.mock(Component.class);
         Component end = Mockito.mock(Component.class);
         QuickView<Integer> quickView = new QuickView<Integer>(
-                "quickview",dataProvider,start,end) {
+                "quickview", dataProvider, start, end) {
             @Override
             protected void populate(Item item) {
             }
         };
-
         QuickView<Integer> spy = Mockito.spy(quickView);
-        Synchronizer synchronizer=Mockito.mock(Synchronizer.class);
-        tester.getRequestCycle().setMetaData(spy.SYNCHRONIZER_KEY,synchronizer);
+        Synchronizer synchronizer = Mockito.mock(Synchronizer.class);
+        Mockito.doReturn(synchronizer).when(spy)._getRequestMetaData(spy.SYNCHRONIZER_KEY);
         Mockito.doReturn(true).when(spy).isAjax();
-        Synchronizer result= spy.getSynchronizer();
-        Assert.assertTrue(result==synchronizer);
+        Synchronizer result = spy.getSynchronizer();
+        Assert.assertEquals(result, synchronizer);
     }
 
 
@@ -1632,26 +1631,27 @@ public class QuickViewTest {
      * and request handler NOT AjaxRequestTarget based
      */
     @Test(groups = {"wicketTests"})
-    public void testGetSynchronizer_2(){
+    public void testGetSynchronizer_2() {
         List<Integer> data = data(10);
         IDataProvider<Integer> dataProvider = new ListDataProvider<Integer>(data);
         Component start = Mockito.mock(Component.class);
         Component end = Mockito.mock(Component.class);
         QuickView<Integer> quickView = new QuickView<Integer>(
-                "quickview",dataProvider,start,end) {
+                "quickview", dataProvider, start, end) {
             @Override
             protected void populate(Item item) {
             }
         };
 
         QuickView<Integer> spy = Mockito.spy(quickView);
-        Synchronizer synchronizer=Mockito.mock(Synchronizer.class);
+        Synchronizer synchronizer = Mockito.mock(Synchronizer.class);
         Mockito.doReturn(true).when(spy).isAjax();
+        Mockito.doReturn(null).when(spy)._getRequestMetaData(spy.SYNCHRONIZER_KEY);
         Mockito.doReturn(synchronizer).when(spy).nonARTSynchronizer();
-        Synchronizer result= spy.getSynchronizer();
-        Assert.assertTrue(result==synchronizer);
-        Synchronizer fetchedFromRequestCycle=tester.getRequestCycle().getMetaData(spy.SYNCHRONIZER_KEY);
-        Assert.assertTrue(fetchedFromRequestCycle==synchronizer);
+        Mockito.doNothing().when(spy)._setRequestMetaData(spy.SYNCHRONIZER_KEY,synchronizer);
+        Synchronizer result = spy.getSynchronizer();
+        Assert.assertEquals(result, synchronizer);
+        Mockito.verify(spy)._setRequestMetaData(spy.SYNCHRONIZER_KEY,synchronizer);
     }
 
     /**
@@ -1659,37 +1659,38 @@ public class QuickViewTest {
      * and request handler is AjaxRequestTarget based
      */
     @Test(groups = {"wicketTests"})
-    public void testGetSynchronizer_3(){
+    public void testGetSynchronizer_3() {
         List<Integer> data = data(10);
         IDataProvider<Integer> dataProvider = new ListDataProvider<Integer>(data);
         Component start = Mockito.mock(Component.class);
         Component end = Mockito.mock(Component.class);
         QuickView<Integer> quickView = new QuickView<Integer>(
-                "quickview",dataProvider,start,end) {
+                "quickview", dataProvider, start, end) {
             @Override
             protected void populate(Item item) {
             }
         };
-        AjaxRequestTarget target=Mockito.mock(AjaxRequestTarget.class);
+        AjaxRequestTarget target = Mockito.mock(AjaxRequestTarget.class);
         QuickView<Integer> spy = Mockito.spy(quickView);
         Mockito.doReturn(target).when(spy).getAjaxRequestTarget();
-        DefaultSynchronizer synchronizer=Mockito.mock(DefaultSynchronizer.class);
+        DefaultSynchronizer synchronizer = Mockito.mock(DefaultSynchronizer.class);
         Mockito.doReturn(synchronizer).when(spy).newDefaultSynchronizer();
         Mockito.doReturn(true).when(spy).isAjax();
-        Synchronizer result= spy.getSynchronizer();
-        Assert.assertTrue(result==synchronizer);
-        Synchronizer fetchedFromRequestCycle=tester.getRequestCycle().getMetaData(spy.SYNCHRONIZER_KEY);
-        Assert.assertTrue(fetchedFromRequestCycle==synchronizer);
+        Mockito.doReturn(null).when(spy)._getRequestMetaData(spy.SYNCHRONIZER_KEY);
+        Mockito.doNothing().when(spy)._setRequestMetaData(spy.SYNCHRONIZER_KEY,synchronizer);
+        Synchronizer result = spy.getSynchronizer();
+        Assert.assertEquals(result ,synchronizer);
+        Mockito.verify(spy)._setRequestMetaData(spy.SYNCHRONIZER_KEY,synchronizer);
     }
 
     /**
      * case: IPartialPageRequestHandler is AjaxRequestTarget based
      */
     @Test(groups = {"wicketTests"})
-    public void testRegister_1(){
+    public void testRegister_1() {
         IDataProvider<Integer> dataProvider = new ListDataProvider<Integer>();
         QuickView<Integer> quickView = new QuickView<Integer>(
-                "quickview",dataProvider) {
+                "quickview", dataProvider) {
             @Override
             protected void populate(Item item) {
             }
@@ -1703,10 +1704,10 @@ public class QuickViewTest {
      * case :partial page request handler is not AjaxRequestTarget based
      */
     @Test(groups = {"wicketTests"})
-    public void testRegister_2(){
+    public void testRegister_2() {
         IDataProvider<Integer> dataProvider = new ListDataProvider<Integer>();
         QuickView<Integer> quickView = new QuickView<Integer>(
-                "quickview",dataProvider) {
+                "quickview", dataProvider) {
             @Override
             protected void populate(Item item) {
             }
@@ -1724,6 +1725,7 @@ public class QuickViewTest {
         Iterator<TestObj> it = mock(Iterator.class);
         return it;
     }
+
 
     List<Integer> data(int size) {
         List<Integer> list = new ArrayList<Integer>();
@@ -1745,7 +1747,7 @@ public class QuickViewTest {
 
     }
 
-    public  static interface ICustomRequestHandler extends IPartialPageRequestHandler {
+    public static interface ICustomRequestHandler extends IPartialPageRequestHandler {
 
     }
 

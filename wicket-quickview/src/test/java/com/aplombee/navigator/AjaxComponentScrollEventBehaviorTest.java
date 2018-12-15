@@ -18,7 +18,6 @@ package com.aplombee.navigator;
 
 import com.aplombee.QuickMockApplication;
 import com.aplombee.RepeaterUtil;
-import junit.framework.Assert;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
@@ -26,6 +25,7 @@ import org.apache.wicket.ajax.attributes.IAjaxCallListener;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**

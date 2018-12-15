@@ -41,6 +41,7 @@ Copyright 2012 Vineet Semwal
     </licenses>
     <properties>
         <slf4j.version>1.7.25</slf4j.version>
+        <log4j.version>2.6.2</log4j.version>
         <wicket.version>8.2.0</wicket.version>
         <servlet-api.version>3.1.0</servlet-api.version>
         <jetty9.version>9.4.12.v20180830</jetty9.version>
@@ -49,12 +50,12 @@ Copyright 2012 Vineet Semwal
     </properties>
 
     <developers>
-     <developer>
-      <email> vineetsemwal82@gmail.com  </email>
-       <name>vineetsemwal</name>
-       <organization>aplombee</organization>
-       <organizationUrl>http://aplombee.com</organizationUrl>
-     </developer>
+        <developer>
+            <email>vineetsemwal82@gmail.com</email>
+            <name>vineetsemwal</name>
+            <organization>aplombee</organization>
+            <organizationUrl>http://aplombee.com</organizationUrl>
+        </developer>
 
     </developers>
 
@@ -81,23 +82,40 @@ Copyright 2012 Vineet Semwal
 
 
             <!-- LOGGING DEPENDENCIES - LOG4J -->
+
             <dependency>
                 <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-log4j12</artifactId>
+                <artifactId>log4j-over-slf4j</artifactId>
                 <version>${slf4j.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-slf4j-impl</artifactId>
+                <version>${log4j.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>${log4j.version}</version>
+                <scope>test</scope>
             </dependency>
 
             <dependency>
                 <groupId>org.slf4j</groupId>
-                <version>${slf4j.version}</version>
                 <artifactId>slf4j-api</artifactId>
-            </dependency>
+                <version>${slf4j.version}</version>
+                <scope>test</scope>
+             </dependency>
 
 
             <dependency>
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
-                <version>6.4</version>
+                <version>6.14.3</version>
                 <scope>test</scope>
             </dependency>
 
@@ -150,7 +168,6 @@ Copyright 2012 Vineet Semwal
                 <artifactId>javax-websocket-server-impl</artifactId>
                 <scope>runtime</scope>
             </dependency>
-
 
 
         </dependencies>
@@ -216,7 +233,9 @@ Copyright 2012 Vineet Semwal
                             <value>${project.build.directory}/test-classes</value>
                         </systemProperty>
                     </systemProperties>
-                    <jettyXml>${project.basedir}/src/test/jetty/jetty.xml,${project.basedir}/src/test/jetty/jetty-ssl.xml,${project.basedir}/src/test/jetty/jetty-http.xml,${project.basedir}/src/test/jetty/jetty-https.xml</jettyXml>
+                    <jettyXml>
+                        ${project.basedir}/src/test/jetty/jetty.xml,${project.basedir}/src/test/jetty/jetty-ssl.xml,${project.basedir}/src/test/jetty/jetty-http.xml,${project.basedir}/src/test/jetty/jetty-https.xml
+                    </jettyXml>
                 </configuration>
             </plugin>
 
