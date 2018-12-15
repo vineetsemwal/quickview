@@ -40,7 +40,7 @@ Copyright 2012 Vineet Semwal
         </license>
     </licenses>
     <properties>
-        <slf4j.version>1.6.4</slf4j.version>
+        <slf4j.version>1.7.25</slf4j.version>
         <wicket.version>8.2.0</wicket.version>
         <servlet-api.version>3.1.0</servlet-api.version>
         <jetty9.version>9.4.12.v20180830</jetty9.version>
@@ -78,7 +78,6 @@ Copyright 2012 Vineet Semwal
                 <artifactId>wicket-native-websocket-javax</artifactId>
                 <version>${wicket.version}</version>
             </dependency>
-
 
 
             <!-- LOGGING DEPENDENCIES - LOG4J -->
