@@ -22,8 +22,8 @@ public class QuickMockApplication extends MockApplication {
         return lastAjaxRequestTarget;
     }
 
-    private QuickViewBase.Synchronizer synchronizer;
-    public QuickViewBase.Synchronizer getSynchronizer(){
+    private Synchronizer synchronizer;
+    public Synchronizer getSynchronizer(){
         return synchronizer;
     }
 

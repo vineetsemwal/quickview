@@ -41,6 +41,7 @@ Copyright 2012 Vineet Semwal
     </licenses>
     <properties>
         <slf4j.version>1.7.25</slf4j.version>
+        <log4j.version>2.6.2</log4j.version>
         <wicket.version>7.11.0</wicket.version>
         <jetty.version>9.2.19.v20160908</jetty.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -72,6 +73,13 @@ Copyright 2012 Vineet Semwal
             </dependency>
 
 
+            <dependency>
+                <groupId>org.apache.wicket</groupId>
+                <artifactId>wicket-native-websocket-javax</artifactId>
+                <version>${wicket.version}</version>
+            </dependency>
+
+
             <!-- LOGGING DEPENDENCIES - LOG4J -->
 
             <dependency>
@@ -99,6 +107,14 @@ Copyright 2012 Vineet Semwal
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+
+            <dependency>
+                <groupId>org.testng</groupId>
+                <artifactId>testng</artifactId>
+                <version>6.14.3</version>
                 <scope>test</scope>
             </dependency>
 
