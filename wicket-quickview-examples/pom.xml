@@ -18,7 +18,6 @@ Copyright 2012 Vineet Semwal
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-
     <parent>
         <groupId>com.aplombee</groupId>
         <artifactId>wicket-quickview-parent</artifactId>
@@ -53,6 +52,15 @@ Copyright 2012 Vineet Semwal
             <artifactId>wicket-quickview</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-native-websocket-javax</artifactId>
+        </dependency>
+
+
+
+
         <!--  WICKET DEPENDENCIES -->
 
         <!-- OPTIONAL DEPENDENCY
@@ -67,23 +75,21 @@ Copyright 2012 Vineet Semwal
 
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
 
-        <!--  JUNIT DEPENDENCY FOR TESTING -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>log4j-over-slf4j</artifactId>
+            <scope>compile</scope>
+        </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
 
-        <!--  JETTY DEPENDENCIES FOR TESTING  -->
 
         <!--  JETTY DEPENDENCIES FOR TESTING  -->
         <dependency>

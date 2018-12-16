@@ -52,6 +52,12 @@ public class AjaxLinkPage extends WebPage {
         IDataProvider<Integer> data = new ListDataProvider<Integer>(list);
         WebMarkupContainer numbers = new WebMarkupContainer("numbers");   //parent for quickview
         numbers.setOutputMarkupId(true);  //needed for ajax
+        //
+        //boundaries that you may or may not create for quickview but creating it
+        //gives the benefit that quickview will only work inside boundaries
+        //and you can add markup or other components outside boundaries ,without it
+        //quickview can be the only child of parent
+        //
         Component start,end;
         numbers.add(start=new EmptyPanel("start").setOutputMarkupPlaceholderTag(true));
         numbers.add(end=new EmptyPanel("end").setOutputMarkupPlaceholderTag(true)) ;
@@ -66,7 +72,7 @@ public class AjaxLinkPage extends WebPage {
         add(numbers);
 
 
-        AjaxLink addLink = new AjaxLink("addLink") {
+        AjaxLink addLink = new AjaxLink<Void>("addLink") {
 
             @Override
             public void onClick(AjaxRequestTarget target) {
@@ -80,7 +86,7 @@ public class AjaxLinkPage extends WebPage {
         add(addLink);
 
 
-        AjaxLink addAtStartLink = new AjaxLink("addAtStartLink") {
+        AjaxLink addAtStartLink = new AjaxLink<Void>("addAtStartLink") {
 
             @Override
             public void onClick(AjaxRequestTarget target) {

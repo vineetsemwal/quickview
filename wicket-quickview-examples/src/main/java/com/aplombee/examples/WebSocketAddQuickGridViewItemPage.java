@@ -19,13 +19,18 @@ package com.aplombee.examples;
 import com.aplombee.ItemsNavigationStrategy;
 import com.aplombee.QuickGridView;
 import org.apache.wicket.Component;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
+import org.apache.wicket.protocol.ws.api.IWebSocketRequestHandler;
+import org.apache.wicket.protocol.ws.api.WebSocketBehavior;
+import org.apache.wicket.protocol.ws.api.WebSocketRequestHandler;
+import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
+import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,25 +39,24 @@ import java.util.List;
  *
  * @author Vineet Semwal
  */
-public class QuickGridViewWithAjaxLinkAndBoundaries extends WebPage {
-    private List<Integer> list = new ArrayList<Integer>();
+public class WebSocketAddQuickGridViewItemPage extends WebPage {
+    private List<Integer> list = new ArrayList<>();
 
-    public QuickGridViewWithAjaxLinkAndBoundaries() {
-        for (int i = 0; i < 10; i++) {
-            list.add(i);
-        }
+    public WebSocketAddQuickGridViewItemPage() {
+
     }
 
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
+
         IDataProvider<Integer> data = new ListDataProvider<Integer>(list);
         WebMarkupContainer numbers = new WebMarkupContainer("numbers");   //parent for quickview
-        numbers.setOutputMarkupId(true);  //needed for ajax
+        numbers.setOutputMarkupPlaceholderTag(true);  //needed for ajax
         Component start, end;
-        numbers.add(start = new Label("start").setOutputMarkupPlaceholderTag(true));
-        numbers.add(end = new Label("end").setOutputMarkupPlaceholderTag(true));
+        numbers.add(start = new EmptyPanel("start").setOutputMarkupPlaceholderTag(true));
+        numbers.add(end = new EmptyPanel("end").setOutputMarkupPlaceholderTag(true));
 
         final QuickGridView<Integer> number = new QuickGridView<Integer>("number", data, new ItemsNavigationStrategy(), start, end) {
             @Override
@@ -68,46 +72,36 @@ public class QuickGridViewWithAjaxLinkAndBoundaries extends WebPage {
         number.setColumns(2);
         numbers.add(number);
         add(numbers);
+        //
+        //register partial page request handler
+        //
+        number.register(IWebSocketRequestHandler.class);
 
-        AjaxLink addLink = new AjaxLink<Void>("addLink") {
-
+        add(new WebSocketBehavior() {
             @Override
-            public void onClick(AjaxRequestTarget target) {
-                int newObject = list.get(list.size() - 1) + 1;
-                list.add(newObject);
-                int newObject2 = list.get(list.size() - 1) + 1;
-                list.add(newObject2);
-                List<Integer> newOnes = new ArrayList<Integer>();
-                newOnes.add(newObject);
-                newOnes.add(newObject2);
-                number.addRows(newOnes.iterator());//just enough to add new rows and corresponding cells
+            protected void onConnect(ConnectedMessage message) {
+                super.onConnect(message);
+                WicketApplication.get().addGridRowIncrementConnect(message);
 
             }
 
-        };
-        addLink.setOutputMarkupPlaceholderTag(true);
-        add(addLink);
-
-
-        AjaxLink addAtStartLink = new AjaxLink<Void>("addAtStartLink") {
-
             @Override
-            public void onClick(AjaxRequestTarget target) {
-                int newObject = list.get(0) - 1;
-                list.add(0, newObject);
-                int newObject2 = newObject - 1;
-                list.add(0, newObject2);
-                List<Integer> newOnes = new ArrayList<Integer>();
-                newOnes.add(newObject2);
-                newOnes.add(newObject);
-                number.addRowsAtStart(newOnes.iterator());//just enough to add new rows  and corresponding cells
+            protected void onPush(WebSocketRequestHandler handler, IWebSocketPushMessage message) {
+                super.onPush(handler, message);
+                if (message instanceof CounterMessage) {
+                    CounterMessage counterMessage = (CounterMessage) message;
+                    int newObject=counterMessage.getCounter();
+                    list.add( newObject);
+                    int newObject2=newObject+1;
+                    list.add(newObject2);
+                    List<Integer>newOnes=new ArrayList<>();
+                    newOnes.add(newObject);
+                    newOnes.add(newObject2);
+                    number.addRows(newOnes.iterator());//just enough to add new rows and respective cells
 
+                }
             }
-
-        };
-        addAtStartLink.setOutputMarkupPlaceholderTag(true);
-        add(addAtStartLink);
-
+        });
 
     }
 

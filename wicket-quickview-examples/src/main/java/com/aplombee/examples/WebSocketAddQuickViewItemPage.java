@@ -16,17 +16,21 @@
  */
 package com.aplombee.examples;
 
-import com.aplombee.ItemsNavigationStrategy;
 import com.aplombee.QuickView;
+import com.aplombee.ReuseAllStrategy;
 import org.apache.wicket.Component;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
+import org.apache.wicket.protocol.ws.api.IWebSocketRequestHandler;
+import org.apache.wicket.protocol.ws.api.WebSocketBehavior;
+import org.apache.wicket.protocol.ws.api.WebSocketRequestHandler;
+import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
+import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,63 +38,54 @@ import java.util.List;
 /**
  * @author Vineet Semwal
  */
-public class AjaxLinkPageWithBoundaries extends WebPage {
+public class WebSocketAddQuickViewItemPage extends WebPage {
     private List<Integer> list = new ArrayList<Integer>();
 
-    public AjaxLinkPageWithBoundaries() {
-        for (int i = 0; i < 4; i++) {
-            list.add(i);
-        }
-    }
+    public WebSocketAddQuickViewItemPage() {
 
+    }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
         IDataProvider<Integer> data = new ListDataProvider<Integer>(list);
         WebMarkupContainer numbers = new WebMarkupContainer("numbers");   //parent for quickview
-        Component start,end;
-        numbers.add(start=new Label("start").setOutputMarkupPlaceholderTag(true));
-        numbers.add(end=new Label("end").setOutputMarkupPlaceholderTag(true)) ;
-
         numbers.setOutputMarkupId(true);  //needed for ajax
-        final QuickView<Integer> number = new QuickView<Integer>("number", data, new ItemsNavigationStrategy(),start,end ) {
+        Component start,end;
+        numbers.add(start=new EmptyPanel("start").setOutputMarkupPlaceholderTag(true));
+        numbers.add(end=new EmptyPanel("end").setOutputMarkupPlaceholderTag(true)) ;
+
+        final QuickView<Integer> number = new QuickView<Integer>("number", data, new ReuseAllStrategy(),start,end ) {
             @Override
             protected void populate(Item<Integer> item) {
                 item.add(new Label("display", item.getModel()));
             }
-        };
+        } ;
+        //
+        //register request handler that quickview should be aware of
+        //
+        number.register(IWebSocketRequestHandler.class);
         numbers.add(number);
         add(numbers);
 
-
-        AjaxLink addLink = new AjaxLink<Void>("addLink") {
-
+        add(new WebSocketBehavior() {
             @Override
-            public void onClick(AjaxRequestTarget target) {
-                int newObject=list.get(list.size()-1) +1;
-                list.add(newObject);
-                number.addNewItems(newObject);  //just enough to create a new row at last
-                 }
+            protected void onConnect(ConnectedMessage message) {
+                super.onConnect(message);
+                WicketApplication.get().addIncrementConnectMessage(message);
 
-        };
-        addLink.setOutputMarkupPlaceholderTag(true);
-        add(addLink);
-
-
-        AjaxLink addAtStartLink = new AjaxLink<Void>("addAtStartLink") {
-
-
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                int newObject=list.get(0)-1;
-                list.add(0,newObject);
-                number.addNewItemsAtStart(newObject);  //just enough to create a new row at start
             }
 
-        };
-        addAtStartLink.setOutputMarkupPlaceholderTag(true);
-        add(addAtStartLink);
+            @Override
+            protected void onPush(WebSocketRequestHandler handler, IWebSocketPushMessage message) {
+                super.onPush(handler, message);
+                if(message instanceof CounterMessage){
+                    CounterMessage counterMessage=(CounterMessage)message;
+                    number.addNewItems(counterMessage.getCounter());
+                }
+            }
+        });
+
 
     }
 
