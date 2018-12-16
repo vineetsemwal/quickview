@@ -22,7 +22,7 @@ Copyright 2012 Vineet Semwal
     <groupId>com.aplombee</groupId>
     <artifactId>wicket-quickview-parent</artifactId>
     <packaging>pom</packaging>
-    <version>7.1.0</version>
+    <version>7.2.0</version>
     <name>quickview parent</name>
     <description>with quickview you can quickly add/remove new rows using ajax component without the need to re render
         the whole of it,it also works well with pagingnavigator/ajaxpagingnavigator
@@ -40,9 +40,9 @@ Copyright 2012 Vineet Semwal
         </license>
     </licenses>
     <properties>
-        <slf4j.version>1.6.4</slf4j.version>
-        <wicket.version>7.1.0</wicket.version>
-        <jetty.version>9.2.11.v20150529</jetty.version>
+        <slf4j.version>1.7.25</slf4j.version>
+        <wicket.version>7.11.0</wicket.version>
+        <jetty.version>9.2.19.v20160908</jetty.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <wtp.version>none</wtp.version>
     </properties>
@@ -73,23 +73,32 @@ Copyright 2012 Vineet Semwal
 
 
             <!-- LOGGING DEPENDENCIES - LOG4J -->
+
             <dependency>
                 <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-log4j12</artifactId>
+                <artifactId>log4j-over-slf4j</artifactId>
                 <version>${slf4j.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-slf4j-impl</artifactId>
+                <version>${log4j.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>${log4j.version}</version>
+                <scope>test</scope>
             </dependency>
 
             <dependency>
                 <groupId>org.slf4j</groupId>
-                <version>${slf4j.version}</version>
                 <artifactId>slf4j-api</artifactId>
-            </dependency>
-
-
-            <dependency>
-                <groupId>org.testng</groupId>
-                <artifactId>testng</artifactId>
-                <version>6.4</version>
+                <version>${slf4j.version}</version>
                 <scope>test</scope>
             </dependency>
 
