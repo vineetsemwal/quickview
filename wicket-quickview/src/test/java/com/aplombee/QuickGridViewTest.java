@@ -444,7 +444,7 @@ public class QuickGridViewTest {
         final int index = 345;
         Model<Integer> model = new Model<Integer>(object);
         Mockito.when(data.model(object)).thenReturn(model);
-        QuickGridView.CellItem actual = spy.buildCellItem(index, object);
+        QuickGridView.CellItem actual = spy.buildCellItem(index, new Model(object));
         Mockito.verify(spy, Mockito.times(1)).newCellItem(String.valueOf(childId), index, model);
         Mockito.verify(spy, Mockito.times(1)).populate(cell);
     }
@@ -993,7 +993,13 @@ public class QuickGridViewTest {
         Mockito.verify(target, Mockito.never()).prependJavaScript(call);
         Mockito.verify(target, Mockito.never()).add(row);
     }
-
+    /**
+     * cols=3
+     * 3 rows added in order
+     * row 1 added
+     * row 2 addedatstart
+     * row 3 added
+     */
     @Test(groups = {"wicketTests"})
     public void cells_1() {
         List<Integer> list = new ArrayList<Integer>();
@@ -1008,30 +1014,71 @@ public class QuickGridViewTest {
             }
         };
         grid.setColumns(3);
-        QuickGridView.CellItem cell1 = grid.buildCellItem(89780989, 10);
-        QuickGridView.RowItem rowItem = grid.buildRowItem("56", 0);
-        rowItem.getRepeater().add(cell1);
-        QuickGridView.CellItem cell2 = grid.buildCellItem(897980, 20);
-        rowItem.getRepeater().add(cell2);
-        QuickGridView.CellItem cell3 = grid.buildEmptyCellItem(98989);
-        rowItem.getRepeater().add(cell3);
-        grid.addRow(rowItem);
-        Iterator<? extends Component> rows = grid.getItems();
+        QuickGridView.CellItem row1Cell1 = grid.buildCellItem(10, new Model<>(100));
+        QuickGridView.RowItem rowItem1 = grid.buildRowItem("56", 0);
+        rowItem1.getRepeater().add(row1Cell1);
+        QuickGridView.CellItem row1Cell2 = grid.buildCellItem(11, new Model<>(109));
+        rowItem1.getRepeater().add(row1Cell2);
+        QuickGridView.CellItem row1Cell3 = grid.buildEmptyCellItem(11);
+        rowItem1.getRepeater().add(row1Cell3);
+        grid.addRow(rowItem1);
+
+        QuickGridView.RowItem rowItem2=grid.buildRowItem("57",2);
+        QuickGridView.CellItem row2Cell1 = grid.buildCellItem(13, new Model<>(110));
+        QuickGridView.CellItem row2Cell2 = grid.buildCellItem(14, new Model<>(120));
+        QuickGridView.CellItem row2Cell3 = grid.buildCellItem(15, new Model<>(123));
+        rowItem2.getRepeater().add(row2Cell1);
+        rowItem2.getRepeater().add(row2Cell2);
+        rowItem2.getRepeater().add(row2Cell3);
+        grid.addRowAtStart(rowItem2);
+
+        QuickGridView.RowItem rowItem3=grid.buildRowItem("58",3);
+        QuickGridView.CellItem row3Cell1=grid.buildCellItem(16,new Model<>(135));
+        QuickGridView.CellItem row3Cell2=grid.buildCellItem(17,new Model<>(150));
+        QuickGridView.CellItem row3Cell3=grid.buildCellItem(18,new Model<>(160));
+        rowItem3.getRepeater().add(row3Cell1);
+        rowItem3.getRepeater().add(row3Cell2);
+        rowItem3.getRepeater().add(row3Cell3);
+        grid.addRow(rowItem3);
+
         Iterator<QuickGridView.CellItem<Integer>> it = grid.cells();
-        QuickGridView.CellItem<Integer> actual1 = it.next();
-        Assert.assertEquals(actual1.getMarkupId(), cell1.getMarkupId());
-        Assert.assertEquals(actual1.getModelObject(), cell1.getModelObject());
-        Assert.assertEquals(actual1.getIndex(), cell1.getIndex());
-        QuickGridView.CellItem<Integer> actual2 = it.next();
-        Assert.assertEquals(actual2.getMarkupId(), cell2.getMarkupId());
-        Assert.assertEquals(actual2.getModelObject(), cell2.getModelObject());
-        Assert.assertEquals(actual2.getIndex(), cell2.getIndex());
-        QuickGridView.CellItem<Integer> actual3 = it.next();
-        Assert.assertEquals(actual3.getMarkupId(), cell3.getMarkupId());
-        Assert.assertNull(actual3.getModelObject());
-        Assert.assertEquals(actual1.getIndex(), cell1.getIndex());
+        QuickGridView.CellItem<Integer> fetchedCell1 = it.next();
+        Assert.assertEquals(fetchedCell1.getMarkupId(), row2Cell1.getMarkupId());
+        assertCell(fetchedCell1,row2Cell1);
+        QuickGridView.CellItem<Integer> fetchedCell2 = it.next();
+        assertCell(fetchedCell2,row2Cell2);
+        QuickGridView.CellItem<Integer> fetchedCell3 = it.next();
+        assertCell(fetchedCell3,row2Cell3);
+        QuickGridView.CellItem fetchedCell4=it.next();
+        assertCell(fetchedCell4,row1Cell1);
+        QuickGridView.CellItem fetchedCell5=it.next();
+        assertCell(fetchedCell5,row1Cell2);
+        QuickGridView.CellItem fetchedCell6=it.next();
+        assertCell(fetchedCell6,row1Cell3);
+        QuickGridView.CellItem fetchedCell7=it.next();
+        assertCell(fetchedCell7,row3Cell1);
+        QuickGridView.CellItem fetchedCell8=it.next();
+        assertCell(fetchedCell8,row3Cell2);
+        QuickGridView.CellItem fetchedCell9=it.next();
+        assertCell(fetchedCell9,row3Cell3);
     }
 
+    public void assertCell(final QuickGridView.CellItem actual, final QuickGridView.CellItem expected){
+        Assert.assertEquals(actual.getMarkupId(), expected.getMarkupId());
+        Assert.assertEquals(actual.getModelObject(), expected.getModelObject());
+        Assert.assertEquals(actual.getIndex(), expected.getIndex());
+
+    }
+
+
+    /**
+     * 5 rows added in following order
+     * row 1 added using addRow(*)
+     * row2 added using addRow(*)
+     * row3 added using addrowatstart(*)
+     * row4 added using addrowatstart(*)
+     * row5 added using addrow(*)
+     */
     @Test(groups = {"wicketTests"})
     public void rows_1() {
         List<Integer> list = new ArrayList<Integer>();
@@ -1047,19 +1094,35 @@ public class QuickGridViewTest {
         };
         grid.setRows(2);
         QuickGridView.RowItem row1 = grid.buildRowItem();
-        QuickGridView.RowItem row2 = grid.buildRowItem();
         grid.addRow(row1);
+        QuickGridView.RowItem row2 = grid.buildRowItem();
         grid.addRow(row2);
+        QuickGridView.RowItem row3=grid.buildRowItem();
+        grid.addRowAtStart(row3);
+        QuickGridView.RowItem row4=grid.buildRowItem();
+        grid.addRowAtStart(row4);
+        QuickGridView.RowItem row5=grid.buildRowItem();
+        grid.addRow(row5);
         Iterator<QuickGridView.RowItem<Integer>> rows = grid.rows();
-        QuickGridView.RowItem actual1 = rows.next();
-        QuickGridView.RowItem actual2 = rows.next();
-        Assert.assertEquals(actual1.getMarkupId(), row1.getMarkupId());
-        Assert.assertEquals(actual1.getIndex(), row1.getIndex());
-
-        Assert.assertEquals(actual2.getMarkupId(), row2.getMarkupId());
-        Assert.assertEquals(actual2.getIndex(), row2.getIndex());
+        QuickGridView.RowItem fetched1 = rows.next();
+        assertRow(fetched1,row4);
+        QuickGridView.RowItem fetched2 = rows.next();
+        assertRow(fetched2,row3);
+        QuickGridView.RowItem fetched3=rows.next();
+        assertRow(fetched3,row1);
+        QuickGridView.RowItem fetched4=rows.next();
+        assertRow(fetched4,row2);
+        QuickGridView.RowItem fetched5=rows.next();
+        assertRow(fetched5,row5);
 
     }
+
+    public void assertRow(final QuickGridView.RowItem actual, final QuickGridView.RowItem expected){
+        Assert.assertEquals(actual.getMarkupId(),expected.getMarkupId());
+        Assert.assertEquals(actual.getId(),expected.getId());
+        Assert.assertEquals(actual.getIndex(),expected.getIndex());
+    }
+
 
     @Test(groups = {"wicketTests"})
     public void addRows_1() {

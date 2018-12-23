@@ -105,7 +105,7 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
     }
 
     protected void updateItemsPerPage() {
-        long items =  (long)rows *(long) columns;
+        long items =  (long)getRows() *(long) getColumns();
         int itemsPerRequest = (items > Integer.MAX_VALUE) ? Integer.MAX_VALUE :(int) items;
         setItemsPerRequest(itemsPerRequest);
     }
@@ -276,7 +276,7 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
     @Override
     protected Iterator<Item<T>> buildItems(final int index, Iterator<? extends T> iterator) {
         Iterator<CellItem<T>> cells = buildCells(index, iterator);
-        int rowIndex = index / columns;
+        int rowIndex = index / getColumns();
         return (Iterator) buildRows(rowIndex, cells);
     }
 
@@ -302,7 +302,7 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
         for (int row = rowIndex; iterator.hasNext(); row++) {
             RowItem<T> rowItem = buildRowItem(newChildId(), row);
             rowItems.add(rowItem);
-            for (int i = 0; i < columns; i++) {
+            for (int i = 0; i < getColumns(); i++) {
                 if (iterator.hasNext()) {
                     CellItem<T> cell = iterator.next();
                     rowItem.getRepeater().add(cell);
@@ -348,7 +348,7 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
 
     public int gridSize() {
         int rows = size();
-        int  grid = rows * columns;
+        int  grid = rows * getColumns();
         return grid;
     }
 
@@ -404,14 +404,7 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
         return cell;
     }
 
-    /**
-     * builds cell item by creating new cellitem and then populating by populateEmptyItem(cell)
-     *
-     * @return CellItem
-     */
-    public CellItem<T> buildCellItem(int index, T object) {
-        return buildCellItem(newChildId(), index, object);
-    }
+
 
     public RowItem buildRowItem(String id, int index) {
         RowItem<T> item = newRowItem(id, index);
@@ -429,16 +422,25 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
         return buildRowItem(newChildId(), size());
     }
 
+    /**
+     * returns iterator to iterate through rows in the order they are rendered
+     *
+     * @return
+     */
     public Iterator<RowItem<T>> rows() {
         return (Iterator) getItems();
     }
 
 
+    /**
+     * returns iterator to iterate through cells in the order they are rendered
+     *
+     * @return
+     */
     public Iterator<CellItem<T>> cells() {
         Iterator<MarkupContainer> rows = (Iterator) rows();
         return new GridView.ItemsIterator(rows);
     }
-
 
     protected CellItem<T> newCellItem(String id, int index, IModel<T> model) {
         return new CellItem<T>(id,index, model);
