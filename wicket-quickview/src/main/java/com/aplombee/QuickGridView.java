@@ -28,7 +28,6 @@ import org.apache.wicket.util.lang.Args;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -106,9 +105,9 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
     }
 
     protected void updateItemsPerPage() {
-        long items = (long) rows * (long) columns;
-        int prevent = (items > Integer.MAX_VALUE) ? Integer.MAX_VALUE : (int) items;
-        setItemsPerRequest(prevent);
+        long items =  (long)rows *(long) columns;
+        int itemsPerRequest = (items > Integer.MAX_VALUE) ? Integer.MAX_VALUE :(int) items;
+        setItemsPerRequest(itemsPerRequest);
     }
 
 
@@ -158,9 +157,10 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
 
     abstract protected void populateEmptyItem(CellItem<T> item);
 
-
     public QuickGridView<T> addRowAtStart(RowItem<T> rowItem) {
         Args.notNull(rowItem, "rowItem can't be null");
+        initializeAddAtStartStoreIfRequired();
+        getAddAtStartStore().add(rowItem);
         simpleAddRow(rowItem);
         Synchronizer synchronizer = getSynchronizer();
         if (synchronizer == null) {
@@ -220,6 +220,10 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
     public void removeRow(RowItem<T> rowItem) {
         Args.notNull(rowItem, "rowItem can't be null");
         Synchronizer synchronizer = getSynchronizer();
+        IAddAtStartStore addAtStartStore = getAddAtStartStore();
+        if (addAtStartStore != null) {
+            addAtStartStore.remove(rowItem);
+        }
         if (synchronizer == null) {
             simpleRemove(rowItem);
             return;
@@ -237,50 +241,6 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
 
 
     /**
-     * component ids kept only for partial update use only
-     * ie. when {@link IQuickReuseStrategy#isPartialUpdatesSupported()} is true
-     */
-    private LinkedList<String> componentIds = new LinkedList<>();
-
-    private LinkedList<String> _getComponentIds() {
-        return componentIds;
-    }
-
-    /**
-     * last rendered item kept at server
-     * <p>
-     * ie. when {@link IQuickReuseStrategy#isPartialUpdatesSupported()} is true
-     */
-    public Component _lastRenderedItem() {
-        if (!getReuseStrategy().isPartialUpdatesSupported()) {
-            throw new UnsupportedOperationException("only supported when reusestrategy supports partial updates");
-        }
-        String lastComponentId = _getComponentIds().getLast();
-        return get(lastComponentId);
-    }
-
-
-    /**
-     * first rendered item kept at server
-     * <p>
-     * ie. when {@link IQuickReuseStrategy#isPartialUpdatesSupported()} is true
-     */
-    public Component _firstRenderedItem() {
-        if (!getReuseStrategy().isPartialUpdatesSupported()) {
-            throw new UnsupportedOperationException("only supported when reusestrategy supports partial updates");
-        }
-        String firstComponentId = _getComponentIds().getFirst();
-        return get(firstComponentId);
-    }
-
-
-    public RowItem<T> getLastRowItem() {
-        Component lastItem = _lastRenderedItem();
-        RowItem<T> rowItem = (RowItem<T>) lastItem;
-        return rowItem;
-    }
-
-    /**
      * it's a simple add,new item is not drawn just added,no js fired
      *
      * @param components component to be added
@@ -288,11 +248,6 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
      */
     public MarkupContainer simpleAddRow(Component... components) {
         simpleAdd(components);
-        if (getReuseStrategy().isPartialUpdatesSupported()) {
-            for (Component c : components) {
-                _getComponentIds().add(c.getId());
-            }
-        }
         return this;
     }
 
@@ -304,17 +259,11 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
      * @return this
      */
     public MarkupContainer simpleRemoveRow(Component c) {
-        if (getReuseStrategy().isPartialUpdatesSupported()) {
-            _getComponentIds().remove(c.getId());
-        }
         simpleRemove(c);
         return this;
     }
 
     public MarkupContainer simpleRemoveAllRows() {
-        if (getReuseStrategy().isPartialUpdatesSupported()) {
-            _getComponentIds().clear();
-        }
         return simpleRemoveAll();
     }
 
@@ -325,9 +274,9 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
      */
 
     @Override
-    protected Iterator<Item<T>> buildItems(final long index, Iterator<? extends T> iterator) {
+    protected Iterator<Item<T>> buildItems(final int index, Iterator<? extends T> iterator) {
         Iterator<CellItem<T>> cells = buildCells(index, iterator);
-        long rowIndex = index / columns;
+        int rowIndex = index / columns;
         return (Iterator) buildRows(rowIndex, cells);
     }
 
@@ -336,7 +285,7 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
      * @return iterator of RowItem which are created with their corresponding cells attached to them
      */
     public Iterator<RowItem<T>> buildRows(Iterator<? extends T> iterator) {
-        long cellindex = gridSize();
+        int  cellindex = gridSize();
         return (Iterator) buildItems(cellindex, iterator);
     }
 
@@ -348,12 +297,12 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
         }
     }
 
-    protected Iterator<RowItem<T>> buildRows(final long rowIndex, Iterator<CellItem<T>> iterator) {
+    protected Iterator<RowItem<T>> buildRows(final int rowIndex, Iterator<CellItem<T>> iterator) {
         List<RowItem<T>> rowItems = new ArrayList<RowItem<T>>();
-        for (long row = rowIndex; iterator.hasNext(); row++) {
+        for (int row = rowIndex; iterator.hasNext(); row++) {
             RowItem<T> rowItem = buildRowItem(newChildId(), row);
             rowItems.add(rowItem);
-            for (long i = 0; i < columns; i++) {
+            for (int i = 0; i < columns; i++) {
                 if (iterator.hasNext()) {
                     CellItem<T> cell = iterator.next();
                     rowItem.getRepeater().add(cell);
@@ -368,9 +317,9 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
     }
 
 
-    protected Iterator<CellItem<T>> buildCells(final long index, Iterator<? extends T> iterator) {
+    protected Iterator<CellItem<T>> buildCells(final int index, Iterator<? extends T> iterator) {
         List<CellItem<T>> cells = new ArrayList<CellItem<T>>();
-        for (long i = index; iterator.hasNext(); i++) {
+        for (int i = index; iterator.hasNext(); i++) {
             T object = iterator.next();
             CellItem<T> cell = buildCellItem(newChildId(), i, object);
             cells.add(cell);
@@ -381,9 +330,10 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
 
     @Override
     public List<Item<T>> addItemsForPage(long page) {
-        long startIndex = page * getItemsPerRequest();
+        long itemsCount=page*getItemsPerRequest();
+        int startIndex =getRepeaterUtil().safeLongToInt(itemsCount);
         Iterator<IModel<T>> newModels = newModels(startIndex, getItemsPerRequest());
-        Iterator<CellItem<T>> newIterator = (Iterator) getReuseStrategy().addItems((int) startIndex, factory(), newModels);
+        Iterator<CellItem<T>> newIterator = (Iterator) getReuseStrategy().addItems(startIndex, factory(), newModels);
         Iterator<RowItem<T>> rows = buildRows(startIndex / getRows(), newIterator);
         List<Item<T>> items = new ArrayList<Item<T>>();
 
@@ -396,9 +346,9 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
         return items;
     }
 
-    public long gridSize() {
+    public int gridSize() {
         int rows = size();
-        long grid = rows * columns;
+        int  grid = rows * columns;
         return grid;
     }
 
@@ -410,8 +360,8 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
      * @param index index
      * @return RowItem
      */
-    protected RowItem<T> newRowItem(String id, long index) {
-        RowItem<T> item = new RowItem<T>(id, getRepeaterUtil().safeLongToInt(index), new Model());
+    protected RowItem<T> newRowItem(String id, int index) {
+        RowItem<T> item = new RowItem<T>(id,index, new Model());
         return item;
     }
 
@@ -423,13 +373,13 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
      * @param object model object set to the cellitem
      * @return CellItem
      */
-    public CellItem<T> buildCellItem(String id, long index, T object) {
+    public CellItem<T> buildCellItem(String id, int index, T object) {
         return buildCellItem(id, index, getDataProvider().model(object));
     }
 
 
-    protected CellItem<T> buildCellItem(String id, long index, IModel<T> model) {
-        CellItem<T> cell = newCellItem(id, getRepeaterUtil().safeLongToInt(index), model);
+    protected CellItem<T> buildCellItem(String id, int index, IModel<T> model) {
+        CellItem<T> cell = newCellItem(id, index, model);
         populate(cell);
         return cell;
     }
@@ -439,7 +389,7 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
      *
      * @return CellItem
      */
-    public CellItem<T> buildEmptyCellItem(long index) {
+    public CellItem<T> buildEmptyCellItem(int index) {
         return buildEmptyCellItem(newChildId(), index);
     }
 
@@ -448,8 +398,8 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
      *
      * @return CellItem
      */
-    public CellItem<T> buildEmptyCellItem(String id, long index) {
-        CellItem<T> cell = newEmptyCellItem(id, getRepeaterUtil().safeLongToInt(index));
+    public CellItem<T> buildEmptyCellItem(String id, int index) {
+        CellItem<T> cell = newEmptyCellItem(id, index);
         populateEmptyItem(cell);
         return cell;
     }
@@ -459,11 +409,11 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
      *
      * @return CellItem
      */
-    public CellItem<T> buildCellItem(long index, T object) {
+    public CellItem<T> buildCellItem(int index, T object) {
         return buildCellItem(newChildId(), index, object);
     }
 
-    public RowItem buildRowItem(String id, long index) {
+    public RowItem buildRowItem(String id, int index) {
         RowItem<T> item = newRowItem(id, index);
         RepeatingView rowView = new RepeatingView(COLUMNS_REPEATER_ID);
         item.add(rowView);
@@ -479,21 +429,8 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
         return buildRowItem(newChildId(), size());
     }
 
-    public CellItem<T> findFirstEmptyCell() {
-        CellItem<T> emptyCell = null;
-        Iterator<CellItem> iterator = getLastRowItem().cellItems();
-        while (iterator.hasNext()) {
-            CellItem<T> cellItem = iterator.next();
-            if (cellItem.isEmpty()) {
-                emptyCell = cellItem;
-                break;
-            }
-        }
-        return emptyCell;
-    }
-
     public Iterator<RowItem<T>> rows() {
-        return (Iterator) this.iterator();
+        return (Iterator) getItems();
     }
 
 
@@ -502,24 +439,19 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
         return new GridView.ItemsIterator(rows);
     }
 
-    @Override
-    public Iterator<Component> itemsIterator() {
-        return (Iterator) cells();
+
+    protected CellItem<T> newCellItem(String id, int index, IModel<T> model) {
+        return new CellItem<T>(id,index, model);
     }
 
 
-    protected CellItem<T> newCellItem(String id, long index, IModel<T> model) {
-        return new CellItem<T>(id, getRepeaterUtil().safeLongToInt(index), model);
-    }
-
-
-    public CellItem<T> buildCellItem(long index, IModel<T> model) {
+    public CellItem<T> buildCellItem(int index, IModel<T> model) {
         return buildCellItem(newChildId(), index, model);
     }
 
 
-    public CellItem<T> newEmptyCellItem(String id, long index) {
-        return new CellItem<T>(id, getRepeaterUtil().safeLongToInt(index), new Model(), true);
+    public CellItem<T> newEmptyCellItem(String id, int index) {
+        return new CellItem<T>(id, index, new Model(), true);
     }
 
 
@@ -567,22 +499,8 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
         public CellItem(String id, int index, IModel<T> model, boolean empty) {
             super(id, index, model);
             setOutputMarkupId(true);
-            this.empty = empty;
         }
 
-        public RowItem<T> getRowItem() {
-            if (getParent() == null) {
-                throw new RuntimeException("cellItem not yet attached to parent");
-            }
-            return (RowItem<T>) getParent().getParent();
-        }
-
-
-        private boolean empty = false;
-
-        public boolean isEmpty() {
-            return empty;
-        }
 
     }
 

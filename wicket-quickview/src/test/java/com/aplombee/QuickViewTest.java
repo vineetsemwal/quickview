@@ -19,7 +19,6 @@ package com.aplombee;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.core.request.handler.IPageClassRequestHandler;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -32,9 +31,6 @@ import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.request.IRequestCycle;
-import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.WicketTester;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
@@ -42,9 +38,12 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Vineet Semwal
@@ -309,7 +308,7 @@ public class QuickViewTest {
 
 
             @Override
-            public Item buildItem(long index, TestObj object) {
+            public Item buildItem(int index, TestObj object) {
                 return null;
             }
 
@@ -377,7 +376,7 @@ public class QuickViewTest {
 
 
             @Override
-            public Item buildItem(long index, TestObj object) {
+            public Item buildItem(int index, TestObj object) {
                 return null;
             }
 
@@ -515,7 +514,7 @@ public class QuickViewTest {
         final WebMarkupContainer parent = Mockito.mock(WebMarkupContainer.class);
         IDataProvider dataProvider = Mockito.mock(IDataProvider.class);
         final Synchronizer synchronizer = Mockito.mock(Synchronizer.class);
-        final Item c = Mockito.mock(Item.class);
+        final Item c = new Item("10",9);
         QuickView<TestObj> quickView = new QuickView<TestObj>("repeater", dataProvider, itemsPerRequest) {
             public void populate(Item<TestObj> item) {
             }
@@ -533,6 +532,7 @@ public class QuickViewTest {
         Mockito.verify(spy)._contributeAddAtStartScripts(c);
         Mockito.verify(synchronizer).add(c);
         Mockito.verify(synchronizer, Mockito.never()).submit();
+        Assert.assertTrue(spy.getAddAtStartStore().contains(c.getId()));
 
     }
 
@@ -546,7 +546,7 @@ public class QuickViewTest {
         final WebMarkupContainer parent = Mockito.mock(WebMarkupContainer.class);
         IDataProvider dataProvider = Mockito.mock(IDataProvider.class);
         final Synchronizer synchronizer = Mockito.mock(Synchronizer.class);
-        final Item c = Mockito.mock(Item.class);
+        final Item c = new Item("15",14);
         QuickView<TestObj> quickView = new QuickView<TestObj>("repeater", dataProvider, itemsPerRequest) {
 
             public void populate(Item<TestObj> item) {
@@ -565,6 +565,7 @@ public class QuickViewTest {
         Mockito.verify(spy)._contributeAddAtStartScripts(c);
         Mockito.verify(synchronizer).add(c);
         Mockito.verify(synchronizer).submit();
+        Assert.assertTrue(spy.getAddAtStartStore().contains(c.getId()));
 
     }
 
@@ -599,7 +600,7 @@ public class QuickViewTest {
         QuickView repeater = new QuickView("repeater", provider, reuse, itemsPerRequest) {
 
             @Override
-            public Iterator<Component> itemsIterator() {
+            public Iterator<Component> iterator() {
                 return existing;
             }
 
@@ -675,7 +676,7 @@ public class QuickViewTest {
         QuickView repeater = new QuickView("repeater", provider, reuse, itemsPerRequest) {
 
             @Override
-            public Iterator<Component> itemsIterator() {
+            public Iterator<Component> iterator() {
                 return existing;
             }
 
@@ -751,7 +752,7 @@ public class QuickViewTest {
         QuickView repeater = new QuickView("repeater", provider, reuse, itemsPerRequest) {
 
             @Override
-            public Iterator<Component> itemsIterator() {
+            public Iterator<Component> iterator() {
                 return existing;
             }
 
@@ -1121,7 +1122,7 @@ public class QuickViewTest {
             protected void populate(Item<Integer> item) {
             }
         };
-        final long index = 9l;
+        final int index = 9;
         final String id = "67";
         Item<Integer> item = quickView.newItem(id, index, model);
         Assert.assertEquals(item.getModelObject().intValue(), 89);
@@ -1132,7 +1133,7 @@ public class QuickViewTest {
 
 
     /**
-     * test for  {@link QuickViewBase#buildItem(String, long, IModel)} )}
+     * test for  {@link QuickViewBase#buildItem(String, int, IModel)} )}
      */
     @Test(groups = {"wicketTests"})
     public void buildItem_1() {
@@ -1146,11 +1147,11 @@ public class QuickViewTest {
             }
 
             @Override
-            protected Item<TestObj> newItem(String id, long index, IModel<TestObj> model) {
+            protected Item<TestObj> newItem(String id, int index, IModel<TestObj> model) {
                 return item;
             }
         };
-        final long index = 9l;
+        final int index = 9;
         final String id = "87";
         final TestObj object = Mockito.mock(TestObj.class);
         Mockito.when(model.getObject()).thenReturn(object);
@@ -1164,7 +1165,7 @@ public class QuickViewTest {
     }
 
     /**
-     * test for  {@link QuickViewBase#buildItem(String, long, IModel)} )}
+     * test for  {@link QuickViewBase#buildItem(String, int, IModel)} )}
      */
     @Test(groups = {"wicketTests"})
     public void buildItem_2() {
@@ -1178,11 +1179,11 @@ public class QuickViewTest {
             }
 
             @Override
-            protected Item<TestObj> newItem(String id, long index, IModel<TestObj> model) {
+            protected Item<TestObj> newItem(String id, int index, IModel<TestObj> model) {
                 return item;
             }
         };
-        final long index = 9l;
+        final int index = 9;
         final String id = "87";
         final TestObj object = Mockito.mock(TestObj.class);
         Mockito.when(model.getObject()).thenReturn(object);
@@ -1197,7 +1198,7 @@ public class QuickViewTest {
 
 
     /**
-     * test for  {@link QuickViewBase#buildItem(long, Object)}
+     * test for buildItem(long, Object)
      */
     @Test(groups = {"wicketTests"})
     public void buildItem_3() {
@@ -1210,7 +1211,7 @@ public class QuickViewTest {
             }
 
             @Override
-            public Item<TestObj> buildItem(String id, long index, TestObj object) {
+            public Item<TestObj> buildItem(String id,int index, TestObj object) {
                 return item;
             }
 
@@ -1397,7 +1398,7 @@ public class QuickViewTest {
             }
 
             @Override
-            protected Iterator buildItems(long index, Iterator iterator) {
+            protected Iterator buildItems(int index, Iterator iterator) {
                 return newIterator;
             }
 
@@ -1648,10 +1649,10 @@ public class QuickViewTest {
         Mockito.doReturn(true).when(spy).isAjax();
         Mockito.doReturn(null).when(spy)._getRequestMetaData(spy.SYNCHRONIZER_KEY);
         Mockito.doReturn(synchronizer).when(spy).nonARTSynchronizer();
-        Mockito.doNothing().when(spy)._setRequestMetaData(spy.SYNCHRONIZER_KEY,synchronizer);
+        Mockito.doNothing().when(spy)._setRequestMetaData(spy.SYNCHRONIZER_KEY, synchronizer);
         Synchronizer result = spy.getSynchronizer();
         Assert.assertEquals(result, synchronizer);
-        Mockito.verify(spy)._setRequestMetaData(spy.SYNCHRONIZER_KEY,synchronizer);
+        Mockito.verify(spy)._setRequestMetaData(spy.SYNCHRONIZER_KEY, synchronizer);
     }
 
     /**
@@ -1677,10 +1678,10 @@ public class QuickViewTest {
         Mockito.doReturn(synchronizer).when(spy).newDefaultSynchronizer();
         Mockito.doReturn(true).when(spy).isAjax();
         Mockito.doReturn(null).when(spy)._getRequestMetaData(spy.SYNCHRONIZER_KEY);
-        Mockito.doNothing().when(spy)._setRequestMetaData(spy.SYNCHRONIZER_KEY,synchronizer);
+        Mockito.doNothing().when(spy)._setRequestMetaData(spy.SYNCHRONIZER_KEY, synchronizer);
         Synchronizer result = spy.getSynchronizer();
-        Assert.assertEquals(result ,synchronizer);
-        Mockito.verify(spy)._setRequestMetaData(spy.SYNCHRONIZER_KEY,synchronizer);
+        Assert.assertEquals(result, synchronizer);
+        Mockito.verify(spy)._setRequestMetaData(spy.SYNCHRONIZER_KEY, synchronizer);
     }
 
     /**
@@ -1715,6 +1716,173 @@ public class QuickViewTest {
         quickView.register(ICustomRequestHandler.class);
         Assert.assertTrue(quickView.getPartialRequestHandlers().contains(ICustomRequestHandler.class));
     }
+
+
+    @Test(groups = {"wicketTests"})
+    public void testAddOrderIterator_1() {
+        IDataProvider<Integer> dataProvider = new ListDataProvider<Integer>();
+        QuickView<Integer> quickView = new QuickView<Integer>(
+                "quickview", dataProvider) {
+            @Override
+            protected void populate(Item item) {
+            }
+        };
+        quickView.initializeAddAtStartStoreIfRequired();
+        Item item1 = new Item("1", 0);
+        quickView.add(item1);
+
+
+        Item item2 = new Item("2", 1);
+        quickView.add(item2);
+
+        Item item3 = new Item("3", 2);
+        quickView.addAtStart(item3);
+
+        Item item4 = new Item("4", 3);
+        quickView.addAtStart(item4);
+
+        Item item5 = new Item("5", 4);
+        quickView.addAtStart(item5);
+
+        Item item6 = new Item("6", 5);
+        quickView.add(item6);
+
+        Item item7 = new Item("7", 6);
+        quickView.add(item7);
+
+        Item item8 = new Item("8", 7);
+        quickView.addAtStart(item8);
+
+        Iterator<Component> iterator = quickView.getItems();
+        List<Component> fetched = new ArrayList<>();
+        while (iterator.hasNext()) {
+            fetched.add(iterator.next());
+        }
+        Assert.assertEquals(fetched.size(), 8);
+        Assert.assertEquals(fetched.get(0).getId(), item8.getId());
+        Assert.assertEquals(fetched.get(1).getId(), item5.getId());
+        Assert.assertEquals(fetched.get(2).getId(), item4.getId());
+        Assert.assertEquals(fetched.get(3).getId(), item3.getId());
+        Assert.assertEquals(fetched.get(4).getId(), item1.getId());
+        Assert.assertEquals(fetched.get(5).getId(), item2.getId());
+        Assert.assertEquals(fetched.get(6).getId(), item6.getId());
+        Assert.assertEquals(fetched.get(7).getId(), item7.getId());
+    }
+
+    /**
+     * case:only add at end
+     */
+    @Test(groups = {"wicketTests"})
+    public void testAddOrderIterator_2() {
+        IDataProvider<Integer> dataProvider = new ListDataProvider<Integer>();
+        QuickView<Integer> quickView = new QuickView<Integer>(
+                "quickview", dataProvider) {
+            @Override
+            protected void populate(Item item) {
+            }
+        };
+        quickView.initializeAddAtStartStoreIfRequired();
+        Item item1 = new Item("1", 0);
+        quickView.add(item1);
+
+        Item item2 = new Item("2", 1);
+        quickView.add(item2);
+
+        Item item3 = new Item("3", 2);
+        quickView.add(item3);
+
+        Iterator<Component> iterator = quickView.getItems();
+        List<Component> fetched = new ArrayList<>();
+        while (iterator.hasNext()) {
+            fetched.add(iterator.next());
+        }
+        Assert.assertEquals(fetched.size(), 3);
+        Assert.assertEquals(fetched.get(0).getId(), item1.getId());
+        Assert.assertEquals(fetched.get(1).getId(), item2.getId());
+        Assert.assertEquals(fetched.get(2).getId(), item3.getId());
+
+    }
+
+    /**
+     * case:only add at start
+     */
+    @Test(groups = {"wicketTests"})
+    public void testAddOrderIterator_3() {
+        IDataProvider<Integer> dataProvider = new ListDataProvider<Integer>();
+        QuickView<Integer> quickView = new QuickView<Integer>(
+                "quickview", dataProvider) {
+            @Override
+            protected void populate(Item item) {
+            }
+        };
+        quickView.initializeAddAtStartStoreIfRequired();
+        Item item1 = new Item("1", 0);
+        quickView.addAtStart(item1);
+
+        Item item2 = new Item("2", 1);
+        quickView.addAtStart(item2);
+
+        Item item3 = new Item("3", 2);
+        quickView.addAtStart(item3);
+
+
+        Iterator<Component> iterator = quickView.getItems();
+        List<Component> fetched = new ArrayList<>();
+        while (iterator.hasNext()) {
+            fetched.add(iterator.next());
+        }
+        Assert.assertEquals(fetched.size(), 3);
+        Assert.assertEquals(fetched.get(0).getId(), item3.getId());
+        Assert.assertEquals(fetched.get(1).getId(), item2.getId());
+        Assert.assertEquals(fetched.get(2).getId(), item1.getId());
+
+    }
+
+    /**
+     *
+     */
+    @Test(groups = {"wicketTests"})
+    public void testIterator_remove_1() {
+        IDataProvider<Integer> dataProvider = new ListDataProvider<Integer>();
+        QuickView<Integer> quickView = new QuickView<Integer>(
+                "quickview", dataProvider) {
+            @Override
+            protected void populate(Item item) {
+            }
+        };
+        quickView.initializeAddAtStartStoreIfRequired();
+        Item item1 = new Item("1", 0);
+        quickView.addAtStart(item1);
+
+        Item item2 = new Item("2", 1);
+        quickView.addAtStart(item2);
+
+        Item item3 = new Item("3", 2);
+        quickView.addAtStart(item3);
+
+        Item item4 = new Item("4", 3);
+        quickView.addAtStart(item4);
+
+        Item item5 = new Item("5", 4);
+        quickView.add(item5);
+
+
+        Iterator<Component> iterator = quickView.getItems();
+        iterator.next();
+        iterator.next();
+        iterator.remove();
+        List<Component> fetched = new ArrayList<>();
+        while (iterator.hasNext()) {
+            Component component = iterator.next();
+            fetched.add(component);
+        }
+        Assert.assertEquals(quickView.size(),4);
+        Assert.assertEquals(fetched.size(), 3);
+        Assert.assertEquals(fetched.get(0).getId(), item2.getId());
+        Assert.assertEquals(fetched.get(1).getId(), item1.getId());
+        Assert.assertEquals(fetched.get(2).getId(),item5.getId());
+    }
+
 
     public AjaxRequestTarget mockTarget() {
         AjaxRequestTarget target = mock(AjaxRequestTarget.class);

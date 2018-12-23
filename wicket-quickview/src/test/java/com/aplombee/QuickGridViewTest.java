@@ -213,7 +213,7 @@ public class QuickGridViewTest {
             }
         };
         final String id = "id";
-        final long index = 845;
+        final int index = 845;
         QuickGridView.RowItem row = grid.buildRowItem(id, index);
         RepeatingView repeater = (RepeatingView) row.get(QuickGridView.COLUMNS_REPEATER_ID);
         Assert.assertNotNull(repeater);
@@ -232,7 +232,7 @@ public class QuickGridViewTest {
             }
         };
         final String id = "id";
-        final long index = 845;
+        final int index = 845;
         QuickGridView.RowItem row = grid.buildRowItem(id, index);
         RepeatingView repeater = row.getRepeater();
         Assert.assertNotNull(repeater);
@@ -255,14 +255,13 @@ public class QuickGridViewTest {
         };
 
         final String id = "id";
-        final long index = 845;
+        final int index = 845;
         WicketTester tester = new WicketTester(createMockApplication());
         QuickGridView.CellItem cell = grid.newCellItem(id, index, model);
         tester.startComponentInPage(cell);
         Assert.assertEquals(cell.getId(), id);
         Assert.assertEquals(cell.getIndex(), index);
         Assert.assertEquals(cell.getModelObject(), object);
-        Assert.assertFalse(cell.isEmpty());
     }
 
     @Test(groups = {"wicketTests"})
@@ -282,12 +281,11 @@ public class QuickGridViewTest {
         };
 
         final String id = "id";
-        final long index = 845;
+        final int index = 845;
         QuickGridView.CellItem cell = grid.newEmptyCellItem(id, index);
         Assert.assertEquals(cell.getId(), id);
         Assert.assertEquals(cell.getIndex(), index);
         Assert.assertNull(cell.getModelObject());
-        Assert.assertTrue(cell.isEmpty());
     }
 
     /**
@@ -296,7 +294,7 @@ public class QuickGridViewTest {
 
     @Test(groups = {"wicketTests"})
     public void buildEmptyCellItem_1() {
-        final long childId = 845;
+        final int childId = 845;
         final QuickGridView.CellItem cell = Mockito.mock(QuickGridView.CellItem.class);
         IDataProvider data = Mockito.mock(IDataProvider.class);
         QuickGridView<Integer> grid = new QuickGridView<Integer>("grid", data) {
@@ -309,7 +307,7 @@ public class QuickGridViewTest {
             }
 
             @Override
-            public CellItem<Integer> newEmptyCellItem(String id, long index) {
+            public CellItem<Integer> newEmptyCellItem(String id, int index) {
                 return cell;
             }
 
@@ -347,12 +345,12 @@ public class QuickGridViewTest {
             }
 
             @Override
-            public CellItem<Integer> newEmptyCellItem(String id, long index) {
+            public CellItem<Integer> newEmptyCellItem(String id, int index) {
                 return cell;
             }
 
             @Override
-            public CellItem<Integer> newCellItem(String id, long index, IModel<Integer> model) {
+            public CellItem<Integer> newCellItem(String id, int index, IModel<Integer> model) {
                 return cell;
             }
 
@@ -364,7 +362,7 @@ public class QuickGridViewTest {
 
         };
         QuickGridView spy = Mockito.spy(grid);
-        final long index = 6787;
+        final int index = 6787;
         QuickGridView.CellItem actual = spy.buildEmptyCellItem(index);
         Mockito.verify(spy, Mockito.times(1)).newEmptyCellItem(String.valueOf(childId), index);
         Mockito.verify(spy, Mockito.times(1)).populateEmptyItem(cell);
@@ -389,7 +387,7 @@ public class QuickGridViewTest {
             }
 
             @Override
-            public CellItem<Integer> newCellItem(String id, long index, IModel<Integer> model) {
+            public CellItem<Integer> newCellItem(String id, int index, IModel<Integer> model) {
                 return cell;
             }
 
@@ -403,7 +401,7 @@ public class QuickGridViewTest {
         QuickGridView spy = Mockito.spy(grid);
 
         final int object = 876;//any object/number
-        final long index = 34556;
+        final int index = 34556;
         Model<Integer> model = new Model<Integer>(object);
         Mockito.when(data.model(object)).thenReturn(model);
         QuickGridView.CellItem actual = spy.buildCellItem(String.valueOf(childId), index, object);
@@ -431,7 +429,7 @@ public class QuickGridViewTest {
             }
 
             @Override
-            public CellItem<Integer> newCellItem(String id, long index, IModel<Integer> model) {
+            public CellItem<Integer> newCellItem(String id, int index, IModel<Integer> model) {
                 return cell;
             }
 
@@ -443,7 +441,7 @@ public class QuickGridViewTest {
         };
         QuickGridView spy = Mockito.spy(grid);
         final int object = 908;
-        final long index = 345;
+        final int index = 345;
         Model<Integer> model = new Model<Integer>(object);
         Mockito.when(data.model(object)).thenReturn(model);
         QuickGridView.CellItem actual = spy.buildCellItem(index, object);
@@ -471,7 +469,7 @@ public class QuickGridViewTest {
             }
 
             @Override
-            public CellItem<Integer> newCellItem(String id, long index, IModel<Integer> model) {
+            public CellItem<Integer> newCellItem(String id, int index, IModel<Integer> model) {
                 return cell;
             }
 
@@ -484,7 +482,7 @@ public class QuickGridViewTest {
         };
         QuickGridView spy = Mockito.spy(grid);
         final int object = 908;
-        final long index = 345;
+        final int index = 345;
         Model<Integer> model = new Model<Integer>(object);
         Mockito.when(data.model(object)).thenReturn(model);
         QuickGridView.CellItem actual = spy.buildCellItem(index, model);
@@ -497,7 +495,7 @@ public class QuickGridViewTest {
      */
     @Test(groups = {"wicketTests"})
     public void buildCells_1() {
-        final long itemsPerRequest = 2;
+        final int itemsPerRequest = 2;
         List<Integer> data = data(10);
         IDataProvider<Integer> dataProvider = new ListDataProvider<Integer>(data);
         QuickGridView<Integer> gridView = new QuickGridView<Integer>("quickview", dataProvider) {
@@ -555,7 +553,7 @@ public class QuickGridViewTest {
      */
     @Test(groups = {"wicketTests"})
     public void buildRows_1() {
-        final long itemsPerRequest = 2;
+        final int itemsPerRequest = 2;
         List<Integer> data = data(20);
         IDataProvider<Integer> dataProvider = new ListDataProvider<Integer>(data);
         QuickGridView<Integer> gridView = new QuickGridView<Integer>("quickview", dataProvider) {
@@ -612,7 +610,7 @@ public class QuickGridViewTest {
 
     @Test(groups = {"wicketTests"})
     public void buildRows_2() {
-        final long itemsPerRequest = 2;
+        final int itemsPerRequest = 2;
         List<Integer> data = data(20);
         IDataProvider<Integer> dataProvider = new ListDataProvider<Integer>(data);
         QuickGridView<Integer> gridView = new QuickGridView<Integer>("quickview", dataProvider) {
@@ -686,17 +684,17 @@ public class QuickGridViewTest {
             }
 
             @Override
-            public Iterator<CellItem> buildCells(long index, Iterator iterator) {
+            public Iterator<CellItem> buildCells(int index, Iterator iterator) {
                 return cells;
             }
 
             @Override
-            protected Iterator buildItems(long index, Iterator iterator) {
+            protected Iterator buildItems(int index, Iterator iterator) {
                 return rows;
             }
 
             @Override
-            public long gridSize() {
+            public int gridSize() {
                 return gridSize;
             }
         };
@@ -715,7 +713,7 @@ public class QuickGridViewTest {
      */
     @Test(groups = {"wicketTests"})
     public void buildItems_1() {
-        final long itemsPerRequest = 4;
+        final int itemsPerRequest = 4;
         IDataProvider dataProvider = Mockito.mock(IDataProvider.class);
         final Iterator<QuickGridView.CellItem<Integer>> cells = Mockito.mock(Iterator.class);
         final Iterator<QuickGridView.RowItem<Integer>> rows = Mockito.mock(Iterator.class);
@@ -729,12 +727,12 @@ public class QuickGridViewTest {
             }
 
             @Override
-            public Iterator<CellItem<Integer>> buildCells(long index, Iterator<? extends Integer> iterator) {
+            public Iterator<CellItem<Integer>> buildCells(int index, Iterator<? extends Integer> iterator) {
                 return cells;
             }
 
             @Override
-            public Iterator<RowItem<Integer>> buildRows(long rowIndex, Iterator<CellItem<Integer>> iterator) {
+            public Iterator<RowItem<Integer>> buildRows(int rowIndex, Iterator<CellItem<Integer>> iterator) {
                 return rows;
             }
         };
@@ -743,8 +741,8 @@ public class QuickGridViewTest {
         Iterator dataIterator = Mockito.mock(Iterator.class);
         QuickGridView spy = Mockito.spy(gridView);
         spy.buildItems(10, dataIterator);
-        Mockito.verify(spy, Mockito.times(1)).buildRows(5, cells);
-        Mockito.verify(spy, Mockito.times(1)).buildCells(10, dataIterator);
+        Mockito.verify(spy).buildRows(5, cells);
+        Mockito.verify(spy).buildCells(10, dataIterator);
 
     }
 
@@ -759,10 +757,10 @@ public class QuickGridViewTest {
         final IRepeaterUtil util = Mockito.mock(IRepeaterUtil.class);
         final String script = "insert after";
         QuickGridView.RowItem row = Mockito.mock(QuickGridView.RowItem.class);
-        Component start=Mockito.mock(Component.class);
-        Component end=Mockito.mock(Component.class);
+        Component start = Mockito.mock(Component.class);
+        Component end = Mockito.mock(Component.class);
         QuickGridView<Integer> grid = new QuickGridView<Integer>("grid",
-                provider,start,end) {
+                provider, start, end) {
             @Override
             protected void populate(CellItem<Integer> item) {
             }
@@ -783,7 +781,7 @@ public class QuickGridViewTest {
         Mockito.verify(spy).simpleAdd(row);
         Mockito.verify(synchronizer).prependScript(script);
         Mockito.verify(synchronizer).add(row);
-        Mockito.verify(synchronizer,Mockito.never()).submit();
+        Mockito.verify(synchronizer, Mockito.never()).submit();
 
     }
 
@@ -798,10 +796,10 @@ public class QuickGridViewTest {
         final IRepeaterUtil util = Mockito.mock(IRepeaterUtil.class);
         final String script = "insert after";
         QuickGridView.RowItem row = Mockito.mock(QuickGridView.RowItem.class);
-        Component start=Mockito.mock(Component.class);
-        Component end=Mockito.mock(Component.class);
+        Component start = Mockito.mock(Component.class);
+        Component end = Mockito.mock(Component.class);
         QuickGridView<Integer> grid = new QuickGridView<Integer>("grid",
-                provider,start,end) {
+                provider, start, end) {
             @Override
             protected void populate(CellItem<Integer> item) {
             }
@@ -835,11 +833,11 @@ public class QuickGridViewTest {
         final Synchronizer synchronizer = Mockito.mock(Synchronizer.class);
         final IRepeaterUtil util = Mockito.mock(IRepeaterUtil.class);
         final String script = "insert after";
-        QuickGridView.RowItem row = Mockito.mock(QuickGridView.RowItem.class);
-        Component start=Mockito.mock(Component.class);
-        Component end=Mockito.mock(Component.class);
+        QuickGridView.RowItem row = new QuickGridView.RowItem("10",9,null);
+        Component start = Mockito.mock(Component.class);
+        Component end = Mockito.mock(Component.class);
         QuickGridView<Integer> grid = new QuickGridView<Integer>("grid",
-                provider,start,end) {
+                provider, start, end) {
             @Override
             protected void populate(CellItem<Integer> item) {
             }
@@ -860,7 +858,8 @@ public class QuickGridViewTest {
         Mockito.verify(spy).simpleAdd(row);
         Mockito.verify(synchronizer).prependScript(script);
         Mockito.verify(synchronizer).add(row);
-        Mockito.verify(synchronizer,Mockito.never()).submit();
+        Mockito.verify(synchronizer, Mockito.never()).submit();
+        Assert.assertTrue(spy.getAddAtStartStore().contains(row.getId()));
 
     }
 
@@ -874,11 +873,11 @@ public class QuickGridViewTest {
         final Synchronizer synchronizer = Mockito.mock(Synchronizer.class);
         final IRepeaterUtil util = Mockito.mock(IRepeaterUtil.class);
         final String script = "insert after";
-        QuickGridView.RowItem row = Mockito.mock(QuickGridView.RowItem.class);
-        Component start=Mockito.mock(Component.class);
-        Component end=Mockito.mock(Component.class);
+        QuickGridView.RowItem row = new QuickGridView.RowItem("19",18,null);
+        Component start = Mockito.mock(Component.class);
+        Component end = Mockito.mock(Component.class);
         QuickGridView<Integer> grid = new QuickGridView<Integer>("grid",
-                provider,start,end) {
+                provider, start, end) {
             @Override
             protected void populate(CellItem<Integer> item) {
             }
@@ -900,6 +899,7 @@ public class QuickGridViewTest {
         Mockito.verify(synchronizer).prependScript(script);
         Mockito.verify(synchronizer).add(row);
         Mockito.verify(synchronizer).submit();
+        Assert.assertTrue(spy.getAddAtStartStore().contains(row.getId()));
 
     }
 
@@ -914,10 +914,10 @@ public class QuickGridViewTest {
         final String script = "remove row";
         QuickGridView.RowItem row = Mockito.mock(QuickGridView.RowItem.class);
         final MarkupContainer parent = Mockito.mock(MarkupContainer.class);
-        Component start=Mockito.mock(Component.class);
-        Component end=Mockito.mock(Component.class);
+        Component start = Mockito.mock(Component.class);
+        Component end = Mockito.mock(Component.class);
         QuickGridView<Integer> grid = new QuickGridView<Integer>("grid",
-                provider,start,end) {
+                provider, start, end) {
             @Override
             protected void populate(CellItem<Integer> item) {
             }
@@ -995,98 +995,6 @@ public class QuickGridViewTest {
     }
 
     @Test(groups = {"wicketTests"})
-    public void getLastRow_2() {
-        List<Integer> list = new ArrayList<Integer>();
-        IDataProvider provider = new ListDataProvider(list);
-        final QuickGridView.RowItem rowItem = Mockito.mock(QuickGridView.RowItem.class);
-        QuickGridView<Integer> grid = new QuickGridView<Integer>("grid", provider) {
-            @Override
-            protected void populate(CellItem<Integer> item) {
-            }
-
-            @Override
-            protected void populateEmptyItem(CellItem<Integer> item) {
-            }
-
-            @Override
-            public Component _lastRenderedItem() {
-                return rowItem;
-            }
-
-            @Override
-            public int size() {
-                return 1;
-            }
-        };
-
-        QuickGridView spy = Mockito.spy(grid);
-        QuickGridView.RowItem actual = spy.getLastRowItem();
-        Assert.assertEquals(actual, rowItem);
-
-    }
-
-    @Test(groups = {"wicketTests"})
-    public void findFirstEmptyCell_1() {
-        List<Integer> list = new ArrayList<Integer>();
-        IDataProvider provider = new ListDataProvider(list);
-        IQuickReuseStrategy reuseStrategy=Mockito.mock(IQuickReuseStrategy.class);
-        Mockito.when(reuseStrategy.isPartialUpdatesSupported()).thenReturn(true);
-        QuickGridView<Integer> grid = new QuickGridView<Integer>("grid", provider,reuseStrategy) {
-            @Override
-            protected void populate(CellItem<Integer> item) {
-            }
-
-            @Override
-            protected void populateEmptyItem(CellItem<Integer> item) {
-            }
-        };
-        grid.setColumns(3);
-        QuickGridView.CellItem cell1 = grid.buildCellItem(89789089, 10);
-        QuickGridView.RowItem rowItem = grid.buildRowItem("56", 0);
-        rowItem.getRepeater().add(cell1);
-        QuickGridView.CellItem cell2 = grid.buildCellItem(89789, 20);
-        rowItem.getRepeater().add(cell2);
-        QuickGridView.CellItem cell3 = grid.buildEmptyCellItem(897745);
-        rowItem.getRepeater().add(cell3);
-        grid.addRow(rowItem);
-        QuickGridView.CellItem actual = grid.findFirstEmptyCell();
-        Assert.assertTrue(actual.isEmpty());
-        Assert.assertEquals(actual.getMarkupId(), cell3.getMarkupId());
-
-    }
-
-
-    @Test(groups = {"wicketTests"})
-    public void findFirstEmptyCell_2() {
-        List<Integer> list = new ArrayList<Integer>();
-        IDataProvider provider = new ListDataProvider(list);
-        IQuickReuseStrategy reuseStrategy=Mockito.mock(IQuickReuseStrategy.class);
-        Mockito.when(reuseStrategy.isPartialUpdatesSupported()).thenReturn(true);
-        QuickGridView<Integer> grid = new QuickGridView<Integer>("grid", provider,reuseStrategy) {
-            @Override
-            protected void populate(CellItem<Integer> item) {
-            }
-
-            @Override
-            protected void populateEmptyItem(CellItem<Integer> item) {
-            }
-        };
-        grid.setColumns(3);
-        QuickGridView.CellItem cell1 = grid.buildCellItem(10, 345);
-        QuickGridView.RowItem rowItem = grid.buildRowItem("56", 0);
-        rowItem.getRepeater().add(cell1);
-        QuickGridView.CellItem cell2 = grid.buildCellItem(20, 546);
-        rowItem.getRepeater().add(cell2);
-        QuickGridView.CellItem cell3 = grid.buildCellItem(30, 3098);
-        rowItem.getRepeater().add(cell3);
-        grid.addRow(rowItem);
-
-        QuickGridView.CellItem actual = grid.findFirstEmptyCell();
-        Assert.assertNull(actual);
-    }
-
-
-    @Test(groups = {"wicketTests"})
     public void cells_1() {
         List<Integer> list = new ArrayList<Integer>();
         IDataProvider provider = new ListDataProvider(list);
@@ -1108,7 +1016,7 @@ public class QuickGridViewTest {
         QuickGridView.CellItem cell3 = grid.buildEmptyCellItem(98989);
         rowItem.getRepeater().add(cell3);
         grid.addRow(rowItem);
-
+        Iterator<? extends Component> rows = grid.getItems();
         Iterator<QuickGridView.CellItem<Integer>> it = grid.cells();
         QuickGridView.CellItem<Integer> actual1 = it.next();
         Assert.assertEquals(actual1.getMarkupId(), cell1.getMarkupId());
@@ -1226,64 +1134,9 @@ public class QuickGridViewTest {
         Iterator data = Mockito.mock(Iterator.class);
         QuickGridView spy = Mockito.spy(gridView);
         spy.addRowsAtStart(data);
-        Mockito.verify(spy, Mockito.times(1)).buildRows(data);
-        Mockito.verify(spy, Mockito.times(1)).addRowAtStart(rowItem1);
-        Mockito.verify(spy, Mockito.times(1)).addRowAtStart(rowItem2);
-    }
-
-
-    /**
-     * one element added
-     */
-    @Test(groups = {"wicketTests"})
-    public void testLastRendered_1() {
-        List<Integer> data = data(3);
-        IDataProvider<Integer> dataProvider = new ListDataProvider<Integer>(data);
-        IQuickReuseStrategy reuseStrategy = new ItemsNavigationStrategy();
-        QuickGridView<Integer> quickView = new QuickGridView<Integer>("qv", dataProvider, reuseStrategy) {
-            @Override
-            protected void populate(CellItem<Integer> item) {
-
-            }
-
-            @Override
-            protected void populateEmptyItem(CellItem<Integer> item) {
-
-            }
-        };
-        QuickGridView<Integer>spy=Mockito.spy(quickView);
-        Item<Integer>item0=new Item<>("1",1,new Model<>(10));
-        spy.simpleAddRow(item0);
-        Component lastRenderedItem=spy._lastRenderedItem();
-        Assert.assertEquals(lastRenderedItem.getId(),item0.getId());
-    }
-
-    /**
-     * two elements added
-     */
-    @Test(groups = {"wicketTests"})
-    public void testLastRendered_2() {
-        List<Integer> data = data(3);
-        IDataProvider<Integer> dataProvider = new ListDataProvider<Integer>(data);
-        IQuickReuseStrategy reuseStrategy = new ItemsNavigationStrategy();
-        QuickGridView<Integer> quickView = new QuickGridView<Integer>("qv", dataProvider, reuseStrategy) {
-            @Override
-            protected void populate(CellItem<Integer> item) {
-
-            }
-
-            @Override
-            protected void populateEmptyItem(CellItem<Integer> item) {
-
-            }
-        };
-        QuickGridView<Integer>spy=Mockito.spy(quickView);
-        Item<Integer>item0=new Item<>("1",1,new Model<>(10));
-        spy.simpleAddRow(item0);
-        Item<Integer>item1=new Item<>("2",2,new Model<>(20));
-        spy.simpleAddRow(item1);
-        Component lastRenderedItem=spy._lastRenderedItem();
-        Assert.assertEquals(lastRenderedItem.getId(),item1.getId());
+        Mockito.verify(spy).buildRows(data);
+        Mockito.verify(spy).addRowAtStart(rowItem1);
+        Mockito.verify(spy).addRowAtStart(rowItem2);
     }
 
 

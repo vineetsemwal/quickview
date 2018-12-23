@@ -143,7 +143,6 @@ public class RepeaterUtilTest {
 
     @Test(groups = {"utilTests"})
     public void getComponentTag_1() {
-
         QuickMockApplication app = new QuickMockApplication();
         WicketTester tester = new WicketTester(app);
         final QuickViewParent parent = new QuickViewParent("parent");
@@ -174,7 +173,7 @@ public class RepeaterUtilTest {
             }
         };
         tester.startComponentInPage(panel);
-        final Item<Integer> item = (Item) quickView._firstRenderedItem();
+        final Item<Integer> item = (Item) quickView.getItems().next();
         ComponentTag actual=   RepeaterUtil.get().getComponentTag(item);
         Assert.assertEquals(actual.getName(),"tr");
     }

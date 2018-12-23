@@ -44,14 +44,31 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     }
 
 
+    private IAddAtStartStore _addAtStartStore;
+
+    protected IAddAtStartStore getAddAtStartStore() {
+        return _addAtStartStore;
+    }
+
+    protected void initializeAddAtStartStoreIfRequired() {
+        if (_addAtStartStore == null) {
+            _addAtStartStore = newAddAtStartStore();
+        }
+    }
+
+    protected IAddAtStartStore newAddAtStartStore() {
+        return new DefaultAddAtStartStore();
+    }
+
+
     public IQuickReuseStrategy getReuseStrategy() {
         return reuseStrategy7;
     }
 
     //items created per request ,if used with PagingNavigator/AjaxPagingNavigator then it's the items per page
-    private long itemsPerRequest7 = Integer.MAX_VALUE;
+    private int itemsPerRequest7 = Integer.MAX_VALUE;
 
-    public long getItemsPerRequest() {
+    public int getItemsPerRequest() {
         return itemsPerRequest7;
     }
 
@@ -63,7 +80,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         return String.valueOf(childId);
     }
 
-    public void setItemsPerRequest(long items) {
+    public void setItemsPerRequest(int items) {
         if (items < 1) {
             throw new IllegalArgumentException("itemsPerRequest cannot be less than 1");
         }
@@ -98,6 +115,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     }
 
     private long currentPage;
+
 
     private Component start, end;
 
@@ -162,7 +180,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     }
 
 
-    protected Item<T> newItem(String id, long index, IModel<T> model) {
+    protected Item<T> newItem(String id, int index, IModel<T> model) {
         Item<T> item = new Item<T>(id, getRepeaterUtil().safeLongToInt(index), model);
         item.setOutputMarkupId(true);
         return item;
@@ -176,11 +194,11 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      * @param object
      * @return
      */
-    public Item<T> buildItem(String id, long index, T object) {
+    public Item<T> buildItem(String id, int index, T object) {
         return buildItem(id, index, getDataProvider().model(object));
     }
 
-    protected Item<T> buildItem(String id, long index, IModel<T> model) {
+    protected Item<T> buildItem(String id, int index, IModel<T> model) {
         Item<T> item = newItem(id, index, model);
         populate(item);
         return item;
@@ -193,11 +211,11 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      * @param object model object
      * @return item
      */
-    public Item buildItem(long index, T object) {
+    public Item buildItem(int index, T object) {
         return buildItem(newChildId(), index, object);
     }
 
-    protected Item buildItem(long index, IModel<T> model) {
+    protected Item buildItem(int index, IModel<T> model) {
         return buildItem(newChildId(), index, model);
     }
 
@@ -234,8 +252,112 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         return super.removeAll();
     }
 
-    public Iterator<Component> itemsIterator() {
-        return iterator();
+    /**
+     * this iterator doesn't iterate through the elements in the order they are rendered in view,
+     * use {@link this#getItems()}
+     *
+     * @return
+     */
+    @Override
+    public Iterator<Component> iterator() {
+        return super.iterator();
+    }
+
+    /**
+     * iterator which iterates through the items in the order they are rendered in view
+     * ie. first items added using addAtStart(*) are fetched and then items
+     * added using add(*)
+     *
+     * @return
+     */
+    public Iterator<Component> getItems() {
+        return new ItemsIterator();
+    }
+
+
+    /**
+     * iterator that iterates through the elements in the order they are rendered in view
+     * element added using addAtStart(*) are fetched before continuing on to other elements
+     */
+    private class ItemsIterator implements Iterator<Component> {
+        private Iterator<Component> iterator;
+        private Component nextComponent;
+
+        private Iterator<String> addAtStartIterator;
+
+        private Component currentComponent;
+
+
+        public ItemsIterator() {
+            if (getAddAtStartStore() != null) {
+                addAtStartIterator = getAddAtStartStore().iterator();
+            }
+            iterator = iterator();
+            nextComponent = findNext();
+        }
+
+        public Iterator<String> getAddAtStartIterator() {
+            return addAtStartIterator;
+        }
+
+        public Iterator<Component> getIterator() {
+            return iterator;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return nextComponent != null;
+        }
+
+        @Override
+        public Component next() {
+            currentComponent = nextComponent;
+            nextComponent = null;
+            nextComponent = findNext();
+            return currentComponent;
+        }
+
+
+        public Component findNext() {
+            //
+            //addatstartstore items should get fetched before  items add at end
+            //
+            IAddAtStartStore addAtStartStore = getAddAtStartStore();
+            if (addAtStartStore != null && getAddAtStartIterator().hasNext()) {
+                String id = getAddAtStartIterator().next();
+                Component component = get(id);
+                return component;
+            }
+
+            //
+            //fetch items added at end now ,skip the item if it is in addatstartstore too
+            //
+            while (getIterator().hasNext()) {
+                Component found = getIterator().next();
+                if (getAddAtStartStore() == null) {
+                    return found;
+                }
+
+                if (!getAddAtStartStore().contains(found)) {
+                    return found;
+                }
+
+                continue;
+            }
+
+            return null;
+
+        }
+
+        @Override
+        public void remove() {
+            if (currentComponent == null) {
+                return;
+            }
+            QuickViewBase.this.remove(currentComponent);
+
+        }
+
     }
 
     @Override
@@ -250,7 +372,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
             _setCurrentPage(pageToBeCreated);
         }
         long page = _getCurrentPage();
-        Iterator<Item<T>> existing = (Iterator) itemsIterator();
+        Iterator<Item<T>> existing = (Iterator) iterator();
 
         //
         // if add items supported and page to be created is not defined
@@ -310,7 +432,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         private final Iterator<? extends T> items;
         private final IDataProvider<T> dataProvider;
         private final long max;
-        private long index;
+        private int index;
 
         /**
          * Constructor
@@ -365,14 +487,14 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         }
     }
 
-    protected Iterator<Item<T>> buildItems(final long index, Iterator<? extends T> iterator) {
+    protected Iterator<Item<T>> buildItems(final int index, Iterator<? extends T> iterator) {
         return buildItemsList(index, iterator).iterator();
     }
 
 
-    protected List<Item<T>> buildItemsList(final long index, Iterator<? extends T> iterator) {
+    protected List<Item<T>> buildItemsList(final int index, Iterator<? extends T> iterator) {
         List<Item<T>> items = new ArrayList<Item<T>>();
-        for (long i = index; iterator.hasNext(); i++) {
+        for (int i = index; iterator.hasNext(); i++) {
             T object = iterator.next();
             Item<T> item = buildItem(i, object);
             items.add(item);
@@ -380,12 +502,12 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         return items;
     }
 
+
     /*
      * build items from index=size
      */
-
     protected Iterator<Item<T>> buildItems(Iterator<? extends T> iterator) {
-        long index = size();
+        int index = size();
         return buildItems(index, iterator);
     }
 
@@ -395,7 +517,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      */
 
     protected List<Item<T>> buildItemsList(Iterator<? extends T> iterator) {
-        long index = size();
+        int index = size();
         return buildItemsList(index, iterator);
     }
 
@@ -658,7 +780,10 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
                 synchronizer.submit();
             }
         }
-
+        IAddAtStartStore addAtStartStore = getAddAtStartStore();
+        if (addAtStartStore != null) {
+            addAtStartStore.remove(component);
+        }
         return simpleRemove(component);
 
     }
@@ -670,25 +795,23 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         return remove(component);
     }
 
+
     /**
-     * draws a new element at start but actually the element is added at last in repeater,
-     * this should not pose problem when whole repeater is re-rendered and if data is sorted
+     * adds items at start of view
      * <p>
-     * the item will be displayed at start of the view in the passed order
-     * <p>
-     * <p>
-     * <p/>
-     * actually it can be handled properly which means new item(s) created at start  using addAtStart
-     * it is mentioned in issue quickview#15 (https://github.com/vineetsemwal/quickview/issues/15)
+     * also see  {@link this#getItems()}
      *
      * @param components
      * @return this
      */
     public MarkupContainer addAtStart(final Component... components) {
         simpleAdd(components);
+        initializeAddAtStartStoreIfRequired();
+        getAddAtStartStore().add(components);
         if (!isAjax()) {
             return this;
         }
+
         Synchronizer synchronizer = getSynchronizer();
         if (synchronizer == null) {
             return this;
@@ -775,11 +898,9 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     }
 
     /**
-     * less complex/preferred/clear solution would have been checking if listener is already added in AjaxRequestTarget but
-     * since there is no getter for IListeners,there is no way to know listener is added ,it might be added in later versions
-     * see issue WICKET-4800
-     *
-     * @return Synchronizer
+     * Synchronizer basically adds components(repeater's items) and scripts to the associated
+     * {@link IPartialPageRequestHandler}  after checking parent is not added to AjaxRequestTarget.
+     * If parent is added scripts and items are not added to the requesthandler
      */
     public Synchronizer getSynchronizer() {
         if (!isAjax()) {
@@ -803,11 +924,11 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
         return synchronizer;
     }
 
-    protected<T> void _setRequestMetaData(final MetaDataKey<T>key,T value){
-        getRequestCycle().setMetaData(key,value);
+    protected <T> void _setRequestMetaData(final MetaDataKey<T> key, T value) {
+        getRequestCycle().setMetaData(key, value);
     }
 
-    protected  <T> T _getRequestMetaData(final MetaDataKey<T> key) {
+    protected <T> T _getRequestMetaData(final MetaDataKey<T> key) {
         return getRequestCycle().getMetaData(key);
     }
 

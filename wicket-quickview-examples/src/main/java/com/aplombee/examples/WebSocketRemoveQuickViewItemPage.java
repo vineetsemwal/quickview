@@ -98,7 +98,7 @@ public class WebSocketRemoveQuickViewItemPage extends WebPage {
     }
 
     public Component componentAssociatedWithModelObject(final QuickView<Integer> quickView,final int modelObject){
-       Iterator<Component>iterator= quickView.itemsIterator();
+       Iterator<Component>iterator= quickView.getItems();
        while (iterator.hasNext()){
            Component item= iterator.next();
            if(item.getDefaultModelObject().equals(modelObject)){
