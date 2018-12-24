@@ -18,11 +18,10 @@ Copyright 2012 Vineet Semwal
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-
     <parent>
         <groupId>com.aplombee</groupId>
         <artifactId>wicket-quickview-parent</artifactId>
-        <version>8-SNAPSHOT</version>
+        <version>7-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -30,7 +29,7 @@ Copyright 2012 Vineet Semwal
     <artifactId>wicket-quickview-examples</artifactId>
     <packaging>war</packaging>
 
-    <name>quicview examples</name>
+    <name>quickview examples</name>
     <description>quickview examples</description>
 
     <licenses>
@@ -86,49 +85,33 @@ Copyright 2012 Vineet Semwal
         </dependency>
 
         <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <scope>compile</scope>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
         </dependency>
 
 
-
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-slf4j-impl</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-
-
+        <!--  JETTY DEPENDENCIES FOR TESTING  -->
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
-            <version>${jetty9.version}</version>
-            <scope>runtime</scope>
+            <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-webapp</artifactId>
-            <version>${jetty9.version}</version>
-            <scope>runtime</scope>
+            <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
-            <version>${jetty9.version}</version>
-            <artifactId>jetty-jmx</artifactId>
+            <artifactId>jetty-util</artifactId>
+            <scope>test</scope>
         </dependency>
-
         <dependency>
-            <groupId>org.eclipse.jetty.websocket</groupId>
-            <version>${jetty9.version}</version>
-            <artifactId>javax-websocket-server-impl</artifactId>
-            <scope>runtime</scope>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-jmx</artifactId>
+            <scope>test</scope>
         </dependency>
-
-
     </dependencies>
     <build>
         <resources>

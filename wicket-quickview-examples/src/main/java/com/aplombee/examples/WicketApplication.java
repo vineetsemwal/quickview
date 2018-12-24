@@ -53,14 +53,14 @@ public class WicketApplication extends WebApplication {
         // add your configuration here
         Runnable incrementTask = new IncrementCounterTask();
         Executors.newScheduledThreadPool(1).scheduleAtFixedRate(incrementTask, 2, 2, TimeUnit.SECONDS);
-        Runnable decrementTask=new DecrementCounterTask();
-        Executors.newScheduledThreadPool(1).scheduleAtFixedRate(decrementTask,2,2,TimeUnit.SECONDS);
-        Runnable rowIncrementTask=new IncrementRowCounterTask();
-        Executors.newScheduledThreadPool(1).scheduleAtFixedRate(rowIncrementTask,2,2,TimeUnit.SECONDS);
+        Runnable decrementTask = new DecrementCounterTask();
+        Executors.newScheduledThreadPool(1).scheduleAtFixedRate(decrementTask, 2, 2, TimeUnit.SECONDS);
+        Runnable rowIncrementTask = new IncrementRowCounterTask();
+        Executors.newScheduledThreadPool(1).scheduleAtFixedRate(rowIncrementTask, 2, 2, TimeUnit.SECONDS);
     }
 
-    public static WicketApplication get(){
-       return (WicketApplication) Application.get();
+    public static WicketApplication get() {
+        return (WicketApplication) Application.get();
     }
 
     private Set<ConnectedMessage> incrementConnected = new HashSet<>();
@@ -75,7 +75,7 @@ public class WicketApplication extends WebApplication {
 
         @Override
         public void run() {
-            if(incrementConnected.isEmpty()){
+            if (incrementConnected.isEmpty()) {
                 return;
             }
             incrementCounter++;
@@ -85,18 +85,19 @@ public class WicketApplication extends WebApplication {
                 IWebSocketConnection connection = connectionRegistry.getConnection(
                         WicketApplication.this, connected.getSessionId(), connected.getKey());
                 CounterMessage counterMessage = new CounterMessage(incrementCounter);
-                connection.sendMessage(counterMessage);
+                if (connection != null) {
+                    connection.sendMessage(counterMessage);
+                }
             }
         }
     }
 
 
-    private Set<ConnectedMessage>decrementConnected=new HashSet<>();
+    private Set<ConnectedMessage> decrementConnected = new HashSet<>();
 
-    public void addDecrementConnectMessage(final ConnectedMessage connectedMessage){
+    public void addDecrementConnectMessage(final ConnectedMessage connectedMessage) {
         decrementConnected.add(connectedMessage);
     }
-
 
 
     private volatile int decrementCounter = 30;
@@ -105,11 +106,11 @@ public class WicketApplication extends WebApplication {
 
         @Override
         public void run() {
-            if(decrementConnected.isEmpty()){
+            if (decrementConnected.isEmpty()) {
                 return;
             }
-            if(decrementCounter<0) {
-               return;
+            if (decrementCounter < 0) {
+                return;
             }
             decrementCounter--;
             WebSocketSettings socketSettings = WebSocketSettings.Holder.get(WicketApplication.this);
@@ -118,15 +119,17 @@ public class WicketApplication extends WebApplication {
                 IWebSocketConnection connection = connectionRegistry.getConnection(
                         WicketApplication.this, connected.getSessionId(), connected.getKey());
                 CounterMessage counterMessage = new CounterMessage(decrementCounter);
-                connection.sendMessage(counterMessage);
+                if (connection != null) {
+                    connection.sendMessage(counterMessage);
+                }
             }
         }
     }
 
 
-    private Set<ConnectedMessage> incrementGridRowConnected =new HashSet<>();
+    private Set<ConnectedMessage> incrementGridRowConnected = new HashSet<>();
 
-    public void addGridRowIncrementConnect(final ConnectedMessage connectedMessage){
+    public void addGridRowIncrementConnect(final ConnectedMessage connectedMessage) {
         incrementGridRowConnected.add(connectedMessage);
     }
 
@@ -137,17 +140,19 @@ public class WicketApplication extends WebApplication {
 
         @Override
         public void run() {
-            if(incrementGridRowConnected.isEmpty()){
+            if (incrementGridRowConnected.isEmpty()) {
                 return;
             }
-            incrementRowCounter=incrementRowCounter+2;
+            incrementRowCounter = incrementRowCounter + 2;
             WebSocketSettings socketSettings = WebSocketSettings.Holder.get(WicketApplication.this);
             IWebSocketConnectionRegistry connectionRegistry = socketSettings.getConnectionRegistry();
             for (ConnectedMessage connected : incrementGridRowConnected) {
                 IWebSocketConnection connection = connectionRegistry.getConnection(
                         WicketApplication.this, connected.getSessionId(), connected.getKey());
                 CounterMessage counterMessage = new CounterMessage(incrementRowCounter);
-                connection.sendMessage(counterMessage);
+                if (connection != null) {
+                    connection.sendMessage(counterMessage);
+                }
             }
         }
     }

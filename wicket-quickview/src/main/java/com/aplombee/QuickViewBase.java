@@ -642,19 +642,13 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
 
 
     public AjaxRequestTarget getAjaxRequestTarget() {
-        Optional<AjaxRequestTarget> target = RequestCycle.get().find(AjaxRequestTarget.class);
-        if (target.isPresent()) {
-            return target.get();
-        }
-        return null;
+        AjaxRequestTarget target = RequestCycle.get().find(AjaxRequestTarget.class);
+        return target;
     }
 
     public IPartialPageRequestHandler findPartialPageRequestHandler(final Class<? extends IPartialPageRequestHandler> requestHandlerClass) {
-        Optional<? extends IPartialPageRequestHandler> requestHandlerOptional = RequestCycle.get().find(requestHandlerClass);
-        if (requestHandlerOptional.isPresent()) {
-            return requestHandlerOptional.get();
-        }
-        return null;
+        IPartialPageRequestHandler requestHandler = RequestCycle.get().find(requestHandlerClass);
+        return requestHandler;
     }
 
 
@@ -936,9 +930,9 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
 
     public Synchronizer nonARTSynchronizer() {
         for (Class<? extends IPartialPageRequestHandler> requestHandlerClass : getPartialRequestHandlers()) {
-            Optional<? extends IPartialPageRequestHandler> requestHandlerOptional = getRequestCycle().find(requestHandlerClass);
-            if (requestHandlerOptional.isPresent()) {
-                Synchronizer wrap = new Synchronizer(_getParent(), requestHandlerOptional.get());
+            IPartialPageRequestHandler requestHandler = getRequestCycle().find(requestHandlerClass);
+            if (requestHandler!=null) {
+                Synchronizer wrap = new Synchronizer(_getParent(), requestHandler);
                 return wrap;
             }
         }
