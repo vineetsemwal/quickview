@@ -124,7 +124,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      * this is done so that the new children doesn't get mixedup with the other markup or another components
      * specified in immediate parent
      *
-     * @return
+     * @return component using as start boundary
      */
     public final Component getStart() {
         return start;
@@ -135,7 +135,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      * this is done so that the new children doesn't get mixedup with the other markup or another components
      * specified in immediate parent
      *
-     * @return
+     * @return component used as end boundary
      */
     public final Component getEnd() {
         return end;
@@ -192,7 +192,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      * @param id
      * @param index
      * @param object
-     * @return
+     * @return item
      */
     public Item<T> buildItem(String id, int index, T object) {
         return buildItem(id, index, getDataProvider().model(object));
@@ -256,7 +256,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      * this iterator doesn't iterate through the elements in the order they are rendered in view,
      * use {@link this#getItems()}
      *
-     * @return
+     * @return iterator
      */
     @Override
     public Iterator<Component> iterator() {
@@ -268,7 +268,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      * ie. first items added using addAtStart(*) are fetched and then items
      * added using add(*)
      *
-     * @return
+     * @return items iterator
      */
     public Iterator<Component> getItems() {
         return new ItemsIterator();
@@ -555,7 +555,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
      * same as {@link this#getItemsCount()} but takes into account hierarchy so if the view is not visible in hierarchy
      * the returned value is zero else return the getItemsCount() value
      *
-     * @return
+     * @return items count visible
      */
     public final long getRowsCount() {
         if (!isVisibleInHierarchy()) {
@@ -593,9 +593,7 @@ public abstract class QuickViewBase<T> extends RepeatingView implements IQuickVi
     /**
      * @see org.apache.wicket.markup.html.navigation.paging.IPageable#getCurrentPage()
      * <p/>
-     * don't override
      */
-
     @Override
     public final long getCurrentPage() {
         return _getCurrentPage();

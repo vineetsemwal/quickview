@@ -110,7 +110,6 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
         setItemsPerRequest(itemsPerRequest);
     }
 
-
     private int rows = Integer.MAX_VALUE;
 
     public int getRows() {
@@ -405,7 +404,6 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
     }
 
 
-
     public RowItem buildRowItem(String id, int index) {
         RowItem<T> item = newRowItem(id, index);
         RepeatingView rowView = new RepeatingView(COLUMNS_REPEATER_ID);
@@ -425,7 +423,7 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
     /**
      * returns iterator to iterate through rows in the order they are rendered
      *
-     * @return
+     * @return rows iterator
      */
     public Iterator<RowItem<T>> rows() {
         return (Iterator) getItems();
@@ -435,12 +433,13 @@ public abstract class QuickGridView<T> extends QuickViewBase<T> {
     /**
      * returns iterator to iterate through cells in the order they are rendered
      *
-     * @return
+     * @return cells iterator
      */
     public Iterator<CellItem<T>> cells() {
         Iterator<MarkupContainer> rows = (Iterator) rows();
         return new GridView.ItemsIterator(rows);
     }
+
 
     protected CellItem<T> newCellItem(String id, int index, IModel<T> model) {
         return new CellItem<T>(id,index, model);
