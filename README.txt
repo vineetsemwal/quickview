@@ -1,3 +1,12 @@
+
+****The Project has moved to wicketstuff now****
+since it is a part of wicketstuff now and will therefore see a maven release with every new wicket version from 8.3.0
+The wiki is now available on https://github.com/wicketstuff/core/wiki/quickview
+
+
+-------------------------------------
+
+
   QuickView and QuickGridView
 -----------------------------
 QuickView is a wicket component(RepeatingView) ,it lets you add or remove the rows without the need to re-render the whole repeater again in ajax use cases.
