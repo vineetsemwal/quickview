@@ -1,6 +1,6 @@
 
 ****The Project has moved to wicketstuff now****
-since it is a part of wicketstuff now and will therefore see a maven release with every new wicket version from 8.3.0
+since it is a part of wicketstuff now , it will see a maven release with every new wicket version from 8.3.0
 The wiki is now available on https://github.com/wicketstuff/core/wiki/quickview
 
 
